@@ -1,0 +1,35 @@
+name: ETF Intelligence Agent
+
+on:
+  schedule:
+    - cron: '30 16 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  run-etf-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        pip install pandas numpy yfinance openpyxl
+
+    - name: Run ETF Agent
+      run: |
+        python update_etf_data_v3.py
+
+    - name: Upload output
+      uses: actions/upload-artifact@v4
+      with:
+        name: etf-report
+        path: |
+          ETF_Intelligence_Agent_UPDATED.xlsx
+          ETF_Daily_Report.txt
