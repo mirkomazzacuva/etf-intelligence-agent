@@ -1,0 +1,81 @@
+name: Beta test ETF Intelligence App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    # Test rapido ogni giorno feriale al mattino.
+    # GitHub Actions usa UTC: 06:15 UTC = 08:15 in Italia con ora legale, 07:15 con ora solare.
+    - cron: "15 6 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      run_full_update:
+        description: "Eseguire anche il test completo con aggiornamento dati?"
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beta-test-etf-intelligence-app
+  cancel-in-progress: true
+
+jobs:
+  beta-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip check
+
+      - name: Run beta test checks
+        run: |
+          python beta_test_app.py
+
+      - name: Run full update test when requested manually
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_full_update == 'true' }}
+        run: |
+          python beta_test_app.py --full-update
+
+      - name: Start Streamlit smoke test
+        run: |
+          nohup streamlit run streamlit_app.py \
+            --server.headless true \
+            --server.port 8501 \
+            --server.address 0.0.0.0 \
+            > streamlit_smoke.log 2>&1 &
+          sleep 20
+          curl --fail http://localhost:8501/_stcore/health
+
+      - name: Upload beta test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: beta-test-report
+          path: |
+            BETA_TEST_REPORT.md
+            BETA_TEST_STATUS.json
+            streamlit_smoke.log
+          if-no-files-found: ignore
