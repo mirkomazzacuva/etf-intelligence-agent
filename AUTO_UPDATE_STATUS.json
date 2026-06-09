@@ -1,8 +1,8 @@
 {
   "status": "success",
   "message": "Aggiornamento AlphaForge completato",
-  "started_at": "2026-06-09T10:40:30+00:00",
-  "finished_at": "2026-06-09T10:40:58+00:00",
+  "started_at": "2026-06-09T10:45:54+00:00",
+  "finished_at": "2026-06-09T10:46:19+00:00",
   "details": [
     {
       "script": "update_etf_data_v3.py",
@@ -21,6 +21,12 @@
       "returncode": 0,
       "stdout_tail": "Watchlist aggiornata: 9 strumenti\n",
       "stderr_tail": "$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n"
+    },
+    {
+      "script": "generate_dashboard.py",
+      "returncode": 0,
+      "stdout_tail": "Dashboard generata: index.html\n",
+      "stderr_tail": ""
     },
     {
       "script": "generate_dashboard.py",

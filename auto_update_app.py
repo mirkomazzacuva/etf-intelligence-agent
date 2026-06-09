@@ -54,6 +54,17 @@ def ensure_script_exists(script: str, details: list[dict], started_at: str) -> b
     return False
 
 
+def run_dashboard(details: list[dict], started_at: str) -> int:
+    if not ensure_script_exists(DASHBOARD_SCRIPT, details, started_at):
+        return 1
+    dashboard_result = run_script(DASHBOARD_SCRIPT)
+    details.append(dashboard_result)
+    if dashboard_result["returncode"] != 0:
+        write_status("failed", f"Aggiornamento fallito su {DASHBOARD_SCRIPT}", details, started_at=started_at)
+        return int(dashboard_result["returncode"])
+    return 0
+
+
 def main() -> int:
     started_at = now_iso()
     details: list[dict] = []
@@ -68,17 +79,18 @@ def main() -> int:
             write_status("failed", f"Aggiornamento fallito su {script}", details, started_at=started_at)
             return int(result["returncode"])
 
-    # Important: the public dashboard reads AUTO_UPDATE_STATUS.json while it is being generated.
-    # Write a success status before generate_dashboard.py, otherwise index.html can remain stuck on "running".
+    # First write success before building the public page, so index.html never captures a running state.
     write_status("success", "Dati AlphaForge aggiornati; dashboard in generazione", details, started_at=started_at)
+    first_dashboard_status = run_dashboard(details, started_at)
+    if first_dashboard_status != 0:
+        return first_dashboard_status
 
-    if not ensure_script_exists(DASHBOARD_SCRIPT, details, started_at):
-        return 1
-    dashboard_result = run_script(DASHBOARD_SCRIPT)
-    details.append(dashboard_result)
-    if dashboard_result["returncode"] != 0:
-        write_status("failed", f"Aggiornamento fallito su {DASHBOARD_SCRIPT}", details, started_at=started_at)
-        return int(dashboard_result["returncode"])
+    # Write the final success with the dashboard result included, then rebuild index.html one last time.
+    # This guarantees the public GitHub Pages dashboard shows status=success, not status=running.
+    write_status("success", "Aggiornamento AlphaForge completato", details, started_at=started_at)
+    final_dashboard_status = run_dashboard(details, started_at)
+    if final_dashboard_status != 0:
+        return final_dashboard_status
 
     write_status("success", "Aggiornamento AlphaForge completato", details, started_at=started_at)
     return 0

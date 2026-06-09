@@ -1,5 +1,5 @@
 AlphaForge Intelligence - Daily Report
-Aggiornato il 09/06/2026 10:40
+Aggiornato il 09/06/2026 10:46
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
@@ -11,7 +11,7 @@ Top ETF:
 - EIMI.MI: score 79.3, stato Buy Watchlist
 - XDEV.MI: score 79.2, stato Accumulate Carefully
 - VWCE.DE: score 76.4, stato Accumulate Carefully
-- SWDA.MI: score 75.4, stato Accumulate Carefully
+- SWDA.MI: score 75.5, stato Accumulate Carefully
 - SXR8.DE: score 74.8, stato Accumulate Carefully
 
 Allocazione suggerita su 1000 EUR:
