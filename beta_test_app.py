@@ -50,6 +50,7 @@ CORE_MODULES = [
     "core.insight_engine",
     "core.portfolio_engine",
     "core.report_engine",
+    "core.ui_theme",
 ]
 
 
@@ -172,6 +173,18 @@ class BetaTester:
                     self.ok("Stato aggiornamento", "Successo")
                 else:
                     self.warn("Stato aggiornamento", str(status.get("status")))
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Stato aggiornamento", str(exc))
+
+        if Path("index.html").exists():
+            try:
+                html = Path("index.html").read_text(encoding="utf-8", errors="ignore")
+                if "AlphaForge v4" in html and "Premium UI" in html:
+                    self.ok("Dashboard pubblica v4", "AlphaForge v4 Premium UI presente")
+                elif "AlphaForge v3" in html:
+                    self.warn("Dashboard pubblica v4", "index.html ancora v3: esegui full update")
+                else:
+                    self.warn("Dashboard pubblica v4", "Marker v4 non trovato")
             except Exception as exc:  # noqa: BLE001
                 self.fail("Stato aggiornamento", str(exc))
 

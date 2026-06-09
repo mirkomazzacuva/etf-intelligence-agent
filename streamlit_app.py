@@ -19,10 +19,12 @@ from core.config import (
     STATUS_FILE,
     WATCHLIST_OUTPUT_CSV,
 )
+from core.ui_theme import apply_theme, badge, hero, info_panel, mini_cards, style_priority_dataframe
 
 UPDATE_SCRIPT = Path("auto_update_app.py")
 
-st.set_page_config(page_title="AlphaForge Intelligence", page_icon="📈", layout="wide")
+st.set_page_config(page_title="AlphaForge Intelligence", page_icon="⚡", layout="wide")
+apply_theme()
 
 
 def file_last_update(path: Path) -> str:
@@ -90,10 +92,9 @@ def run_manual_update() -> tuple[bool, str]:
 
 status = load_status()
 with st.sidebar:
-    st.title("AlphaForge")
-    st.caption("ETF, stocks, scoring e watchlist")
-    st.header("Aggiornamenti")
-    st.write(status_badge(status.get("status", "unknown")))
+    st.title("⚡ AlphaForge")
+    st.caption("ETF, azioni, priority score e watchlist")
+    st.markdown(badge(status.get("status", "unknown")), unsafe_allow_html=True)
     st.caption(status.get("message", ""))
     if status.get("finished_at"):
         st.caption(f"Ultimo run: {status.get('finished_at')}")
@@ -111,10 +112,13 @@ with st.sidebar:
     st.divider()
     amount = st.number_input("Importo simulato (€)", min_value=100, max_value=100000, value=1000, step=100)
     risk_profile = st.selectbox("Profilo rischio", ["Prudente", "Bilanciato", "Aggressivo"], index=1)
-    st.caption("Le pagine laterali permettono analisi libera, confronto e assistente AI controllato.")
+    st.caption("Usa le pagine laterali per analisi libera, confronto, watchlist e assistente controllato.")
 
-st.title("📈 AlphaForge Intelligence v3")
-st.caption("Dashboard pratica per ETF, azioni, ranking, allocazione, watchlist, priority score e scenari. Informativa, non consulenza finanziaria personalizzata.")
+hero(
+    "AlphaForge Intelligence",
+    "Dashboard premium per leggere ETF, azioni, ranking, allocazione, watchlist, priority score, entry zone e scenari pratici senza complessità inutile.",
+    "AlphaForge v4 Premium UI",
+)
 
 ranking, allocation, summary, watchlist, insights = load_outputs()
 if ranking.empty or allocation.empty:
@@ -122,30 +126,29 @@ if ranking.empty or allocation.empty:
     st.stop()
 
 ranking = ranking.sort_values("Score Finale", ascending=False, na_position="last")
+if not insights.empty and "Priority Score" in insights.columns:
+    insights = insights.sort_values("Priority Score", ascending=False, na_position="last")
 market_regime = get_summary_value(summary, "Market Regime") or "Neutral"
 best = ranking.iloc[0]
 last_update = file_last_update(RANKING_FILE)
+top_priority = insights.iloc[0].get("Ticker", "n/d") if not insights.empty else "n/d"
+top_watch = watchlist.sort_values("Score Finale", ascending=False, na_position="last").iloc[0].get("Ticker", "n/d") if not watchlist.empty and "Score Finale" in watchlist.columns else "n/d"
 
-st.info(f"Ultimo aggiornamento dati: **{last_update}**")
-col1, col2, col3, col4, col5 = st.columns(5)
-with col1:
-    st.metric("Market Regime", market_regime)
-with col2:
-    st.metric("Miglior ETF", best.get("Ticker", ""))
-with col3:
-    st.metric("Score migliore", safe_number(best.get("Score Finale", ""), 1))
-with col4:
-    top_priority = insights.iloc[0].get("Ticker", "") if not insights.empty else "n/d"
-    st.metric("Priorità", top_priority)
-with col5:
-    st.metric("Profilo", risk_profile)
+mini_cards([
+    ("Market Regime", market_regime, "Scenario sintetico"),
+    ("Miglior ETF", best.get("Ticker", ""), f"Score {safe_number(best.get('Score Finale', ''), 1)}"),
+    ("Priorità", top_priority, "Strumento da monitorare prima"),
+    ("Top Watchlist", top_watch, "Miglior score azioni/strumenti"),
+])
 
-tab_dash, tab_prior, tab_alloc, tab_rank, tab_watch, tab_report = st.tabs(["Dashboard", "Priorità", "Allocazione", "Ranking ETF", "Watchlist", "Report"])
+st.info(f"Ultimo aggiornamento dati: **{last_update}** · Profilo selezionato: **{risk_profile}** · Importo simulato: **{amount:,.0f} €**".replace(",", "."))
+
+tab_dash, tab_prior, tab_alloc, tab_rank, tab_watch, tab_report = st.tabs(["Quadro", "Priorità", "Allocazione", "Ranking ETF", "Watchlist", "Report"])
 
 with tab_dash:
-    c1, c2 = st.columns([1.15, 0.85])
+    c1, c2 = st.columns([1.12, 0.88])
     with c1:
-        st.subheader("Score vs volatilità")
+        st.subheader("Mappa score/rischio")
         required = {"Volatilità %", "Score Finale", "Categoria", "Rendimento 12M %", "Ticker"}
         if required.issubset(ranking.columns):
             fig = px.scatter(
@@ -155,29 +158,45 @@ with tab_dash:
                 color="Categoria",
                 size="Rendimento 12M %",
                 hover_name="Ticker",
-                title="Qualità, momentum e rischio ETF",
+                title="ETF: qualità, momentum e rischio",
             )
+            fig.update_layout(height=460, margin=dict(l=10, r=10, t=55, b=10), legend_title_text="Categoria")
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Grafico non disponibile: colonne mancanti.")
     with c2:
-        st.subheader("Lettura pratica")
-        st.markdown(
-            """
-            - **Buy Watchlist** non significa acquisto automatico.
-            - **Priority Score** ordina cosa monitorare prima.
-            - **Entry Zone** aiuta a non inseguire strumenti troppo estesi.
-            - Controlla sempre costi Fineco, spread, valuta e fiscalità.
-            """
+        info_panel(
+            "Lettura operativa",
+            "<b>Priority Score</b> ordina cosa guardare prima. <b>Entry Zone</b> evita di inseguire prezzi estesi. <b>Risk Flag</b> segnala quando usare size più prudente. Gli output sono informativi, non ordini automatici.",
         )
+        st.markdown("<div class='af-divider'></div>", unsafe_allow_html=True)
+        if not insights.empty:
+            top_cols = ["Ticker", "Priority Score", "Azione Suggerita", "Entry Zone", "Risk Flag"]
+            st.dataframe(insights[[c for c in top_cols if c in insights.columns]].head(5), use_container_width=True, hide_index=True)
 
 with tab_prior:
     if insights.empty:
         st.warning("Insights non ancora generati. Esegui aggiornamento completo.")
     else:
         st.subheader("Priorità operative")
+        a1, a2, a3 = st.columns(3)
+        with a1:
+            min_priority = st.slider("Priority minima", 0, 100, 50)
+        with a2:
+            action_options = sorted([str(x) for x in insights.get("Azione Suggerita", pd.Series()).dropna().unique()])
+            selected_actions = st.multiselect("Azione", action_options, default=action_options)
+        with a3:
+            type_options = sorted([str(x) for x in insights.get("Tipo", pd.Series()).dropna().unique()])
+            selected_types = st.multiselect("Tipo", type_options, default=type_options)
+        filtered_insights = insights.copy()
+        if "Priority Score" in filtered_insights.columns:
+            filtered_insights = filtered_insights[pd.to_numeric(filtered_insights["Priority Score"], errors="coerce").fillna(0) >= min_priority]
+        if selected_actions and "Azione Suggerita" in filtered_insights.columns:
+            filtered_insights = filtered_insights[filtered_insights["Azione Suggerita"].isin(selected_actions)]
+        if selected_types and "Tipo" in filtered_insights.columns:
+            filtered_insights = filtered_insights[filtered_insights["Tipo"].isin(selected_types)]
         cols = ["Ticker", "Tipo", "Score Finale", "Priority Score", "Azione Suggerita", "Stato", "Trend", "Entry Zone", "Risk Flag", "Trigger Monitoraggio"]
-        st.dataframe(insights[[c for c in cols if c in insights.columns]].head(20), use_container_width=True, hide_index=True)
+        st.dataframe(style_priority_dataframe(filtered_insights[[c for c in cols if c in filtered_insights.columns]].head(30)), use_container_width=True, hide_index=True)
 
 with tab_alloc:
     alloc = allocation.copy()
@@ -206,7 +225,8 @@ with tab_alloc:
         alloc["Importo €"] = (amount * alloc["Peso App %"] / 100).round(2)
     st.dataframe(alloc, use_container_width=True, hide_index=True)
     if "Peso App %" in alloc.columns:
-        fig_alloc = px.pie(alloc, names="Ticker", values="Peso App %", title="Distribuzione allocazione")
+        fig_alloc = px.pie(alloc, names="Ticker", values="Peso App %", title="Distribuzione allocazione simulata")
+        fig_alloc.update_layout(height=430, margin=dict(l=10, r=10, t=55, b=10))
         st.plotly_chart(fig_alloc, use_container_width=True)
 
 with tab_rank:
@@ -218,14 +238,15 @@ with tab_rank:
         "ETF Momentum Score", "ETF Risk Score", "ETF Entry Score", "Priority Score", "Trend", "Entry Zone", "Risk Flag", "Rendimento 12M %",
         "Volatilità %", "Max Drawdown %", "Sharpe", "Note AI",
     ]
-    st.dataframe(filtered[[c for c in cols if c in filtered.columns]], use_container_width=True, hide_index=True)
+    st.dataframe(style_priority_dataframe(filtered[[c for c in cols if c in filtered.columns]]), use_container_width=True, hide_index=True)
 
 with tab_watch:
     if watchlist.empty:
         st.warning("Watchlist non ancora generata. Esegui l'aggiornamento completo.")
     else:
+        watchlist_view = watchlist.sort_values("Priority Score" if "Priority Score" in watchlist.columns else "Score Finale", ascending=False, na_position="last")
         cols = ["Ticker", "Nome", "Tipo", "Score Finale", "Priority Score", "Azione Suggerita", "Stato", "Trend", "Entry Zone", "Risk Flag", "Rendimento 3M %", "P/E", "Forward P/E", "Note AI"]
-        st.dataframe(watchlist[[c for c in cols if c in watchlist.columns]], use_container_width=True, hide_index=True)
+        st.dataframe(style_priority_dataframe(watchlist_view[[c for c in cols if c in watchlist_view.columns]]), use_container_width=True, hide_index=True)
 
 with tab_report:
     if REPORT_FILE.exists():

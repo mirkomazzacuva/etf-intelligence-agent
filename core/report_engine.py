@@ -19,7 +19,45 @@ def format_number(value: object, digits: int = 2) -> str:
         return str(value)
 
 
-def compact_table(df: pd.DataFrame, columns: list[str], limit: int = 10) -> str:
+def _as_float(value: object, default: float = 0.0) -> float:
+    try:
+        if pd.isna(value):
+            return default
+        return float(value)
+    except Exception:  # noqa: BLE001
+        return default
+
+
+def _badge(value: object) -> str:
+    text = str(value or "n/d")
+    low = text.lower()
+    cls = ""
+    if any(x in low for x in ["buy", "success", "priorità", "priorita", "costruttiva", "positive"]):
+        cls = " good"
+    elif any(x in low for x in ["monitor", "graduale", "pullback", "wait", "neutral", "running"]):
+        cls = " watch"
+    elif any(x in low for x in ["risk", "alto", "high", "avoid", "evitare", "failed", "weak", "negativo"]):
+        cls = " danger"
+    return f"<span class='pill{cls}'>{escape(text)}</span>"
+
+
+def _score_bar(value: object) -> str:
+    score = max(0.0, min(100.0, _as_float(value)))
+    label = format_number(score, 1)
+    return f"<div class='scorebar'><span style='width:{score:.0f}%'></span><b>{escape(label)}</b></div>"
+
+
+def _format_cell(col: str, value: object) -> str:
+    if col in {"Score Finale", "Priority Score", "ETF Quality Score", "ETF Momentum Score", "ETF Risk Score", "ETF Entry Score"}:
+        return _score_bar(value)
+    if col in {"Stato", "Azione Suggerita", "Entry Zone", "Risk Flag", "Trend", "Tipo", "Categoria"}:
+        return _badge(value)
+    if isinstance(value, (float, int)):
+        return escape(format_number(value))
+    return escape(str(value if value is not None else ""))
+
+
+def compact_table(df: pd.DataFrame | None, columns: list[str], limit: int = 10) -> str:
     if df is None or df.empty:
         return "<p class='muted'>Nessun dato disponibile.</p>"
     cols = [col for col in columns if col in df.columns]
@@ -30,21 +68,24 @@ def compact_table(df: pd.DataFrame, columns: list[str], limit: int = 10) -> str:
         cells = []
         for col in cols:
             value = row.get(col, "")
-            txt = format_number(value) if isinstance(value, (float, int)) else str(value)
-            css = " class='long'" if col in {"Note AI", "Trigger Monitoraggio", "Azione Suggerita", "Scenario Base"} else ""
-            cells.append(f"<td{css}>{escape(txt)}</td>")
+            css = " class='long'" if col in {"Note AI", "Trigger Monitoraggio", "Azione Suggerita", "Scenario Base", "Scenario Negativo", "Azione Pratica"} else ""
+            cells.append(f"<td{css}>{_format_cell(col, value)}</td>")
         rows.append(f"<tr>{''.join(cells)}</tr>")
     th = "".join(f"<th>{escape(col)}</th>" for col in cols)
-    return f"<table><thead><tr>{th}</tr></thead><tbody>{''.join(rows)}</tbody></table>"
+    return f"<div class='table-wrap'><table><thead><tr>{th}</tr></thead><tbody>{''.join(rows)}</tbody></table></div>"
 
 
-def _best_row(df: pd.DataFrame, col: str) -> dict[str, Any]:
+def _best_row(df: pd.DataFrame | None, col: str) -> dict[str, Any]:
     if df is None or df.empty or col not in df.columns:
         return {}
     try:
         return df.sort_values(col, ascending=False, na_position="last").iloc[0].to_dict()
     except Exception:  # noqa: BLE001
         return {}
+
+
+def _safe_count(df: pd.DataFrame | None) -> int:
+    return 0 if df is None or df.empty else int(len(df))
 
 
 def build_text_report(
@@ -55,7 +96,7 @@ def build_text_report(
 ) -> str:
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
     lines = [
-        "AlphaForge Intelligence v3 - Daily Report",
+        "AlphaForge Intelligence v4 - Daily Report",
         f"Aggiornato il {now}",
         "",
         "Report informativo. Non costituisce consulenza finanziaria personalizzata.",
@@ -100,64 +141,121 @@ def render_dashboard_html(
 ) -> None:
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
     best = _best_row(ranking, "Score Finale")
-    best_watch = _best_row(watchlist if watchlist is not None else pd.DataFrame(), "Score Finale")
-    best_priority = _best_row(insights if insights is not None else pd.DataFrame(), "Priority Score")
+    best_watch = _best_row(watchlist, "Score Finale")
+    best_priority = _best_row(insights, "Priority Score")
     status_text = status.get("status", "unknown") if isinstance(status, dict) else "unknown"
-    status_class = "ok" if status_text == "success" else "warn" if status_text == "running" else "bad" if status_text == "failed" else ""
+    status_class = "good" if status_text == "success" else "watch" if status_text == "running" else "danger" if status_text == "failed" else ""
+    avg_priority = "n/d"
+    if insights is not None and not insights.empty and "Priority Score" in insights.columns:
+        avg_priority = format_number(pd.to_numeric(insights["Priority Score"], errors="coerce").mean(), 1)
+
     html = f"""<!doctype html>
 <html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AlphaForge Intelligence Dashboard</title>
+<title>AlphaForge v4 Premium Dashboard</title>
 <style>
-:root {{ --bg:#07101f; --panel:#101a33; --card:#152340; --text:#eef3ff; --muted:#9fb0d0; --accent:#70e1c8; --accent2:#8fb7ff; --danger:#ff8b8b; --warning:#ffd37a; }}
+:root {{
+  --bg:#050814; --bg2:#090f21; --panel:rgba(17,26,52,.82); --panel2:rgba(24,37,73,.92);
+  --border:rgba(255,255,255,.11); --text:#f4f7ff; --muted:#a7b6d8; --soft:#dbe6ff;
+  --green:#6ee7c8; --blue:#91b8ff; --gold:#ffd37a; --red:#ff8f98; --purple:#bda2ff;
+}}
 * {{ box-sizing:border-box; }}
-body {{ margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:radial-gradient(circle at top left,#17284f,#07101f 45%,#050813); color:var(--text); }}
-.container {{ max-width:1240px; margin:0 auto; padding:32px 18px 56px; }}
-.hero {{ padding:30px; border:1px solid rgba(255,255,255,.12); border-radius:28px; background:linear-gradient(135deg,rgba(18,30,58,.92),rgba(12,18,35,.88)); box-shadow:0 20px 70px rgba(0,0,0,.38); }}
-h1 {{ margin:0 0 8px; font-size:clamp(32px,5vw,58px); letter-spacing:-.045em; }}
-.subtitle {{ color:var(--muted); font-size:17px; max-width:820px; line-height:1.55; }}
-.grid {{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:14px; margin:24px 0 6px; }}
-.card {{ background:rgba(21,35,64,.94); border:1px solid rgba(255,255,255,.10); border-radius:20px; padding:18px; }}
-.label {{ color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; }}
-.value {{ margin-top:8px; font-size:23px; font-weight:850; }}
-.ok {{ color:var(--accent); }} .warn {{ color:var(--warning); }} .bad {{ color:var(--danger); }}
-section {{ margin-top:28px; }}
-h2 {{ margin:0 0 12px; font-size:24px; }}
-table {{ width:100%; border-collapse:collapse; overflow:hidden; border-radius:18px; background:rgba(17,26,51,.72); }}
-th,td {{ padding:11px 10px; border-bottom:1px solid rgba(255,255,255,.08); text-align:left; vertical-align:top; }}
-th {{ color:#cbd7f4; background:rgba(255,255,255,.06); font-size:12px; text-transform:uppercase; letter-spacing:.06em; }}
-td {{ color:#f5f7ff; font-size:14px; }}
-td.long {{ min-width:260px; color:#dfe7ff; }}
-.muted {{ color:var(--muted); }}
-.badge {{ display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(112,225,200,.16); color:var(--accent); font-weight:800; }}
-.notegrid {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }}
-.note {{ background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:16px; color:#dce7ff; line-height:1.55; }}
-.disclaimer {{ color:var(--muted); line-height:1.6; font-size:13px; }}
-@media (max-width:980px) {{ .grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} .notegrid {{ grid-template-columns:1fr; }} table {{ display:block; overflow-x:auto; }} }}
-@media (max-width:560px) {{ .grid {{ grid-template-columns:1fr; }} .hero {{ padding:20px; }} }}
+html {{ scroll-behavior:smooth; }}
+body {{ margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); background:
+  radial-gradient(circle at 6% -4%, rgba(85,119,255,.30), transparent 31%),
+  radial-gradient(circle at 92% 2%, rgba(110,231,200,.18), transparent 26%),
+  linear-gradient(180deg, var(--bg), var(--bg2) 48%, #050711); }}
+body:before {{ content:""; position:fixed; inset:0; pointer-events:none; opacity:.32; background-image:linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size:42px 42px; mask-image:linear-gradient(to bottom, black, transparent 78%); }}
+.container {{ width:min(1280px, calc(100% - 32px)); margin:0 auto; padding:30px 0 58px; }}
+.nav {{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; color:var(--muted); font-size:13px; }}
+.nav b {{ color:var(--text); letter-spacing:-.02em; }}
+.hero {{ position:relative; overflow:hidden; border:1px solid var(--border); border-radius:34px; padding:34px; background:linear-gradient(135deg, rgba(30,45,90,.94), rgba(10,16,33,.88)); box-shadow:0 28px 100px rgba(0,0,0,.42); }}
+.hero:after {{ content:""; position:absolute; right:-130px; bottom:-190px; width:440px; height:440px; background:radial-gradient(circle, rgba(145,184,255,.25), transparent 62%); }}
+.pill {{ display:inline-flex; align-items:center; gap:7px; padding:6px 11px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.07); color:#dfe8ff; font-weight:850; font-size:12px; white-space:nowrap; }}
+.pill.good {{ color:var(--green); background:rgba(110,231,200,.13); border-color:rgba(110,231,200,.25); }}
+.pill.watch {{ color:var(--gold); background:rgba(255,211,122,.13); border-color:rgba(255,211,122,.26); }}
+.pill.danger {{ color:var(--red); background:rgba(255,143,152,.13); border-color:rgba(255,143,152,.26); }}
+h1 {{ position:relative; z-index:1; margin:14px 0 10px; font-size:clamp(40px, 7vw, 74px); line-height:.92; letter-spacing:-.065em; max-width:900px; }}
+.subtitle {{ position:relative; z-index:1; max-width:860px; color:var(--muted); font-size:18px; line-height:1.62; margin:0; }}
+.grid {{ position:relative; z-index:1; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:14px; margin-top:26px; }}
+.card {{ min-height:112px; padding:17px; border-radius:22px; background:linear-gradient(145deg, rgba(255,255,255,.078), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.105); }}
+.card.wide {{ grid-column: span 2; }}
+.label {{ color:var(--muted); font-size:12px; letter-spacing:.08em; text-transform:uppercase; }}
+.value {{ margin-top:8px; color:var(--text); font-size:24px; font-weight:900; letter-spacing:-.03em; }}
+.hint {{ margin-top:5px; color:var(--muted); font-size:12px; line-height:1.35; }}
+section {{ margin-top:30px; }}
+.section-head {{ display:flex; align-items:end; justify-content:space-between; gap:14px; margin-bottom:13px; }}
+h2 {{ margin:0; font-size:26px; letter-spacing:-.035em; }}
+.section-sub {{ color:var(--muted); font-size:13px; }}
+.table-wrap {{ border:1px solid var(--border); border-radius:24px; overflow:auto; background:rgba(8,13,28,.58); box-shadow:0 20px 60px rgba(0,0,0,.20); }}
+table {{ width:100%; border-collapse:separate; border-spacing:0; min-width:850px; }}
+th,td {{ padding:12px 12px; border-bottom:1px solid rgba(255,255,255,.08); text-align:left; vertical-align:middle; }}
+th {{ position:sticky; top:0; z-index:2; color:#cbd8f8; background:rgba(17,26,52,.96); font-size:11px; text-transform:uppercase; letter-spacing:.075em; }}
+td {{ color:#f3f6ff; font-size:14px; }}
+td.long {{ min-width:300px; color:#dce6ff; line-height:1.45; }}
+tr:hover td {{ background:rgba(255,255,255,.035); }}
+.scorebar {{ position:relative; min-width:112px; height:28px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.08); }}
+.scorebar span {{ display:block; height:100%; background:linear-gradient(90deg, rgba(145,184,255,.55), rgba(110,231,200,.72)); }}
+.scorebar b {{ position:absolute; inset:0; display:grid; place-items:center; font-size:12px; color:var(--text); text-shadow:0 1px 8px rgba(0,0,0,.55); }}
+.notegrid {{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }}
+.note {{ border:1px solid var(--border); border-radius:22px; padding:18px; background:rgba(255,255,255,.055); color:#dce7ff; line-height:1.55; }}
+.note b {{ color:var(--text); }}
+.disclaimer {{ color:var(--muted); line-height:1.62; font-size:13px; margin-top:14px; }}
+.footer {{ margin-top:36px; padding:18px; color:var(--muted); border-top:1px solid rgba(255,255,255,.12); font-size:13px; }}
+@media (max-width:1050px) {{ .grid {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} .card.wide {{ grid-column:span 1; }} .notegrid {{ grid-template-columns:1fr 1fr; }} }}
+@media (max-width:640px) {{ .container {{ width:min(100% - 22px, 1280px); padding-top:14px; }} .hero {{ padding:24px; border-radius:26px; }} .grid {{ grid-template-columns:1fr; }} .notegrid {{ grid-template-columns:1fr; }} h1 {{ font-size:42px; }} }}
 </style>
 </head>
 <body>
 <div class="container">
+  <div class="nav"><b>AlphaForge Trader</b><span>Dashboard pubblica • dati informativi • aggiornamento automatico</span></div>
   <div class="hero">
-    <span class="badge">AlphaForge v3</span>
+    <span class="pill good">✦ AlphaForge v4 Premium UI</span>
     <h1>ETF & Stock Intelligence Dashboard</h1>
-    <p class="subtitle">Ranking ETF, allocazione, watchlist azioni, priority score, entry zone e scenari pratici in una dashboard pubblica semplice da leggere.</p>
+    <p class="subtitle">Ranking ETF, allocazione, watchlist azioni, priority score, entry zone, risk flag e scenari pratici in una dashboard più leggibile e premium.</p>
     <div class="grid">
-      <div class="card"><div class="label">Aggiornato</div><div class="value">{escape(now)}</div></div>
-      <div class="card"><div class="label">Stato update</div><div class="value {status_class}">{escape(str(status_text))}</div></div>
-      <div class="card"><div class="label">Miglior ETF</div><div class="value">{escape(str(best.get('Ticker', 'n/d')))}</div></div>
-      <div class="card"><div class="label">Top Watchlist</div><div class="value">{escape(str(best_watch.get('Ticker', 'n/d')))}</div></div>
-      <div class="card"><div class="label">Priorità</div><div class="value">{escape(str(best_priority.get('Ticker', 'n/d')))}</div></div>
+      <div class="card wide"><div class="label">Aggiornato</div><div class="value">{escape(now)}</div><div class="hint">Orario generazione dashboard</div></div>
+      <div class="card"><div class="label">Stato update</div><div class="value">{_badge(status_text)}</div><div class="hint">Pipeline dati</div></div>
+      <div class="card"><div class="label">Miglior ETF</div><div class="value">{escape(str(best.get('Ticker', 'n/d')))}</div><div class="hint">Score: {escape(format_number(best.get('Score Finale', ''), 1))}</div></div>
+      <div class="card"><div class="label">Top Watchlist</div><div class="value">{escape(str(best_watch.get('Ticker', 'n/d')))}</div><div class="hint">Score: {escape(format_number(best_watch.get('Score Finale', ''), 1))}</div></div>
+      <div class="card"><div class="label">Priorità</div><div class="value">{escape(str(best_priority.get('Ticker', 'n/d')))}</div><div class="hint">Media priority: {escape(str(avg_priority))}</div></div>
+      <div class="card"><div class="label">Copertura</div><div class="value">{_safe_count(ranking)+_safe_count(watchlist)}</div><div class="hint">Strumenti monitorati</div></div>
     </div>
   </div>
-  <section><h2>Priorità operative AlphaForge</h2>{compact_table(insights if insights is not None else pd.DataFrame(), ['Ticker','Tipo','Score Finale','Priority Score','Azione Suggerita','Entry Zone','Risk Flag','Trigger Monitoraggio'], 12)}</section>
-  <section><h2>Allocazione suggerita</h2>{compact_table(allocation, ['Ticker','Nome ETF','Categoria','Peso Target %','Importo su 1000 EUR','Score Finale','Stato'], 10)}</section>
-  <section><h2>Top ETF Ranking</h2>{compact_table(ranking, ['Ticker','Nome ETF','Categoria','Tema/Area','Score Finale','Priority Score','Stato','Entry Zone','Rendimento 12M %','Volatilità %','Max Drawdown %','Sharpe'], 12)}</section>
-  <section><h2>Watchlist azioni e strumenti</h2>{compact_table(watchlist if watchlist is not None else pd.DataFrame(), ['Ticker','Nome','Tipo','Score Finale','Priority Score','Azione Suggerita','Trend','Entry Zone','P/E','Note AI'], 10)}</section>
-  <section><h2>Lettura prudente</h2><div class="notegrid"><div class="note"><b>Priority Score</b><br>Combina score, entry quality, rischio e momentum. Serve per ordinare la watchlist, non per comprare automaticamente.</div><div class="note"><b>Entry Zone</b><br>Aiuta a capire se il prezzo è costruttivo, esteso o da attendere. Va sempre confermata con news e mercato.</div><div class="note"><b>Risk Flag</b><br>Segnala volatilità/drawdown elevati e suggerisce size più prudente.</div></div><p class="disclaimer">Gli score sono indicatori informativi e non sono segnali automatici di acquisto o vendita. Prima di qualsiasi operazione verificare costi, spread, fiscalità, liquidità, dimensione posizione, rischio cambio e coerenza con il proprio profilo.</p></section>
+
+  <section>
+    <div class="section-head"><div><h2>Priorità operative AlphaForge</h2><div class="section-sub">Cosa monitorare prima, con azione pratica e rischio visibile.</div></div></div>
+    {compact_table(insights if insights is not None else pd.DataFrame(), ['Ticker','Tipo','Score Finale','Priority Score','Azione Suggerita','Entry Zone','Risk Flag','Trigger Monitoraggio'], 12)}
+  </section>
+
+  <section>
+    <div class="section-head"><div><h2>Allocazione suggerita</h2><div class="section-sub">Modello indicativo su nuovi 1000 EUR, non ordine operativo.</div></div></div>
+    {compact_table(allocation, ['Ticker','Nome ETF','Categoria','Peso Target %','Importo su 1000 EUR','Score Finale','Stato'], 10)}
+  </section>
+
+  <section>
+    <div class="section-head"><div><h2>Top ETF Ranking</h2><div class="section-sub">Score finale, priorità, entry zone e rischio in una vista compatta.</div></div></div>
+    {compact_table(ranking, ['Ticker','Nome ETF','Categoria','Tema/Area','Score Finale','Priority Score','Stato','Entry Zone','Rendimento 12M %','Volatilità %','Max Drawdown %','Sharpe'], 12)}
+  </section>
+
+  <section>
+    <div class="section-head"><div><h2>Watchlist azioni e strumenti</h2><div class="section-sub">Titoli e strumenti da seguire con score, azione suggerita e note sintetiche.</div></div></div>
+    {compact_table(watchlist if watchlist is not None else pd.DataFrame(), ['Ticker','Nome','Tipo','Score Finale','Priority Score','Azione Suggerita','Trend','Entry Zone','P/E','Note AI'], 10)}
+  </section>
+
+  <section>
+    <div class="section-head"><div><h2>Lettura prudente</h2><div class="section-sub">Come interpretare gli indicatori senza trasformarli in segnali automatici.</div></div></div>
+    <div class="notegrid">
+      <div class="note"><b>Priority Score</b><br>Ordina gli strumenti da monitorare combinando score, rischio, momentum ed entry quality.</div>
+      <div class="note"><b>Entry Zone</b><br>Aiuta a distinguere prezzo costruttivo, esteso o da attendere su pullback.</div>
+      <div class="note"><b>Risk Flag</b><br>Rende visibile quando volatilità e drawdown richiedono size più prudente.</div>
+      <div class="note"><b>Azione suggerita</b><br>È una lettura pratica per watchlist, non un ordine di acquisto o vendita.</div>
+    </div>
+    <p class="disclaimer">Gli score sono indicatori informativi. Prima di qualsiasi operazione verificare costi, spread, fiscalità, liquidità, rischio cambio, dimensione posizione, notizie, trimestrali e coerenza con il proprio profilo.</p>
+  </section>
+  <div class="footer">AlphaForge v4 Premium UI • Dashboard statica generata automaticamente da GitHub Actions.</div>
 </div>
 </body>
 </html>"""

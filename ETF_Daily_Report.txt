@@ -1,18 +1,18 @@
-AlphaForge Intelligence v3 - Daily Report
-Aggiornato il 09/06/2026 12:19
+AlphaForge Intelligence v4 - Daily Report
+Aggiornato il 09/06/2026 12:35
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
-Miglior ETF: EIMI.MI - score 79.3
-Stato: Buy Watchlist
-Entry zone: Constructive entry zone
-Nota: ETF forte e in trend favorevole; valutare solo con coerenza di portafoglio.
+Miglior ETF: XDEV.MI - score 79.3
+Stato: Accumulate Carefully
+Entry zone: Extended - wait pullback
+Nota: ETF interessante ma ingresso non ideale: meglio attendere pullback o conferma.
 
 Top ETF:
-- EIMI.MI: score 79.3, priority 79.6, stato Buy Watchlist
-- XDEV.MI: score 79.2, priority 65.6, stato Accumulate Carefully
+- XDEV.MI: score 79.3, priority 66.1, stato Accumulate Carefully
+- EIMI.MI: score 79.3, priority 79.7, stato Buy Watchlist
 - VWCE.DE: score 76.4, priority 76.9, stato Accumulate Carefully
-- SWDA.MI: score 75.4, priority 76.0, stato Accumulate Carefully
+- SWDA.MI: score 75.3, priority 75.9, stato Accumulate Carefully
 - SXR8.DE: score 74.8, priority 75.3, stato Accumulate Carefully
 
 Allocazione suggerita su 1000 EUR:
@@ -33,10 +33,10 @@ Watchlist azioni/strumenti:
 - MSFT: score 65.5, action Ridurre size / solo monitoraggio
 
 Priorità AlphaForge:
-- EIMI.MI: priority 79.6, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
+- EIMI.MI: priority 79.7, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
 - GOOGL: priority 77.9, azione Ridurre size / solo monitoraggio, trigger prezzo vicino a MA50: monitorare conferma
 - VWCE.DE: priority 76.9, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
-- SWDA.MI: priority 76.0, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
+- SWDA.MI: priority 75.9, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
 - EXSA.DE: priority 75.4, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
 
 Usare sempre size, diversificazione, costi, fiscalità, liquidità e profilo personale come filtri finali.
