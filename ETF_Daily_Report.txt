@@ -1,14 +1,14 @@
 AlphaForge Intelligence - Daily Report
-Aggiornato il 09/06/2026 10:46
+Aggiornato il 09/06/2026 10:47
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
-Miglior ETF: EIMI.MI - score 79.3
+Miglior ETF: EIMI.MI - score 79.4
 Stato: Buy Watchlist
 Nota: ETF forte e in trend favorevole; valutare solo con coerenza di portafoglio.
 
 Top ETF:
-- EIMI.MI: score 79.3, stato Buy Watchlist
+- EIMI.MI: score 79.4, stato Buy Watchlist
 - XDEV.MI: score 79.2, stato Accumulate Carefully
 - VWCE.DE: score 76.4, stato Accumulate Carefully
 - SWDA.MI: score 75.5, stato Accumulate Carefully
