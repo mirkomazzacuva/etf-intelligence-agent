@@ -1,0 +1,62 @@
+name: Apply cleanup patch
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-cleanup-patch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure git
+        run: |
+          git config user.name "actions-user"
+          git config user.email "actions@github.com"
+
+      - name: Apply cleanup patch
+        run: |
+          if [ ! -f alpha_forge_repo_cleanup_patch.zip ]; then
+            echo "ERROR: alpha_forge_repo_cleanup_patch.zip not found in repository root"
+            exit 1
+          fi
+
+          mkdir -p /tmp/cleanup_patch
+          unzip -o alpha_forge_repo_cleanup_patch.zip -d /tmp/cleanup_patch
+
+          shopt -s dotglob nullglob
+
+          if [ -d "/tmp/cleanup_patch/alpha_forge_repo_cleanup_patch" ]; then
+            cp -a /tmp/cleanup_patch/alpha_forge_repo_cleanup_patch/. .
+          else
+            cp -a /tmp/cleanup_patch/. .
+          fi
+
+          rm -f ETF_AI_AGENT_FREE.zip
+          rm -f alpha_forge_auto_updates.zip
+          rm -f alpha_forge_repo_cleanup_patch.zip
+          rm -f beta_test_app.cpython-313.pyc
+          find . -name "*.pyc" -delete
+          rm -rf logs
+          rm -rf __pycache__
+          rm -rf .pytest_cache
+
+          rm -f .github/workflows/apply_cleanup_patch.yml
+
+          git status --short
+
+      - name: Commit cleanup
+        run: |
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Apply cleanup patch"
+            git push
+          fi
