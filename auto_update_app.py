@@ -12,6 +12,7 @@ DATA_SCRIPTS = [
     "update_etf_data_v3.py",
     "allocation_engine.py",
     "generate_watchlist.py",
+    "generate_insights.py",
 ]
 
 DASHBOARD_SCRIPT = "generate_dashboard.py"

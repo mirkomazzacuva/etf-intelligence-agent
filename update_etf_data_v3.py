@@ -9,6 +9,8 @@ from core.data_provider import fetch_instrument
 from core.etf_scoring import score_etf
 from core.metrics import calculate_price_metrics
 from core.report_engine import build_text_report
+from core.signal_engine import calculate_signal_levels, build_scenarios
+from core.insight_engine import action_label, priority_score
 
 
 def load_etf_universe() -> pd.DataFrame:
@@ -46,6 +48,7 @@ def update_etf_ranking() -> pd.DataFrame:
         metrics = calculate_price_metrics(data.prices)
         base_dict = base.to_dict()
         scored = score_etf(base_dict, metrics)
+        signals = calculate_signal_levels(data.prices, metrics)
         long_name = data.info.get("longName") or data.info.get("shortName") or base_dict.get("Nome ETF") or ticker
         row = {
             **base_dict,
@@ -53,8 +56,12 @@ def update_etf_ranking() -> pd.DataFrame:
             "Nome ETF": long_name,
             **metrics,
             **scored,
+            **signals,
             "Errore Dati": data.error or "",
         }
+        row["Priority Score"] = priority_score(row)
+        row["Azione Suggerita"] = action_label(row)
+        row.update(build_scenarios(row))
         rows.append(row)
     ranking = pd.DataFrame(rows)
     if ranking.empty:
@@ -62,8 +69,8 @@ def update_etf_ranking() -> pd.DataFrame:
     ranking = ranking.sort_values("Score Finale", ascending=False, na_position="last")
     preferred = [
         "Ticker", "Nome ETF", "Categoria", "Tema/Area", "Current Price", "Score Finale", "Stato",
-        "ETF Quality Score", "ETF Momentum Score", "ETF Risk Score", "ETF Entry Score",
-        "Trend", "Rendimento 1M %", "Rendimento 3M %", "Rendimento 6M %", "Rendimento 12M %",
+        "ETF Quality Score", "ETF Momentum Score", "ETF Risk Score", "ETF Entry Score", "Priority Score",
+        "Trend", "Entry Zone", "Risk Flag", "Azione Suggerita", "Trigger Monitoraggio", "Rendimento 1M %", "Rendimento 3M %", "Rendimento 6M %", "Rendimento 12M %",
         "CAGR %", "Volatilità %", "Max Drawdown %", "Sharpe", "MA50", "MA200", "Note AI", "Errore Dati",
     ]
     ordered = [col for col in preferred if col in ranking.columns] + [col for col in ranking.columns if col not in preferred]

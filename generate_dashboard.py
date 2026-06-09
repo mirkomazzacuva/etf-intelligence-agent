@@ -7,6 +7,7 @@ import pandas as pd
 from core.config import (
     ALLOCATION_FILE,
     DASHBOARD_FILE,
+    INSIGHTS_OUTPUT_CSV,
     RANKING_FILE,
     REPORT_FILE,
     STATUS_FILE,
@@ -30,9 +31,10 @@ def generate_dashboard() -> None:
     ranking = pd.read_excel(RANKING_FILE)
     allocation = pd.read_excel(ALLOCATION_FILE, sheet_name="Suggested_Allocation")
     watchlist = pd.read_csv(WATCHLIST_OUTPUT_CSV) if WATCHLIST_OUTPUT_CSV.exists() else pd.DataFrame()
+    insights = pd.read_csv(INSIGHTS_OUTPUT_CSV) if INSIGHTS_OUTPUT_CSV.exists() else pd.DataFrame()
     status = read_status()
-    REPORT_FILE.write_text(build_text_report(ranking, allocation, watchlist), encoding="utf-8")
-    render_dashboard_html(ranking, allocation, status, watchlist, DASHBOARD_FILE)
+    REPORT_FILE.write_text(build_text_report(ranking, allocation, watchlist, insights), encoding="utf-8")
+    render_dashboard_html(ranking, allocation, status, watchlist, DASHBOARD_FILE, insights)
     print(f"Dashboard generata: {DASHBOARD_FILE}")
 
 

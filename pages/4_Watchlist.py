@@ -24,7 +24,7 @@ if st.button("Aggiorna watchlist ora", type="primary"):
 if WATCHLIST_OUTPUT_CSV.exists():
     out = pd.read_csv(WATCHLIST_OUTPUT_CSV).sort_values("Score Finale", ascending=False, na_position="last")
     st.subheader("Risultati")
-    cols = ["Ticker", "Nome", "Tipo", "Score Finale", "Stato", "Trend", "Rendimento 3M %", "Rendimento 12M %", "P/E", "Forward P/E", "Note AI"]
+    cols = ["Ticker", "Nome", "Tipo", "Score Finale", "Priority Score", "Azione Suggerita", "Stato", "Trend", "Entry Zone", "Risk Flag", "Rendimento 3M %", "Rendimento 12M %", "P/E", "Forward P/E", "Trigger Monitoraggio", "Note AI"]
     st.dataframe(out[[c for c in cols if c in out.columns]], use_container_width=True, hide_index=True)
 else:
     st.info("Output watchlist non ancora generato.")

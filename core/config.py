@@ -11,6 +11,8 @@ DASHBOARD_FILE = Path("index.html")
 WATCHLIST_FILE = Path("data/watchlist.csv")
 WATCHLIST_OUTPUT_XLSX = Path("AlphaForge_Watchlist.xlsx")
 WATCHLIST_OUTPUT_CSV = Path("AlphaForge_Watchlist.csv")
+INSIGHTS_OUTPUT_XLSX = Path("AlphaForge_Insights.xlsx")
+INSIGHTS_OUTPUT_CSV = Path("AlphaForge_Insights.csv")
 
 DEFAULT_ETF_UNIVERSE = [
     {"Ticker": "SWDA.MI", "Nome ETF": "iShares Core MSCI World", "Categoria": "Core", "Tema/Area": "Azionario globale sviluppato"},
@@ -28,6 +30,13 @@ DEFAULT_ETF_UNIVERSE = [
     {"Ticker": "SMH", "Nome ETF": "VanEck Semiconductor", "Categoria": "Thematic", "Tema/Area": "Semiconduttori"},
     {"Ticker": "INRG.MI", "Nome ETF": "iShares Global Clean Energy", "Categoria": "Thematic", "Tema/Area": "Energia pulita"},
 ]
+
+DEFAULT_MODEL_BASKETS = {
+    "AI & Semiconductors": ["NVDA", "AMD", "ASML.AS", "SMH", "STM.MI"],
+    "Core ETF": ["SWDA.MI", "VWCE.DE", "SXR8.DE", "EIMI.MI"],
+    "Defensive": ["EUNA.MI", "SGLD.MI", "MVOL.MI"],
+    "Big Tech": ["AAPL", "MSFT", "GOOGL", "AMZN", "META"],
+}
 
 DEFAULT_STOCK_WATCHLIST = [
     {"Ticker": "AAPL", "Nome": "Apple", "Tipo": "Stock", "Area": "USA / Technology"},

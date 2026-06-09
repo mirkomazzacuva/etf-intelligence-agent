@@ -1,8 +1,8 @@
 {
   "status": "success",
   "message": "Aggiornamento AlphaForge completato",
-  "started_at": "2026-06-09T10:47:15+00:00",
-  "finished_at": "2026-06-09T10:47:34+00:00",
+  "started_at": "2026-06-09T12:19:03+00:00",
+  "finished_at": "2026-06-09T12:19:19+00:00",
   "details": [
     {
       "script": "update_etf_data_v3.py",
@@ -20,7 +20,13 @@
       "script": "generate_watchlist.py",
       "returncode": 0,
       "stdout_tail": "Watchlist aggiornata: 9 strumenti\n",
-      "stderr_tail": "$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n"
+      "stderr_tail": "$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n"
+    },
+    {
+      "script": "generate_insights.py",
+      "returncode": 0,
+      "stdout_tail": "Insights generati: 23 strumenti\n",
+      "stderr_tail": ""
     },
     {
       "script": "generate_dashboard.py",

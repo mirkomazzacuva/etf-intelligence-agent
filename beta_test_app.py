@@ -19,6 +19,7 @@ REQUIRED_FILES = [
     "allocation_engine.py",
     "generate_dashboard.py",
     "generate_watchlist.py",
+    "generate_insights.py",
     "requirements.txt",
     ".github/workflows/etf_agent.yml",
     ".github/workflows/beta_test_app.yml",
@@ -31,6 +32,10 @@ OUTPUT_FILES = [
     "ETF_Daily_Report.txt",
     "index.html",
     "AUTO_UPDATE_STATUS.json",
+    "AlphaForge_Watchlist.csv",
+    "AlphaForge_Watchlist.xlsx",
+    "AlphaForge_Insights.csv",
+    "AlphaForge_Insights.xlsx",
 ]
 
 CORE_MODULES = [
@@ -41,6 +46,9 @@ CORE_MODULES = [
     "core.stock_scoring",
     "core.compare_engine",
     "core.watchlist_engine",
+    "core.signal_engine",
+    "core.insight_engine",
+    "core.portfolio_engine",
     "core.report_engine",
 ]
 
@@ -145,6 +153,17 @@ class BetaTester:
                     self.ok("Excel allocazione", f"OK, {len(alloc)} righe. Colonna importo: {amount_col}")
             except Exception as exc:  # noqa: BLE001
                 self.fail("Excel allocazione", str(exc))
+
+        if Path("AlphaForge_Insights.csv").exists():
+            try:
+                insights = pd.read_csv("AlphaForge_Insights.csv")
+                missing = [col for col in ["Ticker", "Priority Score", "Azione Suggerita", "Entry Zone", "Risk Flag"] if col not in insights.columns]
+                if missing:
+                    self.fail("Insights", f"Mancano colonne: {', '.join(missing)}")
+                else:
+                    self.ok("Insights", f"OK, {len(insights)} righe")
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Insights", str(exc))
 
         if Path("AUTO_UPDATE_STATUS.json").exists():
             try:

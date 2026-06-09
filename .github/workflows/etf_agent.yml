@@ -47,6 +47,8 @@ jobs:
           git add index.html || true
           git add AlphaForge_Watchlist.xlsx || true
           git add AlphaForge_Watchlist.csv || true
+          git add AlphaForge_Insights.xlsx || true
+          git add AlphaForge_Insights.csv || true
           git add data/watchlist.csv || true
 
           if git diff --cached --quiet; then
