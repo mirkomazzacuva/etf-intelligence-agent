@@ -63,7 +63,16 @@ EXPECTED_ALLOCATION_COLUMNS = [
     "Nome ETF",
     "Categoria",
     "Peso Target %",
+]
+
+# L'allocation engine puo' chiamare la colonna importo in modi diversi
+# a seconda della versione dell'app. Il beta test deve verificare la
+# sostanza del dato, non fallire per una semplice etichetta.
+ACCEPTED_ALLOCATION_AMOUNT_COLUMNS = [
     "Importo Indicativo EUR",
+    "Importo su 1000 EUR",
+    "Importo €",
+    "Importo EUR",
 ]
 
 
@@ -197,12 +206,23 @@ def check_excel_outputs() -> list[CheckResult]:
             allocation = pd.read_excel(allocation_path, sheet_name="Suggested_Allocation")
             summary = pd.read_excel(allocation_path, sheet_name="Summary")
             missing = [col for col in EXPECTED_ALLOCATION_COLUMNS if col not in allocation.columns]
+            amount_columns_found = [
+                col for col in ACCEPTED_ALLOCATION_AMOUNT_COLUMNS if col in allocation.columns
+            ]
             if missing:
                 results.append(
                     fail(
                         "Excel allocazione",
-                        "File leggibile ma mancano colonne attese",
+                        "File leggibile ma mancano colonne strutturali attese",
                         ", ".join(missing),
+                    )
+                )
+            elif not amount_columns_found:
+                results.append(
+                    fail(
+                        "Excel allocazione",
+                        "File leggibile ma manca una colonna importo riconosciuta",
+                        "Colonne accettate: " + ", ".join(ACCEPTED_ALLOCATION_AMOUNT_COLUMNS),
                     )
                 )
             elif allocation.empty:
@@ -210,7 +230,13 @@ def check_excel_outputs() -> list[CheckResult]:
             elif summary.empty:
                 results.append(fail("Excel allocazione", "Sheet Summary vuoto"))
             else:
-                results.append(ok("Excel allocazione", f"Leggibile, {len(allocation)} righe"))
+                results.append(
+                    ok(
+                        "Excel allocazione",
+                        f"Leggibile, {len(allocation)} righe",
+                        f"Colonna importo: {amount_columns_found[0]}",
+                    )
+                )
         except Exception as exc:  # noqa: BLE001
             results.append(fail("Excel allocazione", "File non leggibile", str(exc)))
     else:

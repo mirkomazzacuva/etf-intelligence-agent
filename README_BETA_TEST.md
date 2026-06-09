@@ -65,3 +65,10 @@ Dentro trovi:
 - `BETA_TEST_STATUS.json`
 - `streamlit_smoke.log`
 
+
+
+## Aggiornamento v2
+
+Questa versione rende il controllo dell'Excel di allocazione piu' robusto: accetta sia `Importo Indicativo EUR` sia `Importo su 1000 EUR`, perche' alcune versioni dell'allocation engine usano il secondo nome.
+
+Il workflow inoltre esegue una sola modalita' per volta: test rapido oppure test completo, evitando il doppio run quando scegli `run_full_update = true`.
