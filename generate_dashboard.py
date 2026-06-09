@@ -1,236 +1,118 @@
-import pandas as pd
+from __future__ import annotations
+
 from datetime import datetime
+from html import escape
+from pathlib import Path
+from zoneinfo import ZoneInfo
 
-RANKING_FILE = "ETF_Intelligence_Agent_UPDATED.xlsx"
-ALLOCATION_FILE = "ETF_Allocation_Model.xlsx"
-OUTPUT_FILE = "index.html"
+import pandas as pd
 
-ranking = pd.read_excel(RANKING_FILE)
-ranking = ranking.sort_values("Score Finale", ascending=False, na_position="last")
+APP_TZ = ZoneInfo("Europe/Rome")
+RANKING_FILE = Path("ETF_Intelligence_Agent_UPDATED.xlsx")
+ALLOCATION_FILE = Path("ETF_Allocation_Model.xlsx")
+OUTPUT_FILE = Path("index.html")
 
-allocation = pd.read_excel(ALLOCATION_FILE, sheet_name="Suggested_Allocation")
-summary = pd.read_excel(ALLOCATION_FILE, sheet_name="Summary")
 
-top = ranking.head(20)
-best = top.iloc[0]
-
-def safe(value):
+def safe(value: object) -> str:
     if pd.isna(value):
         return ""
-    return str(value)
+    return escape(str(value))
 
-def get_summary_value(key):
+
+def get_summary_value(summary: pd.DataFrame, key: str) -> str:
     row = summary[summary["Parametro"] == key]
     if len(row) == 0:
         return ""
-    return row.iloc[0]["Valore"]
+    return safe(row.iloc[0]["Valore"])
 
-market_regime = get_summary_value("Market Regime")
 
-ranking_rows = ""
+def badge(status: object) -> str:
+    text = safe(status)
+    return f'<span class="badge">{text}</span>'
 
-for _, r in top.iterrows():
-    ranking_rows += f"""
-    <tr>
-        <td>{safe(r.get("Ticker"))}</td>
-        <td>{safe(r.get("Nome ETF"))}</td>
-        <td>{safe(r.get("Tema/Area"))}</td>
-        <td><strong>{safe(r.get("Score Finale"))}</strong></td>
-        <td>{safe(r.get("Stato"))}</td>
-        <td>{safe(r.get("Rendimento 12M %"))}%</td>
-        <td>{safe(r.get("Volatilità %"))}%</td>
-        <td>{safe(r.get("Max Drawdown %"))}%</td>
-        <td>{safe(r.get("Note AI"))}</td>
-    </tr>
-    """
 
-allocation_rows = ""
+def table_rows(df: pd.DataFrame, columns: list[str]) -> str:
+    rows: list[str] = []
+    for _, row in df.iterrows():
+        cells = "".join(f"<td>{safe(row.get(col, ''))}</td>" for col in columns)
+        rows.append(f"<tr>{cells}</tr>")
+    return "\n".join(rows)
 
-for _, r in allocation.iterrows():
-    allocation_rows += f"""
-    <tr>
-        <td>{safe(r.get("Ticker"))}</td>
-        <td>{safe(r.get("Nome ETF"))}</td>
-        <td>{safe(r.get("Categoria"))}</td>
-        <td>{safe(r.get("Tema/Area"))}</td>
-        <td><strong>{safe(r.get("Peso Target %"))}%</strong></td>
-        <td>{safe(r.get("Importo su 1000 EUR"))} €</td>
-        <td>{safe(r.get("Score Finale"))}</td>
-        <td>{safe(r.get("Note AI"))}</td>
-    </tr>
-    """
 
-html = f"""
-<!DOCTYPE html>
+def main() -> None:
+    ranking = pd.read_excel(RANKING_FILE).sort_values("Score Finale", ascending=False, na_position="last")
+    allocation = pd.read_excel(ALLOCATION_FILE, sheet_name="Suggested_Allocation")
+    summary = pd.read_excel(ALLOCATION_FILE, sheet_name="Summary")
+
+    top = ranking.head(20)
+    best = top.iloc[0] if not top.empty else {}
+    market_regime = get_summary_value(summary, "Market Regime")
+    updated_at = datetime.now(APP_TZ).strftime("%d/%m/%Y %H:%M")
+
+    allocation_cols = ["Ticker", "Nome ETF", "Categoria", "Tema/Area", "Peso Target %", "Importo su 1000 EUR", "Score Finale", "Note AI"]
+    ranking_cols = ["Ticker", "Nome ETF", "Tema/Area", "Score Finale", "Stato", "Rendimento 12M %", "Volatilità %", "Max Drawdown %", "Note AI"]
+
+    html = f"""
+<!doctype html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ETF Intelligence Dashboard</title>
-
-<style>
-body {{
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-    padding: 20px;
-    color: #111827;
-}}
-
-h1 {{
-    margin-bottom: 5px;
-}}
-
-.subtitle {{
-    color: #6b7280;
-    margin-bottom: 25px;
-}}
-
-.grid {{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
-}}
-
-.card {{
-    background: white;
-    padding: 18px;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
-}}
-
-.badge {{
-    display: inline-block;
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: #e0f2fe;
-    font-weight: bold;
-}}
-
-.badge-green {{
-    background: #dcfce7;
-}}
-
-.badge-yellow {{
-    background: #fef9c3;
-}}
-
-.badge-red {{
-    background: #fee2e2;
-}}
-
-table {{
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-}}
-
-th, td {{
-    padding: 10px;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: left;
-    font-size: 14px;
-    vertical-align: top;
-}}
-
-th {{
-    background: #111827;
-    color: white;
-}}
-
-tr:hover {{
-    background: #f9fafb;
-}}
-
-.footer {{
-    margin-top: 25px;
-    color: #6b7280;
-    font-size: 13px;
-}}
-
-@media screen and (max-width: 768px) {{
-    body {{
-        padding: 10px;
-    }}
-
-    table {{
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }}
-}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ETF Intelligence Dashboard</title>
+  <style>
+    body {{ font-family: Inter, Arial, sans-serif; margin: 0; background: #0f172a; color: #e5e7eb; }}
+    main {{ max-width: 1180px; margin: 0 auto; padding: 32px 18px 60px; }}
+    .hero {{ background: linear-gradient(135deg, #111827, #1e293b); border: 1px solid #334155; border-radius: 24px; padding: 28px; margin-bottom: 22px; }}
+    h1 {{ margin: 0 0 8px; font-size: 34px; }}
+    h2 {{ margin-top: 34px; }}
+    .cards {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 18px; }}
+    .card {{ background: #111827; border: 1px solid #334155; border-radius: 18px; padding: 18px; }}
+    .label {{ color: #94a3b8; font-size: 13px; margin-bottom: 8px; }}
+    .value {{ font-size: 22px; font-weight: 750; }}
+    table {{ width: 100%; border-collapse: collapse; margin-top: 12px; background: #111827; border-radius: 16px; overflow: hidden; }}
+    th, td {{ border-bottom: 1px solid #263449; padding: 11px 10px; text-align: left; vertical-align: top; }}
+    th {{ color: #cbd5e1; background: #1e293b; font-size: 13px; }}
+    td {{ color: #e5e7eb; font-size: 13px; }}
+    .muted {{ color: #94a3b8; }}
+    .badge {{ display: inline-block; padding: 5px 9px; border-radius: 999px; background: #1d4ed8; color: white; font-size: 12px; }}
+    .disclaimer {{ margin-top: 28px; padding: 16px; border-radius: 14px; background: #1e293b; color: #cbd5e1; }}
+  </style>
 </head>
-
 <body>
-
-<h1>ETF Intelligence Dashboard</h1>
-<div class="subtitle">
-Aggiornato il {datetime.now().strftime("%d/%m/%Y %H:%M")}
-</div>
-
-<div class="grid">
-    <div class="card">
-        <h2>Market Regime</h2>
-        <p class="badge">{market_regime}</p>
+<main>
+  <section class="hero">
+    <div class="muted">Aggiornato il {safe(updated_at)}</div>
+    <h1>ETF Intelligence Dashboard</h1>
+    <p class="muted">Ranking ETF, allocazione indicativa e lettura prudente del rischio.</p>
+    <div class="cards">
+      <div class="card"><div class="label">Market Regime</div><div class="value">{market_regime}</div></div>
+      <div class="card"><div class="label">Miglior ETF</div><div class="value">{safe(best.get('Ticker', ''))}</div></div>
+      <div class="card"><div class="label">Score migliore</div><div class="value">{safe(best.get('Score Finale', ''))}</div></div>
+      <div class="card"><div class="label">Stato</div><div class="value">{badge(best.get('Stato', ''))}</div></div>
     </div>
+  </section>
 
-    <div class="card">
-        <h2>Miglior ETF oggi</h2>
-        <p class="badge badge-green">
-            {safe(best.get("Ticker"))} - {safe(best.get("Nome ETF"))} | Score {safe(best.get("Score Finale"))}
-        </p>
-        <p>{safe(best.get("Note AI"))}</p>
-    </div>
-</div>
+  <h2>Allocazione suggerita per nuovi 1000 EUR</h2>
+  <p class="muted">Non è una raccomandazione automatica di acquisto: serve per capire distribuzione, rischio e ruolo degli ETF.</p>
+  <table>
+    <thead><tr>{''.join(f'<th>{safe(col)}</th>' for col in allocation_cols)}</tr></thead>
+    <tbody>{table_rows(allocation, allocation_cols)}</tbody>
+  </table>
 
-<div class="card">
-    <h2>Allocazione suggerita per nuovi 1000 €</h2>
-    <p>
-        Questa non è una raccomandazione automatica di acquisto, ma una proposta di distribuzione basata su score, categoria, rischio e contesto.
-    </p>
-    <table>
-        <tr>
-            <th>Ticker</th>
-            <th>ETF</th>
-            <th>Categoria</th>
-            <th>Tema</th>
-            <th>Peso</th>
-            <th>Importo</th>
-            <th>Score</th>
-            <th>Nota AI</th>
-        </tr>
-        {allocation_rows}
-    </table>
-</div>
+  <h2>Top ETF Ranking</h2>
+  <table>
+    <thead><tr>{''.join(f'<th>{safe(col)}</th>' for col in ranking_cols)}</tr></thead>
+    <tbody>{table_rows(top, ranking_cols)}</tbody>
+  </table>
 
-<div class="card">
-    <h2>Top ETF Ranking</h2>
-    <table>
-        <tr>
-            <th>Ticker</th>
-            <th>ETF</th>
-            <th>Tema</th>
-            <th>Score</th>
-            <th>Stato</th>
-            <th>12M</th>
-            <th>Volatilità</th>
-            <th>Drawdown</th>
-            <th>Nota AI</th>
-        </tr>
-        {ranking_rows}
-    </table>
-</div>
-
-<div class="footer">
-    Report informativo. Non costituisce consulenza finanziaria personalizzata.
-</div>
-
+  <div class="disclaimer">Report informativo. Non costituisce consulenza finanziaria personalizzata.</div>
+</main>
 </body>
 </html>
 """
+    OUTPUT_FILE.write_text(html, encoding="utf-8")
+    print("Dashboard creata:", OUTPUT_FILE)
 
-with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-    f.write(html)
 
-print("Dashboard creata:", OUTPUT_FILE)
+if __name__ == "__main__":
+    main()
