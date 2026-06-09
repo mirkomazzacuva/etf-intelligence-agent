@@ -13,6 +13,9 @@ WATCHLIST_OUTPUT_XLSX = Path("AlphaForge_Watchlist.xlsx")
 WATCHLIST_OUTPUT_CSV = Path("AlphaForge_Watchlist.csv")
 INSIGHTS_OUTPUT_XLSX = Path("AlphaForge_Insights.xlsx")
 INSIGHTS_OUTPUT_CSV = Path("AlphaForge_Insights.csv")
+ACTION_PLAN_OUTPUT_XLSX = Path("AlphaForge_Action_Plan.xlsx")
+ACTION_PLAN_OUTPUT_CSV = Path("AlphaForge_Action_Plan.csv")
+PORTFOLIO_TEMPLATE_FILE = Path("data/portfolio_template.csv")
 
 DEFAULT_ETF_UNIVERSE = [
     {"Ticker": "SWDA.MI", "Nome ETF": "iShares Core MSCI World", "Categoria": "Core", "Tema/Area": "Azionario globale sviluppato"},

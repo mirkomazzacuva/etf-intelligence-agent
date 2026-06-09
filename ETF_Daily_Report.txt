@@ -1,19 +1,21 @@
-AlphaForge Intelligence v4 - Daily Report
-Aggiornato il 09/06/2026 12:41
+AlphaForge Intelligence v5 - Action & Portfolio Report
+Aggiornato il 09/06/2026 12:55
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
-Miglior ETF: XDEV.MI - score 79.3
-Stato: Accumulate Carefully
-Entry zone: Extended - wait pullback
-Nota: ETF interessante ma ingresso non ideale: meglio attendere pullback o conferma.
+Cosa fare adesso:
+- AMZN: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
+- RBOT.MI: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
+- MSFT: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
+- INRG.MI: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
+- META: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
+- TSLA: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
+- SMH: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
+- WCLD.MI: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
 
-Top ETF:
-- XDEV.MI: score 79.3, priority 66.1, stato Accumulate Carefully
-- EIMI.MI: score 79.3, priority 79.8, stato Buy Watchlist
-- VWCE.DE: score 76.4, priority 76.9, stato Accumulate Carefully
-- SWDA.MI: score 75.3, priority 75.9, stato Accumulate Carefully
-- SXR8.DE: score 74.8, priority 75.3, stato Accumulate Carefully
+Miglior ETF: EIMI.MI - score 79.4
+Stato: Buy Watchlist
+Entry zone: Constructive entry zone
 
 Allocazione suggerita su 1000 EUR:
 - EIMI.MI: 18.33% - 183.3 EUR
@@ -32,11 +34,6 @@ Watchlist azioni/strumenti:
 - AMZN: score 66.8, action Ridurre size / solo monitoraggio
 - MSFT: score 65.5, action Ridurre size / solo monitoraggio
 
-Priorità AlphaForge:
-- EIMI.MI: priority 79.8, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
-- GOOGL: priority 77.9, azione Ridurre size / solo monitoraggio, trigger prezzo vicino a MA50: monitorare conferma
-- VWCE.DE: priority 76.9, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
-- SWDA.MI: priority 75.9, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
-- EXSA.DE: priority 75.4, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
+Per il portafoglio personale usa la pagina Streamlit 'Portafoglio': carica CSV/XLSX e confronta peso, score e rischio delle tue posizioni.
 
 Usare sempre size, diversificazione, costi, fiscalità, liquidità e profilo personale come filtri finali.

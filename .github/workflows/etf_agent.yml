@@ -49,7 +49,10 @@ jobs:
           git add AlphaForge_Watchlist.csv || true
           git add AlphaForge_Insights.xlsx || true
           git add AlphaForge_Insights.csv || true
+          git add AlphaForge_Action_Plan.xlsx || true
+          git add AlphaForge_Action_Plan.csv || true
           git add data/watchlist.csv || true
+          git add data/portfolio_template.csv || true
 
           if git diff --cached --quiet; then
             echo "No updated files to commit"

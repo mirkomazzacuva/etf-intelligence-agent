@@ -13,6 +13,7 @@ DATA_SCRIPTS = [
     "allocation_engine.py",
     "generate_watchlist.py",
     "generate_insights.py",
+    "generate_decisions.py",
 ]
 
 DASHBOARD_SCRIPT = "generate_dashboard.py"
@@ -69,7 +70,7 @@ def run_dashboard(details: list[dict], started_at: str) -> int:
 def main() -> int:
     started_at = now_iso()
     details: list[dict] = []
-    write_status("running", "Aggiornamento AlphaForge in corso", details, started_at=started_at)
+    write_status("running", "Aggiornamento AlphaForge v5 in corso", details, started_at=started_at)
 
     for script in DATA_SCRIPTS:
         if not ensure_script_exists(script, details, started_at):
@@ -80,20 +81,17 @@ def main() -> int:
             write_status("failed", f"Aggiornamento fallito su {script}", details, started_at=started_at)
             return int(result["returncode"])
 
-    # First write success before building the public page, so index.html never captures a running state.
-    write_status("success", "Dati AlphaForge aggiornati; dashboard in generazione", details, started_at=started_at)
+    write_status("success", "Dati AlphaForge v5 aggiornati; dashboard in generazione", details, started_at=started_at)
     first_dashboard_status = run_dashboard(details, started_at)
     if first_dashboard_status != 0:
         return first_dashboard_status
 
-    # Write the final success with the dashboard result included, then rebuild index.html one last time.
-    # This guarantees the public GitHub Pages dashboard shows status=success, not status=running.
-    write_status("success", "Aggiornamento AlphaForge completato", details, started_at=started_at)
+    write_status("success", "Aggiornamento AlphaForge v5 completato", details, started_at=started_at)
     final_dashboard_status = run_dashboard(details, started_at)
     if final_dashboard_status != 0:
         return final_dashboard_status
 
-    write_status("success", "Aggiornamento AlphaForge completato", details, started_at=started_at)
+    write_status("success", "Aggiornamento AlphaForge v5 completato", details, started_at=started_at)
     return 0
 
 

@@ -7,7 +7,7 @@ import py_compile
 import subprocess
 import sys
 import time
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import pandas as pd
@@ -20,10 +20,12 @@ REQUIRED_FILES = [
     "generate_dashboard.py",
     "generate_watchlist.py",
     "generate_insights.py",
+    "generate_decisions.py",
     "requirements.txt",
     ".github/workflows/etf_agent.yml",
     ".github/workflows/beta_test_app.yml",
     ".github/workflows/alpha_forge_patch_installer.yml",
+    "data/portfolio_template.csv",
 ]
 
 OUTPUT_FILES = [
@@ -36,6 +38,8 @@ OUTPUT_FILES = [
     "AlphaForge_Watchlist.xlsx",
     "AlphaForge_Insights.csv",
     "AlphaForge_Insights.xlsx",
+    "AlphaForge_Action_Plan.csv",
+    "AlphaForge_Action_Plan.xlsx",
 ]
 
 CORE_MODULES = [
@@ -48,6 +52,7 @@ CORE_MODULES = [
     "core.watchlist_engine",
     "core.signal_engine",
     "core.insight_engine",
+    "core.decision_engine",
     "core.portfolio_engine",
     "core.report_engine",
     "core.ui_theme",
@@ -166,6 +171,28 @@ class BetaTester:
             except Exception as exc:  # noqa: BLE001
                 self.fail("Insights", str(exc))
 
+        if Path("AlphaForge_Action_Plan.csv").exists():
+            try:
+                actions = pd.read_csv("AlphaForge_Action_Plan.csv")
+                missing = [col for col in ["Ticker", "Decisione chiara", "Cosa fare adesso", "Bucket operativo"] if col not in actions.columns]
+                if missing:
+                    self.fail("Action plan", f"Mancano colonne: {', '.join(missing)}")
+                else:
+                    self.ok("Action plan", f"OK, {len(actions)} righe")
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Action plan", str(exc))
+
+        if Path("data/portfolio_template.csv").exists():
+            try:
+                template = pd.read_csv("data/portfolio_template.csv")
+                missing = [col for col in ["Ticker", "Quantità", "Prezzo Medio"] if col not in template.columns]
+                if missing:
+                    self.fail("Template portafoglio", f"Mancano colonne: {', '.join(missing)}")
+                else:
+                    self.ok("Template portafoglio", f"OK, {len(template)} righe")
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Template portafoglio", str(exc))
+
         if Path("AUTO_UPDATE_STATUS.json").exists():
             try:
                 status = json.loads(Path("AUTO_UPDATE_STATUS.json").read_text(encoding="utf-8"))
@@ -179,14 +206,14 @@ class BetaTester:
         if Path("index.html").exists():
             try:
                 html = Path("index.html").read_text(encoding="utf-8", errors="ignore")
-                if "AlphaForge v4" in html and "Premium UI" in html:
-                    self.ok("Dashboard pubblica v4", "AlphaForge v4 Premium UI presente")
-                elif "AlphaForge v3" in html:
-                    self.warn("Dashboard pubblica v4", "index.html ancora v3: esegui full update")
+                if "AlphaForge v5" in html and "Decision" in html:
+                    self.ok("Dashboard pubblica v5", "AlphaForge v5 Decision & Portfolio presente")
+                elif "AlphaForge v4" in html:
+                    self.warn("Dashboard pubblica v5", "index.html ancora v4: esegui full update")
                 else:
-                    self.warn("Dashboard pubblica v4", "Marker v4 non trovato")
+                    self.warn("Dashboard pubblica v5", "Marker v5 non trovato")
             except Exception as exc:  # noqa: BLE001
-                self.fail("Stato aggiornamento", str(exc))
+                self.fail("Dashboard pubblica", str(exc))
 
     def streamlit_smoke_test(self) -> None:
         if not Path("streamlit_app.py").exists():

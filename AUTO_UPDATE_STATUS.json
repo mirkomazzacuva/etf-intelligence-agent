@@ -1,8 +1,8 @@
 {
   "status": "success",
-  "message": "Aggiornamento AlphaForge completato",
-  "started_at": "2026-06-09T12:41:28+00:00",
-  "finished_at": "2026-06-09T12:41:52+00:00",
+  "message": "Aggiornamento AlphaForge v5 completato",
+  "started_at": "2026-06-09T12:54:53+00:00",
+  "finished_at": "2026-06-09T12:55:28+00:00",
   "details": [
     {
       "script": "update_etf_data_v3.py",
@@ -26,6 +26,12 @@
       "script": "generate_insights.py",
       "returncode": 0,
       "stdout_tail": "Insights generati: 23 strumenti\n",
+      "stderr_tail": ""
+    },
+    {
+      "script": "generate_decisions.py",
+      "returncode": 0,
+      "stdout_tail": "Action plan generato: 23 strumenti\n",
       "stderr_tail": ""
     },
     {

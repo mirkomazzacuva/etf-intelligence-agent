@@ -5,6 +5,7 @@ import json
 import pandas as pd
 
 from core.config import (
+    ACTION_PLAN_OUTPUT_CSV,
     ALLOCATION_FILE,
     DASHBOARD_FILE,
     INSIGHTS_OUTPUT_CSV,
@@ -32,9 +33,10 @@ def generate_dashboard() -> None:
     allocation = pd.read_excel(ALLOCATION_FILE, sheet_name="Suggested_Allocation")
     watchlist = pd.read_csv(WATCHLIST_OUTPUT_CSV) if WATCHLIST_OUTPUT_CSV.exists() else pd.DataFrame()
     insights = pd.read_csv(INSIGHTS_OUTPUT_CSV) if INSIGHTS_OUTPUT_CSV.exists() else pd.DataFrame()
+    action_plan = pd.read_csv(ACTION_PLAN_OUTPUT_CSV) if ACTION_PLAN_OUTPUT_CSV.exists() else pd.DataFrame()
     status = read_status()
-    REPORT_FILE.write_text(build_text_report(ranking, allocation, watchlist, insights), encoding="utf-8")
-    render_dashboard_html(ranking, allocation, status, watchlist, DASHBOARD_FILE, insights)
+    REPORT_FILE.write_text(build_text_report(ranking, allocation, watchlist, insights, action_plan), encoding="utf-8")
+    render_dashboard_html(ranking, allocation, status, watchlist, DASHBOARD_FILE, insights, action_plan)
     print(f"Dashboard generata: {DASHBOARD_FILE}")
 
 
