@@ -1,16 +1,16 @@
 ETF INTELLIGENCE REPORT
-Data aggiornamento: 09/06/2026 09:44
+Data aggiornamento: 09/06/2026 11:21
 
 Miglior ETF del giorno: Xtrackers MSCI World Value UCITS ETF (XDEV.MI) - Score 82.0
 
 TOP 10 ETF:
 - XDEV.MI | Xtrackers MSCI World Value UCITS ETF | Score 82.0 | Buy Watchlist | Nota: Monitorare secondo score, trend e rischio.
 - XAIX.MI | Xtrackers Artificial Intelligence & Big Data UCITS ETF | Score 76.0 | Accumulate Carefully | Nota: Tema strutturale forte, ma con rischio euforia e concentrazione.
-- EIMI.MI | iShares Core MSCI Emerging Markets IMI UCITS ETF | Score 72.7 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
+- EIMI.MI | iShares Core MSCI Emerging Markets IMI UCITS ETF | Score 72.9 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
 - FGQI.MI | Fidelity Global Quality Income UCITS ETF | Score 72.1 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
 - VWCE.MI | Vanguard FTSE All-World UCITS ETF | Score 71.5 | Accumulate Carefully | Nota: Buona base core di lungo periodo.
-- SWDA.MI | iShares Core MSCI World UCITS ETF | Score 70.3 | Accumulate Carefully | Nota: Buona base core di lungo periodo.
-- IWQU.MI | iShares MSCI World Quality Factor UCITS ETF | Score 69.5 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
+- SWDA.MI | iShares Core MSCI World UCITS ETF | Score 70.4 | Accumulate Carefully | Nota: Buona base core di lungo periodo.
+- IWQU.MI | iShares MSCI World Quality Factor UCITS ETF | Score 69.6 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
 - IWMO.MI | iShares MSCI World Momentum Factor UCITS ETF | Score 69.3 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
 - VUAA.MI | Vanguard S&P 500 UCITS ETF | Score 66.6 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
 - EQQQ.MI | Invesco Nasdaq-100 UCITS ETF | Score 63.5 | Hold / Monitor | Nota: Monitorare secondo score, trend e rischio.
