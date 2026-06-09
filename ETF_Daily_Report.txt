@@ -1,5 +1,5 @@
 AlphaForge Intelligence v4 - Daily Report
-Aggiornato il 09/06/2026 12:35
+Aggiornato il 09/06/2026 12:41
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
@@ -10,7 +10,7 @@ Nota: ETF interessante ma ingresso non ideale: meglio attendere pullback o confe
 
 Top ETF:
 - XDEV.MI: score 79.3, priority 66.1, stato Accumulate Carefully
-- EIMI.MI: score 79.3, priority 79.7, stato Buy Watchlist
+- EIMI.MI: score 79.3, priority 79.8, stato Buy Watchlist
 - VWCE.DE: score 76.4, priority 76.9, stato Accumulate Carefully
 - SWDA.MI: score 75.3, priority 75.9, stato Accumulate Carefully
 - SXR8.DE: score 74.8, priority 75.3, stato Accumulate Carefully
@@ -33,7 +33,7 @@ Watchlist azioni/strumenti:
 - MSFT: score 65.5, action Ridurre size / solo monitoraggio
 
 Priorità AlphaForge:
-- EIMI.MI: priority 79.7, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
+- EIMI.MI: priority 79.8, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
 - GOOGL: priority 77.9, azione Ridurre size / solo monitoraggio, trigger prezzo vicino a MA50: monitorare conferma
 - VWCE.DE: priority 76.9, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
 - SWDA.MI: priority 75.9, azione Priorità watchlist, trigger prezzo vicino a MA50: monitorare conferma
