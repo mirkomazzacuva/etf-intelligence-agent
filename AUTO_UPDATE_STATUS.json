@@ -1,7 +1,8 @@
 {
   "status": "success",
   "message": "Aggiornamento AlphaForge completato",
-  "finished_at": "2026-06-09T10:27:52+00:00",
+  "started_at": "2026-06-09T10:39:08+00:00",
+  "finished_at": "2026-06-09T10:39:23+00:00",
   "details": [
     {
       "script": "update_etf_data_v3.py",

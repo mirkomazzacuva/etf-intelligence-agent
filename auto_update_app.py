@@ -8,22 +8,24 @@ from pathlib import Path
 
 from core.config import STATUS_FILE
 
-SCRIPTS = [
+DATA_SCRIPTS = [
     "update_etf_data_v3.py",
     "allocation_engine.py",
     "generate_watchlist.py",
-    "generate_dashboard.py",
 ]
+
+DASHBOARD_SCRIPT = "generate_dashboard.py"
 
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
-def write_status(status: str, message: str, details: list[dict] | None = None) -> None:
+def write_status(status: str, message: str, details: list[dict] | None = None, started_at: str | None = None) -> None:
     payload = {
         "status": status,
         "message": message,
+        "started_at": started_at,
         "finished_at": now_iso() if status in {"success", "failed"} else None,
         "details": details or [],
     }
@@ -44,20 +46,41 @@ def run_script(script: str) -> dict:
     }
 
 
+def ensure_script_exists(script: str, details: list[dict], started_at: str) -> bool:
+    if Path(script).exists():
+        return True
+    details.append({"script": script, "returncode": 1, "stderr_tail": "File script mancante"})
+    write_status("failed", f"Script mancante: {script}", details, started_at=started_at)
+    return False
+
+
 def main() -> int:
-    write_status("running", "Aggiornamento AlphaForge in corso")
+    started_at = now_iso()
     details: list[dict] = []
-    for script in SCRIPTS:
-        if not Path(script).exists():
-            details.append({"script": script, "returncode": 1, "stderr_tail": "File script mancante"})
-            write_status("failed", f"Script mancante: {script}", details)
+    write_status("running", "Aggiornamento AlphaForge in corso", details, started_at=started_at)
+
+    for script in DATA_SCRIPTS:
+        if not ensure_script_exists(script, details, started_at):
             return 1
         result = run_script(script)
         details.append(result)
         if result["returncode"] != 0:
-            write_status("failed", f"Aggiornamento fallito su {script}", details)
+            write_status("failed", f"Aggiornamento fallito su {script}", details, started_at=started_at)
             return int(result["returncode"])
-    write_status("success", "Aggiornamento AlphaForge completato", details)
+
+    # Important: the public dashboard reads AUTO_UPDATE_STATUS.json while it is being generated.
+    # Write a success status before generate_dashboard.py, otherwise index.html can remain stuck on "running".
+    write_status("success", "Dati AlphaForge aggiornati; dashboard in generazione", details, started_at=started_at)
+
+    if not ensure_script_exists(DASHBOARD_SCRIPT, details, started_at):
+        return 1
+    dashboard_result = run_script(DASHBOARD_SCRIPT)
+    details.append(dashboard_result)
+    if dashboard_result["returncode"] != 0:
+        write_status("failed", f"Aggiornamento fallito su {DASHBOARD_SCRIPT}", details, started_at=started_at)
+        return int(dashboard_result["returncode"])
+
+    write_status("success", "Aggiornamento AlphaForge completato", details, started_at=started_at)
     return 0
 
 
