@@ -45,10 +45,13 @@ jobs:
           git add ETF_Allocation_Model.xlsx || true
           git add ETF_Daily_Report.txt || true
           git add index.html || true
+          git add AlphaForge_Watchlist.xlsx || true
+          git add AlphaForge_Watchlist.csv || true
+          git add data/watchlist.csv || true
 
           if git diff --cached --quiet; then
             echo "No updated files to commit"
           else
-            git commit -m "Auto update ETF data"
+            git commit -m "Auto update AlphaForge data"
             git push
           fi

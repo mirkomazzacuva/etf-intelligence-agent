@@ -1,24 +1,12 @@
-# Python
 __pycache__/
-*.py[cod]
-.venv/
-venv/
-.env
-
-# Local/test outputs
+*.pyc
+.pytest_cache/
+logs/
 BETA_TEST_REPORT.md
 BETA_TEST_STATUS.json
+BETA_FULL_UPDATE.log
 streamlit_smoke.log
-logs/
-
-# OS/editor
 .DS_Store
-.vscode/
-.idea/
-
-# Keep generated app data versioned intentionally:
-# ETF_Intelligence_Agent_UPDATED.xlsx
-# ETF_Allocation_Model.xlsx
-# ETF_Daily_Report.txt
-# index.html
-# AUTO_UPDATE_STATUS.json
+.env
+.venv/
+venv/

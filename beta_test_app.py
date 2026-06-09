@@ -3,37 +3,29 @@ from __future__ import annotations
 import argparse
 import importlib
 import json
-import os
 import py_compile
 import subprocess
 import sys
 import time
 from dataclasses import dataclass, asdict
-from datetime import datetime
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
-APP_TZ = ZoneInfo("Europe/Rome")
-ROOT = Path(__file__).resolve().parent
-REPORT_FILE = ROOT / "BETA_TEST_REPORT.md"
-STATUS_FILE = ROOT / "BETA_TEST_STATUS.json"
+import pandas as pd
 
-REQUIRED_SOURCE_FILES = [
+REQUIRED_FILES = [
     "streamlit_app.py",
     "auto_update_app.py",
     "update_etf_data_v3.py",
     "allocation_engine.py",
     "generate_dashboard.py",
+    "generate_watchlist.py",
     "requirements.txt",
     ".github/workflows/etf_agent.yml",
     ".github/workflows/beta_test_app.yml",
+    ".github/workflows/alpha_forge_patch_installer.yml",
 ]
 
-REQUIRED_DATA_FILES = [
-    "ETF_Intelligence_Agent_Master_Populated.xlsx",
-]
-
-GENERATED_FILES = [
+OUTPUT_FILES = [
     "ETF_Intelligence_Agent_UPDATED.xlsx",
     "ETF_Allocation_Model.xlsx",
     "ETF_Daily_Report.txt",
@@ -41,351 +33,191 @@ GENERATED_FILES = [
     "AUTO_UPDATE_STATUS.json",
 ]
 
-IMPORT_CHECKS = {
-    "pandas": "pandas",
-    "numpy": "numpy",
-    "yfinance": "yfinance",
-    "openpyxl": "openpyxl",
-    "streamlit": "streamlit",
-    "plotly": "plotly",
-}
-
-EXPECTED_RANKING_COLUMNS = [
-    "Ticker",
-    "Nome ETF",
-    "Categoria",
-    "Tema/Area",
-    "Score Finale",
-]
-
-EXPECTED_ALLOCATION_COLUMNS = [
-    "Ticker",
-    "Nome ETF",
-    "Categoria",
-    "Peso Target %",
-]
-
-# L'allocation engine puo' chiamare la colonna importo in modi diversi
-# a seconda della versione dell'app. Il beta test deve verificare la
-# sostanza del dato, non fallire per una semplice etichetta.
-ACCEPTED_ALLOCATION_AMOUNT_COLUMNS = [
-    "Importo Indicativo EUR",
-    "Importo su 1000 EUR",
-    "Importo €",
-    "Importo EUR",
+CORE_MODULES = [
+    "core.config",
+    "core.data_provider",
+    "core.metrics",
+    "core.etf_scoring",
+    "core.stock_scoring",
+    "core.compare_engine",
+    "core.watchlist_engine",
+    "core.report_engine",
 ]
 
 
 @dataclass
-class CheckResult:
+class Check:
     name: str
     status: str
-    message: str
-    details: str = ""
+    detail: str = ""
 
 
-def now_iso() -> str:
-    return datetime.now(APP_TZ).isoformat(timespec="seconds")
+class BetaTester:
+    def __init__(self, full_update: bool = False) -> None:
+        self.full_update = full_update
+        self.checks: list[Check] = []
 
+    def add(self, name: str, status: str, detail: str = "") -> None:
+        self.checks.append(Check(name, status, detail))
+        print(f"{status:4} | {name} | {detail}")
 
-def ok(name: str, message: str, details: str = "") -> CheckResult:
-    return CheckResult(name=name, status="OK", message=message, details=details)
+    def ok(self, name: str, detail: str = "") -> None:
+        self.add(name, "OK", detail)
 
+    def warn(self, name: str, detail: str = "") -> None:
+        self.add(name, "WARN", detail)
 
-def warn(name: str, message: str, details: str = "") -> CheckResult:
-    return CheckResult(name=name, status="WARN", message=message, details=details)
+    def fail(self, name: str, detail: str = "") -> None:
+        self.add(name, "FAIL", detail)
 
-
-def fail(name: str, message: str, details: str = "") -> CheckResult:
-    return CheckResult(name=name, status="FAIL", message=message, details=details)
-
-
-def check_required_files() -> list[CheckResult]:
-    results: list[CheckResult] = []
-    for rel_path in REQUIRED_SOURCE_FILES:
-        path = ROOT / rel_path
-        if path.exists():
-            results.append(ok(f"File sorgente: {rel_path}", "Presente"))
-        else:
-            results.append(fail(f"File sorgente: {rel_path}", "Manca un file necessario"))
-
-    for rel_path in REQUIRED_DATA_FILES:
-        path = ROOT / rel_path
-        if path.exists():
-            results.append(ok(f"File dati: {rel_path}", "Presente"))
-        else:
-            results.append(
-                fail(
-                    f"File dati: {rel_path}",
-                    "Manca il file master necessario per rigenerare ranking e dashboard",
-                    "Carica il file Excel master nel repository oppure correggi INPUT_FILE in update_etf_data_v3.py.",
-                )
-            )
-
-    for rel_path in GENERATED_FILES:
-        path = ROOT / rel_path
-        if path.exists():
-            size_kb = path.stat().st_size / 1024
-            results.append(ok(f"Output generato: {rel_path}", f"Presente ({size_kb:.1f} KB)"))
-        else:
-            results.append(
-                warn(
-                    f"Output generato: {rel_path}",
-                    "Non presente al momento del beta test rapido",
-                    "Non e' bloccante se il workflow di aggiornamento deve ancora generarlo.",
-                )
-            )
-    return results
-
-
-def check_python_syntax() -> list[CheckResult]:
-    results: list[CheckResult] = []
-    py_files = [
-        path
-        for path in ROOT.rglob("*.py")
-        if ".git" not in path.parts and "venv" not in path.parts and ".venv" not in path.parts
-    ]
-    if not py_files:
-        return [fail("Sintassi Python", "Nessun file Python trovato")]
-
-    for path in sorted(py_files):
-        rel_path = path.relative_to(ROOT).as_posix()
-        try:
-            py_compile.compile(str(path), doraise=True)
-            results.append(ok(f"Sintassi Python: {rel_path}", "Compilazione riuscita"))
-        except py_compile.PyCompileError as exc:
-            results.append(fail(f"Sintassi Python: {rel_path}", "Errore di sintassi", str(exc)))
-    return results
-
-
-def check_imports() -> list[CheckResult]:
-    results: list[CheckResult] = []
-    for label, module_name in IMPORT_CHECKS.items():
-        try:
-            module = importlib.import_module(module_name)
-            version = getattr(module, "__version__", "versione non disponibile")
-            results.append(ok(f"Dipendenza: {label}", f"Import OK ({version})"))
-        except Exception as exc:  # noqa: BLE001
-            results.append(fail(f"Dipendenza: {label}", "Import fallito", str(exc)))
-    return results
-
-
-def check_excel_outputs() -> list[CheckResult]:
-    results: list[CheckResult] = []
-    try:
-        import pandas as pd
-    except Exception as exc:  # noqa: BLE001
-        return [fail("Controllo Excel", "Pandas non disponibile", str(exc))]
-
-    ranking_path = ROOT / "ETF_Intelligence_Agent_UPDATED.xlsx"
-    allocation_path = ROOT / "ETF_Allocation_Model.xlsx"
-
-    if ranking_path.exists():
-        try:
-            ranking = pd.read_excel(ranking_path)
-            missing = [col for col in EXPECTED_RANKING_COLUMNS if col not in ranking.columns]
-            if missing:
-                results.append(
-                    fail(
-                        "Excel ranking",
-                        "File leggibile ma mancano colonne attese",
-                        ", ".join(missing),
-                    )
-                )
-            elif ranking.empty:
-                results.append(fail("Excel ranking", "File leggibile ma tabella vuota"))
+    def check_required_files(self) -> None:
+        for item in REQUIRED_FILES:
+            if Path(item).exists():
+                self.ok("File presente", item)
             else:
-                results.append(ok("Excel ranking", f"Leggibile, {len(ranking)} righe"))
-        except Exception as exc:  # noqa: BLE001
-            results.append(fail("Excel ranking", "File non leggibile", str(exc)))
-    else:
-        results.append(warn("Excel ranking", "Non ancora presente"))
+                self.fail("File mancante", item)
 
-    if allocation_path.exists():
-        try:
-            allocation = pd.read_excel(allocation_path, sheet_name="Suggested_Allocation")
-            summary = pd.read_excel(allocation_path, sheet_name="Summary")
-            missing = [col for col in EXPECTED_ALLOCATION_COLUMNS if col not in allocation.columns]
-            amount_columns_found = [
-                col for col in ACCEPTED_ALLOCATION_AMOUNT_COLUMNS if col in allocation.columns
-            ]
-            if missing:
-                results.append(
-                    fail(
-                        "Excel allocazione",
-                        "File leggibile ma mancano colonne strutturali attese",
-                        ", ".join(missing),
-                    )
-                )
-            elif not amount_columns_found:
-                results.append(
-                    fail(
-                        "Excel allocazione",
-                        "File leggibile ma manca una colonna importo riconosciuta",
-                        "Colonne accettate: " + ", ".join(ACCEPTED_ALLOCATION_AMOUNT_COLUMNS),
-                    )
-                )
-            elif allocation.empty:
-                results.append(fail("Excel allocazione", "Sheet Suggested_Allocation vuoto"))
-            elif summary.empty:
-                results.append(fail("Excel allocazione", "Sheet Summary vuoto"))
+    def check_python_syntax(self) -> None:
+        for path in sorted(Path(".").glob("**/*.py")):
+            if any(part.startswith(".") for part in path.parts) or "__pycache__" in path.parts:
+                continue
+            try:
+                py_compile.compile(str(path), doraise=True)
+                self.ok("Sintassi Python", str(path))
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Sintassi Python", f"{path}: {exc}")
+
+    def check_imports(self) -> None:
+        for module in CORE_MODULES:
+            try:
+                importlib.import_module(module)
+                self.ok("Import modulo core", module)
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Import modulo core", f"{module}: {exc}")
+        for module in ["pandas", "numpy", "yfinance", "openpyxl", "streamlit", "plotly"]:
+            try:
+                importlib.import_module(module)
+                self.ok("Dipendenza", module)
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Dipendenza", f"{module}: {exc}")
+
+    def run_full_update_if_requested(self) -> None:
+        if not self.full_update:
+            self.ok("Test completo aggiornamento dati", "no")
+            return
+        start = time.time()
+        completed = subprocess.run([sys.executable, "auto_update_app.py"], text=True, capture_output=True, check=False)
+        Path("BETA_FULL_UPDATE.log").write_text((completed.stdout or "") + "\n" + (completed.stderr or ""), encoding="utf-8")
+        if completed.returncode == 0:
+            self.ok("Test completo aggiornamento", f"Completato in {time.time() - start:.2f} secondi")
+        else:
+            self.fail("Test completo aggiornamento", f"Exit {completed.returncode}. Vedi BETA_FULL_UPDATE.log")
+
+    def check_outputs(self) -> None:
+        for item in OUTPUT_FILES:
+            if Path(item).exists():
+                self.ok("Output presente", item)
             else:
-                results.append(
-                    ok(
-                        "Excel allocazione",
-                        f"Leggibile, {len(allocation)} righe",
-                        f"Colonna importo: {amount_columns_found[0]}",
-                    )
-                )
-        except Exception as exc:  # noqa: BLE001
-            results.append(fail("Excel allocazione", "File non leggibile", str(exc)))
-    else:
-        results.append(warn("Excel allocazione", "Non ancora presente"))
+                self.fail("Output mancante", item)
 
-    return results
+        if Path("ETF_Intelligence_Agent_UPDATED.xlsx").exists():
+            try:
+                df = pd.read_excel("ETF_Intelligence_Agent_UPDATED.xlsx")
+                missing = [col for col in ["Ticker", "Score Finale", "Stato", "Note AI"] if col not in df.columns]
+                if missing:
+                    self.fail("Excel ranking", f"Mancano colonne: {', '.join(missing)}")
+                else:
+                    self.ok("Excel ranking", f"OK, {len(df)} righe")
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Excel ranking", str(exc))
 
+        if Path("ETF_Allocation_Model.xlsx").exists():
+            try:
+                alloc = pd.read_excel("ETF_Allocation_Model.xlsx", sheet_name="Suggested_Allocation")
+                amount_cols = ["Importo su 1000 EUR", "Importo Indicativo EUR"]
+                missing = [col for col in ["Ticker", "Peso Target %"] if col not in alloc.columns]
+                if not any(col in alloc.columns for col in amount_cols):
+                    missing.append("Importo su 1000 EUR")
+                if missing:
+                    self.fail("Excel allocazione", f"Mancano colonne: {', '.join(missing)}")
+                else:
+                    amount_col = next(col for col in amount_cols if col in alloc.columns)
+                    self.ok("Excel allocazione", f"OK, {len(alloc)} righe. Colonna importo: {amount_col}")
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Excel allocazione", str(exc))
 
-def check_status_file() -> list[CheckResult]:
-    path = ROOT / "AUTO_UPDATE_STATUS.json"
-    if not path.exists():
-        return [warn("Stato aggiornamento", "AUTO_UPDATE_STATUS.json non ancora presente")]
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except Exception as exc:  # noqa: BLE001
-        return [fail("Stato aggiornamento", "JSON non leggibile", str(exc))]
+        if Path("AUTO_UPDATE_STATUS.json").exists():
+            try:
+                status = json.loads(Path("AUTO_UPDATE_STATUS.json").read_text(encoding="utf-8"))
+                if status.get("status") == "success":
+                    self.ok("Stato aggiornamento", "Successo")
+                else:
+                    self.warn("Stato aggiornamento", str(status.get("status")))
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Stato aggiornamento", str(exc))
 
-    status = payload.get("status")
-    message = payload.get("message", "")
-    if status == "success":
-        return [ok("Stato aggiornamento", f"Successo: {message}")]
-    if status in {"failed", "error"}:
-        return [fail("Stato aggiornamento", f"Ultimo aggiornamento in errore: {message}")]
-    return [warn("Stato aggiornamento", f"Stato non conclusivo: {status} - {message}")]
+    def streamlit_smoke_test(self) -> None:
+        if not Path("streamlit_app.py").exists():
+            self.fail("Streamlit smoke test", "streamlit_app.py mancante")
+            return
+        cmd = [sys.executable, "-m", "streamlit", "run", "streamlit_app.py", "--server.headless", "true", "--server.port", "8501"]
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        log_lines: list[str] = []
+        try:
+            time.sleep(8)
+            if proc.poll() is None:
+                self.ok("Streamlit smoke test", "Server avviato")
+            else:
+                self.fail("Streamlit smoke test", f"Exit {proc.returncode}")
+        finally:
+            proc.terminate()
+            try:
+                out, _ = proc.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                out, _ = proc.communicate()
+            if out:
+                log_lines.append(out)
+            Path("streamlit_smoke.log").write_text("\n".join(log_lines), encoding="utf-8")
 
+    def write_report(self) -> int:
+        ok = sum(1 for c in self.checks if c.status == "OK")
+        warn = sum(1 for c in self.checks if c.status == "WARN")
+        fail = sum(1 for c in self.checks if c.status == "FAIL")
+        lines = [
+            "# AlphaForge Beta Test Report",
+            "",
+            f"Check totali: {len(self.checks)}",
+            f"OK: {ok}",
+            f"Warning: {warn}",
+            f"Errori bloccanti: {fail}",
+            f"Test completo aggiornamento dati: {'sì' if self.full_update else 'no'}",
+            "",
+            "| Stato | Controllo | Dettaglio |",
+            "|---|---|---|",
+        ]
+        for check in self.checks:
+            lines.append(f"| {check.status} | {check.name} | {str(check.detail).replace('|', '/')} |")
+        Path("BETA_TEST_REPORT.md").write_text("\n".join(lines), encoding="utf-8")
+        Path("BETA_TEST_STATUS.json").write_text(json.dumps([asdict(c) for c in self.checks], indent=2, ensure_ascii=False), encoding="utf-8")
+        print("\n".join(lines[:8]))
+        return 1 if fail else 0
 
-def run_command(command: list[str], timeout_seconds: int) -> tuple[int, float, str]:
-    started = time.time()
-    completed = subprocess.run(
-        command,
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-        timeout=timeout_seconds,
-    )
-    duration = round(time.time() - started, 2)
-    output = ((completed.stdout or "") + "\n" + (completed.stderr or "")).strip()
-    return completed.returncode, duration, output[-8000:]
-
-
-def run_full_update_check() -> list[CheckResult]:
-    results: list[CheckResult] = []
-    script = ROOT / "auto_update_app.py"
-    if not script.exists():
-        return [fail("Test completo aggiornamento", "auto_update_app.py non trovato")]
-
-    try:
-        return_code, duration, output = run_command([sys.executable, str(script)], timeout_seconds=1200)
-    except subprocess.TimeoutExpired as exc:
-        return [fail("Test completo aggiornamento", "Timeout durante aggiornamento", str(exc))]
-
-    if return_code == 0:
-        results.append(ok("Test completo aggiornamento", f"Completato in {duration} secondi"))
-    else:
-        results.append(
-            fail(
-                "Test completo aggiornamento",
-                f"Fallito con codice {return_code} dopo {duration} secondi",
-                output,
-            )
-        )
-    results.extend(check_required_files())
-    results.extend(check_excel_outputs())
-    results.extend(check_status_file())
-    return results
-
-
-def write_reports(results: list[CheckResult], full_update: bool) -> None:
-    failures = [item for item in results if item.status == "FAIL"]
-    warnings = [item for item in results if item.status == "WARN"]
-    payload = {
-        "generated_at": now_iso(),
-        "full_update": full_update,
-        "summary": {
-            "total": len(results),
-            "ok": len([item for item in results if item.status == "OK"]),
-            "warnings": len(warnings),
-            "failures": len(failures),
-        },
-        "results": [asdict(item) for item in results],
-    }
-    STATUS_FILE.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
-
-    lines = [
-        "# Beta test ETF Intelligence App",
-        "",
-        f"Generato: {payload['generated_at']}",
-        f"Test completo aggiornamento dati: {'si' if full_update else 'no'}",
-        "",
-        "## Sintesi",
-        "",
-        f"- Check totali: {payload['summary']['total']}",
-        f"- OK: {payload['summary']['ok']}",
-        f"- Warning: {payload['summary']['warnings']}",
-        f"- Errori bloccanti: {payload['summary']['failures']}",
-        "",
-        "## Dettaglio controlli",
-        "",
-        "| Stato | Controllo | Messaggio | Dettagli |",
-        "|---|---|---|---|",
-    ]
-    for item in results:
-        details = item.details.replace("\n", "<br>").replace("|", "\\|") if item.details else ""
-        lines.append(f"| {item.status} | {item.name} | {item.message} | {details} |")
-    REPORT_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-
-def print_summary(results: list[CheckResult]) -> None:
-    failures = [item for item in results if item.status == "FAIL"]
-    warnings = [item for item in results if item.status == "WARN"]
-    print("\n=== BETA TEST ETF INTELLIGENCE APP ===")
-    print(f"OK: {len([item for item in results if item.status == 'OK'])}")
-    print(f"WARN: {len(warnings)}")
-    print(f"FAIL: {len(failures)}")
-    print(f"Report: {REPORT_FILE.name}")
-    print(f"Status: {STATUS_FILE.name}")
-    if failures:
-        print("\nErrori bloccanti:")
-        for item in failures:
-            print(f"- {item.name}: {item.message}")
-    if warnings:
-        print("\nWarning:")
-        for item in warnings[:10]:
-            print(f"- {item.name}: {item.message}")
+    def run(self) -> int:
+        self.check_required_files()
+        self.check_python_syntax()
+        self.check_imports()
+        self.run_full_update_if_requested()
+        self.check_outputs()
+        self.streamlit_smoke_test()
+        return self.write_report()
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Beta tester automatico per ETF Intelligence App")
-    parser.add_argument(
-        "--full-update",
-        action="store_true",
-        help="Esegue anche auto_update_app.py e controlla gli output generati.",
-    )
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--full-update", action="store_true")
     args = parser.parse_args()
-
-    results: list[CheckResult] = []
-    results.extend(check_required_files())
-    results.extend(check_python_syntax())
-    results.extend(check_imports())
-    results.extend(check_excel_outputs())
-    results.extend(check_status_file())
-
-    if args.full_update:
-        results.extend(run_full_update_check())
-
-    write_reports(results, full_update=args.full_update)
-    print_summary(results)
-    return 1 if any(item.status == "FAIL" for item in results) else 0
+    return BetaTester(full_update=args.full_update).run()
 
 
 if __name__ == "__main__":

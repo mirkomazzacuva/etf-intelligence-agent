@@ -1,136 +1,86 @@
 from __future__ import annotations
 
-from datetime import datetime
-from pathlib import Path
-from zoneinfo import ZoneInfo
-
-import numpy as np
 import pandas as pd
 
-APP_TZ = ZoneInfo("Europe/Rome")
-INPUT_FILE = Path("ETF_Intelligence_Agent_UPDATED.xlsx")
-OUTPUT_FILE = Path("ETF_Allocation_Model.xlsx")
-CASH_AMOUNT = 1000
+from core.config import ALLOCATION_FILE, RANKING_FILE
+
+TARGET_BY_CATEGORY = {
+    "Core": 55.0,
+    "Defensive": 20.0,
+    "Factor": 15.0,
+    "Thematic": 10.0,
+    "Custom": 0.0,
+}
 
 
-def now_text() -> str:
-    return datetime.now(APP_TZ).strftime("%d/%m/%Y %H:%M")
+def build_allocation(amount: float = 1000.0) -> tuple[pd.DataFrame, pd.DataFrame]:
+    if not RANKING_FILE.exists():
+        raise FileNotFoundError(f"File ranking non trovato: {RANKING_FILE}")
+    ranking = pd.read_excel(RANKING_FILE)
+    if ranking.empty:
+        raise RuntimeError("Ranking vuoto")
+    if "Categoria" not in ranking.columns:
+        ranking["Categoria"] = "Core"
+    ranking = ranking.sort_values("Score Finale", ascending=False, na_position="last")
 
-
-def market_regime(df: pd.DataFrame) -> str:
-    category = df["Categoria"].astype(str).str.lower() if "Categoria" in df.columns else pd.Series(dtype=str)
-    core = df[category == "core"]
-    thematic = df[category == "thematic"]
-    defensive = df[category == "defensive"]
-
-    avg_core_score = core["Score Finale"].mean() if len(core) else np.nan
-    avg_thematic_vol = thematic["Volatilità %"].mean() if len(thematic) else np.nan
-    avg_defensive_score = defensive["Score Finale"].mean() if len(defensive) else np.nan
-
-    if pd.notna(avg_core_score) and pd.notna(avg_thematic_vol):
-        if avg_core_score >= 65 and avg_thematic_vol < 24:
-            return "Risk-On"
-    if (pd.notna(avg_defensive_score) and avg_defensive_score >= 65) or (
-        pd.notna(avg_thematic_vol) and avg_thematic_vol > 28
-    ):
-        return "Defensive"
-    return "Neutral"
-
-
-def allocation_targets(regime: str) -> dict[str, float]:
-    if regime == "Risk-On":
-        return {"Core": 60, "Factor": 15, "Thematic": 20, "Defensive": 5, "Satellite": 0}
-    if regime == "Defensive":
-        return {"Core": 70, "Factor": 10, "Thematic": 5, "Defensive": 15, "Satellite": 0}
-    return {"Core": 65, "Factor": 15, "Thematic": 10, "Defensive": 10, "Satellite": 0}
-
-
-def pick_best_by_category(df: pd.DataFrame, category: str, max_items: int) -> pd.DataFrame:
-    if "Categoria" not in df.columns:
-        return pd.DataFrame()
-    subset = df[df["Categoria"].astype(str).str.lower() == category.lower()].copy()
-    subset = subset[pd.notna(subset.get("Score Finale"))]
-    subset = subset.sort_values("Score Finale", ascending=False)
-
-    if category.lower() == "thematic" and "Volatilità %" in subset.columns:
-        subset = subset[(subset["Volatilità %"].isna()) | (subset["Volatilità %"] <= 30)]
-
-    return subset.head(max_items)
-
-
-def build_allocation(df: pd.DataFrame, cash_amount: float = 1000) -> tuple[str, pd.DataFrame]:
-    regime = market_regime(df)
-    targets = allocation_targets(regime)
-    selected: list[dict] = []
-    category_rules = {"Core": 2, "Factor": 2, "Thematic": 2, "Defensive": 2, "Satellite": 1}
-
-    for category, target_weight in targets.items():
-        if target_weight <= 0:
+    selected_rows = []
+    for category, target in TARGET_BY_CATEGORY.items():
+        if target <= 0:
             continue
-        picks = pick_best_by_category(df, category, category_rules.get(category, 1))
-        if picks.empty:
+        subset = ranking[ranking["Categoria"].astype(str).str.lower() == category.lower()].head(3)
+        if subset.empty:
             continue
-        weight_each = target_weight / len(picks)
-        for _, row in picks.iterrows():
-            selected.append(
-                {
-                    "Ticker": row.get("Ticker", ""),
-                    "Nome ETF": row.get("Nome ETF", ""),
-                    "Categoria": row.get("Categoria", ""),
-                    "Tema/Area": row.get("Tema/Area", ""),
-                    "Score Finale": row.get("Score Finale", np.nan),
-                    "Stato": row.get("Stato", ""),
-                    "Peso Target %": round(weight_each, 2),
-                    "Importo su 1000 EUR": round(cash_amount * weight_each / 100, 2),
-                    "Note AI": row.get("Note AI", ""),
-                }
-            )
+        weight_each = target / len(subset)
+        for _, row in subset.iterrows():
+            out = row.to_dict()
+            out["Peso Target %"] = round(weight_each, 2)
+            selected_rows.append(out)
 
-    allocation = pd.DataFrame(selected)
-    if allocation.empty:
-        return regime, allocation
+    if not selected_rows:
+        selected_rows = ranking.head(8).to_dict("records")
+        for row in selected_rows:
+            row["Peso Target %"] = round(100 / len(selected_rows), 2)
 
-    total_weight = allocation["Peso Target %"].sum()
-    if total_weight > 0:
-        allocation["Peso Target %"] = allocation["Peso Target %"] / total_weight * 100
-        allocation["Peso Target %"] = allocation["Peso Target %"].round(2)
-        allocation["Importo su 1000 EUR"] = (cash_amount * allocation["Peso Target %"] / 100).round(2)
+    alloc = pd.DataFrame(selected_rows)
+    alloc = alloc.drop_duplicates(subset=["Ticker"]).copy()
+    alloc["Peso Target %"] = pd.to_numeric(alloc["Peso Target %"], errors="coerce").fillna(0)
+    total = alloc["Peso Target %"].sum()
+    if total <= 0:
+        alloc["Peso Target %"] = 100 / len(alloc)
+    else:
+        alloc["Peso Target %"] = alloc["Peso Target %"] / total * 100
+    alloc["Peso Target %"] = alloc["Peso Target %"].round(2)
+    alloc["Importo su 1000 EUR"] = (amount * alloc["Peso Target %"] / 100).round(2)
 
-    allocation = allocation.sort_values(["Peso Target %", "Score Finale"], ascending=[False, False])
-    return regime, allocation
+    cols = [
+        "Ticker", "Nome ETF", "Categoria", "Tema/Area", "Peso Target %", "Importo su 1000 EUR",
+        "Score Finale", "Stato", "Volatilità %", "Max Drawdown %", "Note AI",
+    ]
+    alloc = alloc[[col for col in cols if col in alloc.columns]]
 
-
-def main() -> None:
-    if not INPUT_FILE.exists():
-        raise FileNotFoundError(f"File ranking non trovato: {INPUT_FILE}")
-
-    df = pd.read_excel(INPUT_FILE)
-    df = df.sort_values("Score Finale", ascending=False, na_position="last")
-    regime, allocation = build_allocation(df, CASH_AMOUNT)
+    market_regime = "Neutral"
+    avg_score = pd.to_numeric(ranking.get("Score Finale"), errors="coerce").mean()
+    avg_mom = pd.to_numeric(ranking.get("ETF Momentum Score"), errors="coerce").mean()
+    if avg_score >= 72 and avg_mom >= 60:
+        market_regime = "Risk On"
+    elif avg_score < 55 or avg_mom < 45:
+        market_regime = "Risk Off"
 
     summary = pd.DataFrame(
         [
-            {"Parametro": "Market Regime", "Valore": regime},
-            {"Parametro": "Importo simulato", "Valore": f"{CASH_AMOUNT} EUR"},
-            {"Parametro": "Ultimo aggiornamento", "Valore": now_text()},
-            {
-                "Parametro": "Nota",
-                "Valore": "Allocazione indicativa, non consulenza finanziaria personalizzata",
-            },
+            {"Parametro": "Market Regime", "Valore": market_regime},
+            {"Parametro": "ETF analizzati", "Valore": len(ranking)},
+            {"Parametro": "ETF in allocazione", "Valore": len(alloc)},
+            {"Parametro": "Score medio", "Valore": round(float(avg_score), 2) if pd.notna(avg_score) else ""},
+            {"Parametro": "Nota", "Valore": "Allocazione informativa su 1000 EUR, non consulenza personalizzata."},
         ]
     )
-
-    with pd.ExcelWriter(OUTPUT_FILE, engine="openpyxl") as writer:
-        allocation.to_excel(writer, sheet_name="Suggested_Allocation", index=False)
+    with pd.ExcelWriter(ALLOCATION_FILE, engine="openpyxl") as writer:
+        alloc.to_excel(writer, sheet_name="Suggested_Allocation", index=False)
         summary.to_excel(writer, sheet_name="Summary", index=False)
-
-    print("Market regime:", regime)
-    print("")
-    print("Allocazione suggerita:")
-    print(allocation.to_string(index=False) if not allocation.empty else "Nessuna allocazione disponibile")
-    print("")
-    print("File creato:", OUTPUT_FILE)
+    print(f"Creato {ALLOCATION_FILE} con {len(alloc)} righe")
+    return alloc, summary
 
 
 if __name__ == "__main__":
-    main()
+    build_allocation()

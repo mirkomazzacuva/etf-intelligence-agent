@@ -1,24 +1,34 @@
-ETF INTELLIGENCE REPORT
-Data aggiornamento: 09/06/2026 11:21
+AlphaForge Intelligence - Daily Report
+Aggiornato il 09/06/2026 10:18
 
-Miglior ETF del giorno: Xtrackers MSCI World Value UCITS ETF (XDEV.MI) - Score 82.0
+Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
-TOP 10 ETF:
-- XDEV.MI | Xtrackers MSCI World Value UCITS ETF | Score 82.0 | Buy Watchlist | Nota: Monitorare secondo score, trend e rischio.
-- XAIX.MI | Xtrackers Artificial Intelligence & Big Data UCITS ETF | Score 76.0 | Accumulate Carefully | Nota: Tema strutturale forte, ma con rischio euforia e concentrazione.
-- EIMI.MI | iShares Core MSCI Emerging Markets IMI UCITS ETF | Score 72.9 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
-- FGQI.MI | Fidelity Global Quality Income UCITS ETF | Score 72.1 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
-- VWCE.MI | Vanguard FTSE All-World UCITS ETF | Score 71.5 | Accumulate Carefully | Nota: Buona base core di lungo periodo.
-- SWDA.MI | iShares Core MSCI World UCITS ETF | Score 70.4 | Accumulate Carefully | Nota: Buona base core di lungo periodo.
-- IWQU.MI | iShares MSCI World Quality Factor UCITS ETF | Score 69.6 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
-- IWMO.MI | iShares MSCI World Momentum Factor UCITS ETF | Score 69.3 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
-- VUAA.MI | Vanguard S&P 500 UCITS ETF | Score 66.6 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.
-- EQQQ.MI | Invesco Nasdaq-100 UCITS ETF | Score 63.5 | Hold / Monitor | Nota: Monitorare secondo score, trend e rischio.
+Miglior ETF: EIMI.MI - score 79.3
+Stato: Buy Watchlist
+Nota: ETF forte e in trend favorevole; valutare solo con coerenza di portafoglio.
 
-Lettura prudente:
-- Non sono segnali automatici di acquisto.
-- Gli ETF tematici vanno trattati come satellite.
-- Gli ETF core globali sono piu adatti come base.
-- Oro/difensivi aiutano a bilanciare rischio macro.
+Top ETF:
+- EIMI.MI: score 79.3, stato Buy Watchlist
+- XDEV.MI: score 79.2, stato Accumulate Carefully
+- VWCE.DE: score 76.4, stato Accumulate Carefully
+- SWDA.MI: score 75.5, stato Accumulate Carefully
+- SXR8.DE: score 74.8, stato Accumulate Carefully
 
-Disclaimer: report informativo, non consulenza finanziaria personalizzata.
+Allocazione suggerita su 1000 EUR:
+- EIMI.MI: 18.33% - 183.3 EUR
+- VWCE.DE: 18.33% - 183.3 EUR
+- SWDA.MI: 18.33% - 183.3 EUR
+- MVOL.MI: 6.67% - 66.7 EUR
+- SGLD.MI: 6.67% - 66.7 EUR
+- EUNA.MI: 6.67% - 66.7 EUR
+- XDEV.MI: 7.5% - 75.0 EUR
+- IWQU.MI: 7.5% - 75.0 EUR
+
+Watchlist azioni/strumenti:
+- GOOGL: score 80.2, stato Buy Watchlist
+- NVDA: score 74.8, stato Accumulate Carefully
+- AAPL: score 73.4, stato Accumulate Carefully
+- AMZN: score 66.8, stato Hold / Monitor
+- MSFT: score 65.5, stato Hold / Monitor
+
+Usare sempre size, diversificazione, costi, fiscalità, liquidità e profilo personale come filtri finali.

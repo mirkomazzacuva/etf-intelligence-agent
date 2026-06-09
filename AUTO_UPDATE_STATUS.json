@@ -1,40 +1,31 @@
 {
   "status": "success",
-  "started_at": "2026-06-09T11:20:54+02:00",
-  "finished_at": "2026-06-09T11:21:02+02:00",
-  "duration_seconds": 7.46,
-  "message": "Aggiornamento completato correttamente",
-  "steps": [
+  "message": "Aggiornamento AlphaForge completato",
+  "finished_at": "2026-06-09T10:18:47+00:00",
+  "details": [
     {
-      "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python update_etf_data_v3.py",
-      "return_code": 0,
-      "duration_seconds": 6.43,
-      "stdout_tail": "Aggiorno: VWCE.MI\nAggiorno: SWDA.MI\nAggiorno: VUAA.MI\nAggiorno: EQQQ.MI\nAggiorno: EXSA.MI\nAggiorno: EIMI.MI\nAggiorno: AGGH.MI\nAggiorno: VAGF.MI\nAggiorno: SGLD.MI\nAggiorno: IWQU.MI\nAggiorno: IWMO.MI\nAggiorno: XDEV.MI\nAggiorno: MVOL.MI\nAggiorno: WTAI.MI\nAggiorno: XAIX.MI\nAggiorno: SMH.MI\nAggiorno: ISPY.MI\nAggiorno: RBOT.MI\nAggiorno: DFNS.MI\nAggiorno: FGQI.MI\nETF INTELLIGENCE REPORT\nData aggiornamento: 09/06/2026 11:21\n\nMiglior ETF del giorno: Xtrackers MSCI World Value UCITS ETF (XDEV.MI) - Score 82.0\n\nTOP 10 ETF:\n- XDEV.MI | Xtrackers MSCI World Value UCITS ETF | Score 82.0 | Buy Watchlist | Nota: Monitorare secondo score, trend e rischio.\n- XAIX.MI | Xtrackers Artificial Intelligence & Big Data UCITS ETF | Score 76.0 | Accumulate Carefully | Nota: Tema strutturale forte, ma con rischio euforia e concentrazione.\n- EIMI.MI | iShares Core MSCI Emerging Markets IMI UCITS ETF | Score 72.9 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.\n- FGQI.MI | Fidelity Global Quality Income UCITS ETF | Score 72.1 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.\n- VWCE.MI | Vanguard FTSE All-World UCITS ETF | Score 71.5 | Accumulate Carefully | Nota: Buona base core di lungo periodo.\n- SWDA.MI | iShares Core MSCI World UCITS ETF | Score 70.4 | Accumulate Carefully | Nota: Buona base core di lungo periodo.\n- IWQU.MI | iShares MSCI World Quality Factor UCITS ETF | Score 69.6 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.\n- IWMO.MI | iShares MSCI World Momentum Factor UCITS ETF | Score 69.3 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.\n- VUAA.MI | Vanguard S&P 500 UCITS ETF | Score 66.6 | Accumulate Carefully | Nota: Monitorare secondo score, trend e rischio.\n- EQQQ.MI | Invesco Nasdaq-100 UCITS ETF | Score 63.5 | Hold / Monitor | Nota: Monitorare secondo score, trend e rischio.\n\nLettura prudente:\n- Non sono segnali automatici di acquisto.\n- Gli ETF tematici vanno trattati come satellite.\n- Gli ETF core globali sono piu adatti come base.\n- Oro/difensivi aiutano a bilanciare rischio macro.\n\nDisclaimer: report informativo, non consulenza finanziaria personalizzata.\nCreati: ETF_Intelligence_Agent_UPDATED.xlsx, ETF_Daily_Report.txt, ETF_Update_Metadata.json\n",
-      "stderr_tail": "",
-      "ok": true
+      "script": "update_etf_data_v3.py",
+      "returncode": 0,
+      "stdout_tail": "Analisi ETF: SWDA.MI\nAnalisi ETF: VWCE.DE\nAnalisi ETF: EIMI.MI\nAnalisi ETF: SXR8.DE\nAnalisi ETF: XDEV.MI\nAnalisi ETF: IWQU.MI\nAnalisi ETF: MVOL.MI\nAnalisi ETF: EUNA.MI\nAnalisi ETF: SGLD.MI\nAnalisi ETF: EXSA.DE\nAnalisi ETF: RBOT.MI\nAnalisi ETF: WCLD.MI\nAnalisi ETF: SMH\nAnalisi ETF: INRG.MI\nCreato ETF_Intelligence_Agent_UPDATED.xlsx con 14 righe\n",
+      "stderr_tail": "HTTP Error 404: {\"quoteSummary\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"Quote not found for symbol: EUNA.MI\"}}}\n$EUNA.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['EUNA.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\nHTTP Error 404: {\"quoteSummary\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"Quote not found for symbol: EUNA.MI\"}}}\n"
     },
     {
-      "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python allocation_engine.py",
-      "return_code": 0,
-      "duration_seconds": 0.53,
-      "stdout_tail": "Market regime: Neutral\n\nAllocazione suggerita:\n Ticker                                               Nome ETF Categoria               Tema/Area  Score Finale                Stato  Peso Target %  Importo su 1000 EUR                                                                                                            Note AI\nEIMI.MI       iShares Core MSCI Emerging Markets IMI UCITS ETF      Core        Emerging Markets          72.9 Accumulate Carefully           32.5                325.0                                                                         Monitorare secondo score, trend e rischio.\nVWCE.MI                      Vanguard FTSE All-World UCITS ETF      Core           Global Equity          71.5 Accumulate Carefully           32.5                325.0                                                                                  Buona base core di lungo periodo.\nXDEV.MI                   Xtrackers MSCI World Value UCITS ETF    Factor                   Value          82.0        Buy Watchlist            7.5                 75.0                                                                         Monitorare secondo score, trend e rischio.\nIWQU.MI            iShares MSCI World Quality Factor UCITS ETF    Factor                 Quality          69.6 Accumulate Carefully            7.5                 75.0                                                                         Monitorare secondo score, trend e rischio.\nXAIX.MI Xtrackers Artificial Intelligence & Big Data UCITS ETF  Thematic Artificial Intelligence          76.0 Accumulate Carefully            5.0                 50.0                                                   Tema strutturale forte, ma con rischio euforia e concentrazione.\nISPY.MI                           L&G Cyber Security UCITS ETF  Thematic           Cybersecurity          62.2       Hold / Monitor            5.0                 50.0                                                                         Monitorare secondo score, trend e rischio.\nSGLD.MI                              Invesco Physical Gold ETC Defensive                    Gold          61.2       Hold / Monitor            5.0                 50.0                     Utile come protezione macro/geopolitica. Prezzo sotto media 200: trend non ancora convincente.\nAGGH.MI           iShares Core Global Aggregate Bond UCITS ETF Defensive            Global Bonds          38.9        Avoid for Now            5.0                 50.0 Componente difensiva utile per bilanciare il rischio equity. Prezzo sotto media 200: trend non ancora convincente.\n\nFile creato: ETF_Allocation_Model.xlsx\n",
-      "stderr_tail": "",
-      "ok": true
+      "script": "allocation_engine.py",
+      "returncode": 0,
+      "stdout_tail": "Creato ETF_Allocation_Model.xlsx con 11 righe\n",
+      "stderr_tail": ""
     },
     {
-      "command": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python generate_dashboard.py",
-      "return_code": 0,
-      "duration_seconds": 0.49,
-      "stdout_tail": "Dashboard creata: index.html\n",
-      "stderr_tail": "",
-      "ok": true
+      "script": "generate_watchlist.py",
+      "returncode": 0,
+      "stdout_tail": "Watchlist aggiornata: 9 strumenti\n",
+      "stderr_tail": "$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n"
+    },
+    {
+      "script": "generate_dashboard.py",
+      "returncode": 0,
+      "stdout_tail": "Dashboard generata: index.html\n",
+      "stderr_tail": ""
     }
-  ],
-  "output_files": [
-    "ETF_Intelligence_Agent_UPDATED.xlsx",
-    "ETF_Allocation_Model.xlsx",
-    "ETF_Daily_Report.txt",
-    "index.html",
-    "AUTO_UPDATE_STATUS.json"
   ]
 }
