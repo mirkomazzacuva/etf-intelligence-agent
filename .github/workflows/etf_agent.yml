@@ -2,18 +2,14 @@ name: Auto update ETF Intelligence App
 
 on:
   schedule:
-    # GitHub Actions usa orario UTC.
-    # 18:30 UTC = 20:30 in Italia con ora legale, 19:30 con ora solare.
-    # Scelto dopo la chiusura dei mercati europei per avere dati più stabili.
     - cron: "30 18 * * 1-5"
   workflow_dispatch:
 
 permissions:
   contents: write
 
-concurrency:
-  group: etf-intelligence-auto-update
-  cancel-in-progress: false
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   update-data:
@@ -26,8 +22,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-          cache: "pip"
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
@@ -38,10 +33,22 @@ jobs:
         run: |
           python auto_update_app.py
 
-      - name: Commit updated app files
+      - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ETF_Intelligence_Agent_UPDATED.xlsx ETF_Allocation_Model.xlsx ETF_Daily_Report.txt index.html AUTO_UPDATE_STATUS.json logs/update_log.jsonl
-          git diff --cached --quiet && echo "No changes to commit" || git commit -m "Auto update ETF intelligence data"
-          git push
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit updated app outputs
+        run: |
+          git add AUTO_UPDATE_STATUS.json || true
+          git add ETF_Intelligence_Agent_UPDATED.xlsx || true
+          git add ETF_Allocation_Model.xlsx || true
+          git add ETF_Daily_Report.txt || true
+          git add index.html || true
+
+          if git diff --cached --quiet; then
+            echo "No updated files to commit"
+          else
+            git commit -m "Auto update ETF data"
+            git push
+          fi
