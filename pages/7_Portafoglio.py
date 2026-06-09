@@ -1,71 +1,80 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
-import plotly.express as px
 import streamlit as st
 
 from core.config import ACTION_PLAN_OUTPUT_CSV, INSIGHTS_OUTPUT_CSV
 from core.portfolio_engine import analyze_portfolio, portfolio_template
 from core.ui_theme import apply_theme, hero, info_panel, mini_cards, style_priority_dataframe
 
-st.set_page_config(page_title="Portafoglio - AlphaForge", page_icon="💼", layout="wide")
+st.set_page_config(page_title="Portafoglio AlphaForge", page_icon="📊", layout="wide")
 apply_theme()
 hero(
-    "Portafoglio personale",
-    "Carica le tue posizioni e capisci se sono coerenti con score, rischio, concentrazione e decisioni AlphaForge.",
-    "AlphaForge v5",
+    "Portafoglio utente",
+    "Carica le posizioni reali e guarda subito concentrazione, rischio, gap target e suggerimenti pratici per migliorarlo.",
+    "AlphaForge v6 Portfolio",
 )
 
-info_panel(
-    "Come usarla",
-    "Carica un file CSV/XLSX con colonne tipo <b>Ticker</b>, <b>Quantità</b>, <b>Prezzo Medio</b>, <b>Valore EUR</b>. Il sistema calcola pesi, P/L indicativo, concentrazione e suggerimenti di miglioramento.",
-)
+
+def load_csv(path: str) -> pd.DataFrame:
+    p = Path(path)
+    return pd.read_csv(p) if p.exists() else pd.DataFrame()
+
+
+def read_uploaded(uploaded_file) -> pd.DataFrame:
+    if uploaded_file is None:
+        return pd.DataFrame()
+    name = uploaded_file.name.lower()
+    if name.endswith((".xlsx", ".xls")):
+        return pd.read_excel(uploaded_file)
+    return pd.read_csv(uploaded_file)
+
+
+def safe_cols(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
+    return df[[c for c in cols if c in df.columns]].copy() if not df.empty else df
+
+
+action_plan = load_csv(str(ACTION_PLAN_OUTPUT_CSV))
+insights = load_csv(str(INSIGHTS_OUTPUT_CSV))
 
 template = portfolio_template()
 st.download_button("⬇️ Scarica template CSV", template.to_csv(index=False).encode("utf-8"), "portfolio_template.csv", "text/csv")
 
-uploaded = st.file_uploader("Carica portafoglio CSV/XLSX", type=["csv", "xlsx", "xls"])
-use_demo = st.checkbox("Usa template demo", value=False)
+uploaded = st.file_uploader("Carica CSV/XLSX portafoglio", type=["csv", "xlsx", "xls"])
+use_demo = st.checkbox("Usa demo", value=False)
 
-if uploaded is None and not use_demo:
-    st.caption("Carica un file o spunta 'Usa template demo' per provare.")
+if not uploaded and not use_demo:
+    info_panel(
+        "Formato consigliato",
+        "Usa colonne: <b>Ticker, Quantità, Prezzo Medio, Prezzo Attuale, Valore EUR, Target %, Categoria Utente</b>. Se non inserisci Prezzo Attuale, AlphaForge prova a scaricarlo automaticamente.",
+    )
+    st.dataframe(template, use_container_width=True, hide_index=True)
     st.stop()
 
 try:
-    if use_demo and uploaded is None:
-        portfolio_df = template
-    elif uploaded.name.lower().endswith((".xlsx", ".xls")):
-        portfolio_df = pd.read_excel(uploaded)
-    else:
-        portfolio_df = pd.read_csv(uploaded)
+    portfolio = template if use_demo and uploaded is None else read_uploaded(uploaded)
 except Exception as exc:  # noqa: BLE001
     st.error(f"File non leggibile: {exc}")
     st.stop()
 
-action_plan = pd.read_csv(ACTION_PLAN_OUTPUT_CSV) if ACTION_PLAN_OUTPUT_CSV.exists() else pd.DataFrame()
-insights = pd.read_csv(INSIGHTS_OUTPUT_CSV) if INSIGHTS_OUTPUT_CSV.exists() else pd.DataFrame()
+with st.spinner("Analisi portafoglio..."):
+    result = analyze_portfolio(portfolio, action_plan=action_plan, insights=insights)
 
-with st.spinner("Analisi portafoglio in corso..."):
-    result = analyze_portfolio(portfolio_df, action_plan=action_plan, insights=insights)
-
-summary = result.summary
+s = result.summary
 mini_cards([
-    ("Valore totale", f"€ {summary.get('Valore Totale EUR', 0):,.0f}".replace(",", "."), "Stima indicativa"),
-    ("Posizioni", summary.get("Numero Posizioni", 0), "Ticker caricati"),
-    ("Peso maggiore", f"{summary.get('Peso maggiore %', 0)}%", "Concentrazione"),
-    ("High risk", f"{summary.get('Peso High Risk %', 0)}%", "Peso strumenti rischiosi"),
+    ("Health Score", s.get("Portfolio Health Score", 0), "Più alto = più ordinato"),
+    ("Valore totale", f"€ {s.get('Valore Totale EUR', 0):,.0f}".replace(",", "."), "Indicativo"),
+    ("Peso maggiore", f"{s.get('Peso maggiore %', 0)}%", "Concentrazione"),
+    ("Da rivedere", s.get("Posizioni da rivedere", 0), "Priorità pratiche"),
 ])
 
-st.subheader("Posizioni analizzate")
-pos_cols = ["Ticker", "Valore EUR", "Peso %", "P/L %", "Score Finale", "Priority Score", "Decisione chiara", "Risk Flag", "Suggerimento Portafoglio"]
-st.dataframe(style_priority_dataframe(result.positions[[c for c in pos_cols if c in result.positions.columns]]), use_container_width=True, hide_index=True)
-
-st.subheader("Come migliorarlo")
+st.subheader("Cosa migliorare prima")
 st.dataframe(result.improvements, use_container_width=True, hide_index=True)
 
-if "Peso %" in result.positions.columns and not result.positions.empty:
-    fig = px.pie(result.positions, names="Ticker", values="Peso %", title="Distribuzione portafoglio")
-    fig.update_layout(height=460, margin=dict(l=10, r=10, t=55, b=10))
-    st.plotly_chart(fig, use_container_width=True)
+st.subheader("Posizioni con suggerimento")
+cols = ["Ticker", "Categoria Stimata", "Valore EUR", "Peso %", "Target %", "Gap vs Target %", "P/L %", "Score Finale", "Priority Score", "Risk Flag", "Suggerimento Portafoglio"]
+st.dataframe(style_priority_dataframe(safe_cols(result.positions, cols)), use_container_width=True, hide_index=True)
 
-st.caption("Nota: analisi informativa. Prima di operare valuta costi, fiscalità, liquidità, profilo rischio, notizie e obiettivi personali.")
+st.caption("Uso informativo: i risultati dipendono dai dati disponibili, dalla correttezza del file caricato e non costituiscono consulenza finanziaria personalizzata.")

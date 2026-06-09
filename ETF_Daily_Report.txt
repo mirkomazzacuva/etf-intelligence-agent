@@ -1,21 +1,17 @@
-AlphaForge Intelligence v5 - Action & Portfolio Report
-Aggiornato il 09/06/2026 12:56
+AlphaForge Intelligence v6 - Action First Report
+Aggiornato il 09/06/2026 15:18
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
 Cosa fare adesso:
-- AMZN: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
-- RBOT.MI: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
-- MSFT: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
-- INRG.MI: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
-- META: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
-- TSLA: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
-- SMH: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
-- WCLD.MI: 🟥 Riduci rischio / non aumentare | Non aumentare esposizione: controlla peso in portafoglio, stop mentale e correlazione con posizioni simili.
+- EIMI.MI: valuta ingresso solo graduale. Prima controlla prezzo vicino a MA50: monitorare conferma.
+- VWCE.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
+- SWDA.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
+- SXR8.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
+- EXSA.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 
-Miglior ETF: EIMI.MI - score 79.4
+Miglior ETF: XDEV.MI - score 80.0
 Stato: Buy Watchlist
-Entry zone: Constructive entry zone
 
 Allocazione suggerita su 1000 EUR:
 - EIMI.MI: 18.33% - 183.3 EUR
@@ -27,13 +23,6 @@ Allocazione suggerita su 1000 EUR:
 - XDEV.MI: 7.5% - 75.0 EUR
 - IWQU.MI: 7.5% - 75.0 EUR
 
-Watchlist azioni/strumenti:
-- GOOGL: score 80.2, action Ridurre size / solo monitoraggio
-- NVDA: score 74.8, action Ridurre size / solo monitoraggio
-- AAPL: score 73.4, action Ridurre size / solo monitoraggio
-- AMZN: score 66.8, action Ridurre size / solo monitoraggio
-- MSFT: score 65.5, action Ridurre size / solo monitoraggio
-
-Per il portafoglio personale usa la pagina Streamlit 'Portafoglio': carica CSV/XLSX e confronta peso, score e rischio delle tue posizioni.
+Portafoglio personale: usa la pagina Streamlit 'Portafoglio' per caricare CSV/XLSX, controllare concentrazione, rischio e gap target.
 
 Usare sempre size, diversificazione, costi, fiscalità, liquidità e profilo personale come filtri finali.

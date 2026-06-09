@@ -37,7 +37,7 @@ def generate_dashboard() -> None:
     status = read_status()
     REPORT_FILE.write_text(build_text_report(ranking, allocation, watchlist, insights, action_plan), encoding="utf-8")
     render_dashboard_html(ranking, allocation, status, watchlist, DASHBOARD_FILE, insights, action_plan)
-    print(f"Dashboard generata: {DASHBOARD_FILE}")
+    print(f"Dashboard v6 generata: {DASHBOARD_FILE}")
 
 
 if __name__ == "__main__":

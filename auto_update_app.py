@@ -29,6 +29,7 @@ def write_status(status: str, message: str, details: list[dict] | None = None, s
         "message": message,
         "started_at": started_at,
         "finished_at": now_iso() if status in {"success", "failed"} else None,
+        "version": "AlphaForge v6 Action First",
         "details": details or [],
     }
     STATUS_FILE.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -70,7 +71,7 @@ def run_dashboard(details: list[dict], started_at: str) -> int:
 def main() -> int:
     started_at = now_iso()
     details: list[dict] = []
-    write_status("running", "Aggiornamento AlphaForge v5 in corso", details, started_at=started_at)
+    write_status("running", "Aggiornamento AlphaForge v6 in corso", details, started_at=started_at)
 
     for script in DATA_SCRIPTS:
         if not ensure_script_exists(script, details, started_at):
@@ -81,17 +82,15 @@ def main() -> int:
             write_status("failed", f"Aggiornamento fallito su {script}", details, started_at=started_at)
             return int(result["returncode"])
 
-    write_status("success", "Dati AlphaForge v5 aggiornati; dashboard in generazione", details, started_at=started_at)
-    first_dashboard_status = run_dashboard(details, started_at)
-    if first_dashboard_status != 0:
-        return first_dashboard_status
+    write_status("success", "Dati AlphaForge v6 aggiornati; dashboard in generazione", details, started_at=started_at)
+    if run_dashboard(details, started_at) != 0:
+        return 1
 
-    write_status("success", "Aggiornamento AlphaForge v5 completato", details, started_at=started_at)
-    final_dashboard_status = run_dashboard(details, started_at)
-    if final_dashboard_status != 0:
-        return final_dashboard_status
+    write_status("success", "Aggiornamento AlphaForge v6 completato", details, started_at=started_at)
+    if run_dashboard(details, started_at) != 0:
+        return 1
 
-    write_status("success", "Aggiornamento AlphaForge v5 completato", details, started_at=started_at)
+    write_status("success", "Aggiornamento AlphaForge v6 completato", details, started_at=started_at)
     return 0
 
 

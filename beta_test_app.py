@@ -54,6 +54,7 @@ CORE_MODULES = [
     "core.insight_engine",
     "core.decision_engine",
     "core.portfolio_engine",
+    "core.action_guide_engine",
     "core.report_engine",
     "core.ui_theme",
 ]
@@ -206,12 +207,12 @@ class BetaTester:
         if Path("index.html").exists():
             try:
                 html = Path("index.html").read_text(encoding="utf-8", errors="ignore")
-                if "AlphaForge v5" in html and "Decision" in html:
-                    self.ok("Dashboard pubblica v5", "AlphaForge v5 Decision & Portfolio presente")
+                if "AlphaForge v6" in html and "Action First" in html:
+                    self.ok("Dashboard pubblica v6", "AlphaForge v6 Decision & Portfolio presente")
                 elif "AlphaForge v4" in html:
-                    self.warn("Dashboard pubblica v5", "index.html ancora v4: esegui full update")
+                    self.warn("Dashboard pubblica v6", "index.html non ancora v6: esegui full update")
                 else:
-                    self.warn("Dashboard pubblica v5", "Marker v5 non trovato")
+                    self.warn("Dashboard pubblica v6", "Marker v6 non trovato")
             except Exception as exc:  # noqa: BLE001
                 self.fail("Dashboard pubblica", str(exc))
 
