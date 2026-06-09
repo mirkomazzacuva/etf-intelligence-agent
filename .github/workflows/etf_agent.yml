@@ -1,19 +1,23 @@
-name: ETF Intelligence Agent
+name: Auto update ETF Intelligence App
 
 on:
   schedule:
-    - cron: '30 16 * * 1-5'
+    # GitHub Actions usa orario UTC.
+    # 18:30 UTC = 20:30 in Italia con ora legale, 19:30 con ora solare.
+    # Scelto dopo la chiusura dei mercati europei per avere dati più stabili.
+    - cron: "30 18 * * 1-5"
   workflow_dispatch:
 
 permissions:
   contents: write
 
-jobs:
-  run-etf-agent:
-    runs-on: ubuntu-latest
+concurrency:
+  group: etf-intelligence-auto-update
+  cancel-in-progress: false
 
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -22,25 +26,22 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
+          cache: "pip"
 
       - name: Install dependencies
         run: |
-          pip install pandas numpy yfinance openpyxl
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Run ETF Agent
+      - name: Run automatic update
         run: |
-          python update_etf_data_v3.py
-          python allocation_engine.py
-          python generate_dashboard.py
+          python auto_update_app.py
 
-      - name: Commit generated files
+      - name: Commit updated app files
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-
-          git add .
-
-          git commit -m "Auto update dashboard and allocation" || echo "No changes"
-
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ETF_Intelligence_Agent_UPDATED.xlsx ETF_Allocation_Model.xlsx ETF_Daily_Report.txt index.html AUTO_UPDATE_STATUS.json logs/update_log.jsonl
+          git diff --cached --quiet && echo "No changes to commit" || git commit -m "Auto update ETF intelligence data"
           git push
