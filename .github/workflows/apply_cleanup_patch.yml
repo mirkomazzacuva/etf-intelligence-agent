@@ -1,4 +1,4 @@
-name: Apply cleanup patch
+name: Apply cleanup patch safe
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  apply-cleanup-patch:
+  apply-cleanup-patch-safe:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +19,7 @@ jobs:
           git config user.name "actions-user"
           git config user.email "actions@github.com"
 
-      - name: Apply cleanup patch
+      - name: Apply cleanup patch without touching workflows
         run: |
           if [ ! -f alpha_forge_repo_cleanup_patch.zip ]; then
             echo "ERROR: alpha_forge_repo_cleanup_patch.zip not found in repository root"
@@ -29,14 +29,21 @@ jobs:
           mkdir -p /tmp/cleanup_patch
           unzip -o alpha_forge_repo_cleanup_patch.zip -d /tmp/cleanup_patch
 
-          shopt -s dotglob nullglob
-
           if [ -d "/tmp/cleanup_patch/alpha_forge_repo_cleanup_patch" ]; then
-            cp -a /tmp/cleanup_patch/alpha_forge_repo_cleanup_patch/. .
+            PATCH_DIR="/tmp/cleanup_patch/alpha_forge_repo_cleanup_patch"
           else
-            cp -a /tmp/cleanup_patch/. .
+            PATCH_DIR="/tmp/cleanup_patch"
           fi
 
+          # Copy only non-workflow files
+          cp -f "$PATCH_DIR/.gitignore" . 2>/dev/null || true
+          cp -f "$PATCH_DIR/auto_update_app.py" . 2>/dev/null || true
+          cp -f "$PATCH_DIR/beta_test_app.py" . 2>/dev/null || true
+          cp -f "$PATCH_DIR/streamlit_app.py" . 2>/dev/null || true
+          cp -f "$PATCH_DIR/README_BETA_TEST.md" . 2>/dev/null || true
+          cp -f "$PATCH_DIR/README_REPO_CLEANUP.md" . 2>/dev/null || true
+
+          # Remove useless files
           rm -f ETF_AI_AGENT_FREE.zip
           rm -f alpha_forge_auto_updates.zip
           rm -f alpha_forge_repo_cleanup_patch.zip
@@ -45,8 +52,6 @@ jobs:
           rm -rf logs
           rm -rf __pycache__
           rm -rf .pytest_cache
-
-          rm -f .github/workflows/apply_cleanup_patch.yml
 
           git status --short
 
@@ -57,6 +62,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Apply cleanup patch"
+            git commit -m "Apply safe cleanup patch"
             git push
           fi
