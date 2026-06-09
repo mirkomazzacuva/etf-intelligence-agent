@@ -52,14 +52,14 @@ jobs:
 
       - name: Run beta test checks
         run: |
-          python beta_test_app.py
-
-      - name: Run full update test when requested manually
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_full_update == 'true' }}
-        run: |
-          python beta_test_app.py --full-update
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.run_full_update }}" = "true" ]; then
+            python beta_test_app.py --full-update
+          else
+            python beta_test_app.py
+          fi
 
       - name: Start Streamlit smoke test
+        if: always()
         run: |
           nohup streamlit run streamlit_app.py \
             --server.headless true \
