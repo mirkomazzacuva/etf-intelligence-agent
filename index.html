@@ -1,496 +1,83 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ETF Intelligence Dashboard</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-    padding: 20px;
-    color: #111827;
-}
-
-h1 {
-    margin-bottom: 5px;
-}
-
-.subtitle {
-    color: #6b7280;
-    margin-bottom: 25px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
-}
-
-.card {
-    background: white;
-    padding: 18px;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
-}
-
-.badge {
-    display: inline-block;
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: #e0f2fe;
-    font-weight: bold;
-}
-
-.badge-green {
-    background: #dcfce7;
-}
-
-.badge-yellow {
-    background: #fef9c3;
-}
-
-.badge-red {
-    background: #fee2e2;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-}
-
-th, td {
-    padding: 10px;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: left;
-    font-size: 14px;
-    vertical-align: top;
-}
-
-th {
-    background: #111827;
-    color: white;
-}
-
-tr:hover {
-    background: #f9fafb;
-}
-
-.footer {
-    margin-top: 25px;
-    color: #6b7280;
-    font-size: 13px;
-}
-
-@media screen and (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ETF Intelligence Dashboard</title>
+  <style>
+    body { font-family: Inter, Arial, sans-serif; margin: 0; background: #0f172a; color: #e5e7eb; }
+    main { max-width: 1180px; margin: 0 auto; padding: 32px 18px 60px; }
+    .hero { background: linear-gradient(135deg, #111827, #1e293b); border: 1px solid #334155; border-radius: 24px; padding: 28px; margin-bottom: 22px; }
+    h1 { margin: 0 0 8px; font-size: 34px; }
+    h2 { margin-top: 34px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 18px; }
+    .card { background: #111827; border: 1px solid #334155; border-radius: 18px; padding: 18px; }
+    .label { color: #94a3b8; font-size: 13px; margin-bottom: 8px; }
+    .value { font-size: 22px; font-weight: 750; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; background: #111827; border-radius: 16px; overflow: hidden; }
+    th, td { border-bottom: 1px solid #263449; padding: 11px 10px; text-align: left; vertical-align: top; }
+    th { color: #cbd5e1; background: #1e293b; font-size: 13px; }
+    td { color: #e5e7eb; font-size: 13px; }
+    .muted { color: #94a3b8; }
+    .badge { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #1d4ed8; color: white; font-size: 12px; }
+    .disclaimer { margin-top: 28px; padding: 16px; border-radius: 14px; background: #1e293b; color: #cbd5e1; }
+  </style>
 </head>
-
 <body>
-
-<h1>ETF Intelligence Dashboard</h1>
-<div class="subtitle">
-Aggiornato il 08/06/2026 22:15
-</div>
-
-<div class="grid">
-    <div class="card">
-        <h2>Market Regime</h2>
-        <p class="badge">Neutral</p>
+<main>
+  <section class="hero">
+    <div class="muted">Aggiornato il 09/06/2026 09:44</div>
+    <h1>ETF Intelligence Dashboard</h1>
+    <p class="muted">Ranking ETF, allocazione indicativa e lettura prudente del rischio.</p>
+    <div class="cards">
+      <div class="card"><div class="label">Market Regime</div><div class="value">Neutral</div></div>
+      <div class="card"><div class="label">Miglior ETF</div><div class="value">XDEV.MI</div></div>
+      <div class="card"><div class="label">Score migliore</div><div class="value">82.0</div></div>
+      <div class="card"><div class="label">Stato</div><div class="value"><span class="badge">Buy Watchlist</span></div></div>
     </div>
+  </section>
 
-    <div class="card">
-        <h2>Miglior ETF oggi</h2>
-        <p class="badge badge-green">
-            XDEV.MI - Xtrackers MSCI World Value UCITS ETF | Score 81.9
-        </p>
-        <p>Monitorare secondo score e trend.</p>
-    </div>
-</div>
+  <h2>Allocazione suggerita per nuovi 1000 EUR</h2>
+  <p class="muted">Non è una raccomandazione automatica di acquisto: serve per capire distribuzione, rischio e ruolo degli ETF.</p>
+  <table>
+    <thead><tr><th>Ticker</th><th>Nome ETF</th><th>Categoria</th><th>Tema/Area</th><th>Peso Target %</th><th>Importo su 1000 EUR</th><th>Score Finale</th><th>Note AI</th></tr></thead>
+    <tbody><tr><td>EIMI.MI</td><td>iShares Core MSCI Emerging Markets IMI UCITS ETF</td><td>Core</td><td>Emerging Markets</td><td>32.5</td><td>325</td><td>72.7</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>VWCE.MI</td><td>Vanguard FTSE All-World UCITS ETF</td><td>Core</td><td>Global Equity</td><td>32.5</td><td>325</td><td>71.5</td><td>Buona base core di lungo periodo.</td></tr>
+<tr><td>XDEV.MI</td><td>Xtrackers MSCI World Value UCITS ETF</td><td>Factor</td><td>Value</td><td>7.5</td><td>75</td><td>82.0</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>IWQU.MI</td><td>iShares MSCI World Quality Factor UCITS ETF</td><td>Factor</td><td>Quality</td><td>7.5</td><td>75</td><td>69.5</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>XAIX.MI</td><td>Xtrackers Artificial Intelligence &amp; Big Data UCITS ETF</td><td>Thematic</td><td>Artificial Intelligence</td><td>5.0</td><td>50</td><td>76.0</td><td>Tema strutturale forte, ma con rischio euforia e concentrazione.</td></tr>
+<tr><td>ISPY.MI</td><td>L&amp;G Cyber Security UCITS ETF</td><td>Thematic</td><td>Cybersecurity</td><td>5.0</td><td>50</td><td>62.2</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>SGLD.MI</td><td>Invesco Physical Gold ETC</td><td>Defensive</td><td>Gold</td><td>5.0</td><td>50</td><td>61.3</td><td>Utile come protezione macro/geopolitica. Prezzo sotto media 200: trend non ancora convincente.</td></tr>
+<tr><td>AGGH.MI</td><td>iShares Core Global Aggregate Bond UCITS ETF</td><td>Defensive</td><td>Global Bonds</td><td>5.0</td><td>50</td><td>38.9</td><td>Componente difensiva utile per bilanciare il rischio equity. Prezzo sotto media 200: trend non ancora convincente.</td></tr></tbody>
+  </table>
 
-<div class="card">
-    <h2>Allocazione suggerita per nuovi 1000 €</h2>
-    <p>
-        Questa non è una raccomandazione automatica di acquisto, ma una proposta di distribuzione basata su score, categoria, rischio e contesto.
-    </p>
-    <table>
-        <tr>
-            <th>Ticker</th>
-            <th>ETF</th>
-            <th>Categoria</th>
-            <th>Tema</th>
-            <th>Peso</th>
-            <th>Importo</th>
-            <th>Score</th>
-            <th>Nota AI</th>
-        </tr>
-        
-    <tr>
-        <td>EIMI.MI</td>
-        <td>iShares Core MSCI Emerging Markets IMI UCITS ETF</td>
-        <td>Core</td>
-        <td>Emerging Markets</td>
-        <td><strong>32.5%</strong></td>
-        <td>325 €</td>
-        <td>71.9</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>VWCE.MI</td>
-        <td>Vanguard FTSE All-World UCITS ETF</td>
-        <td>Core</td>
-        <td>Global Equity</td>
-        <td><strong>32.5%</strong></td>
-        <td>325 €</td>
-        <td>71.9</td>
-        <td>Buona base core di lungo periodo.</td>
-    </tr>
-    
-    <tr>
-        <td>XDEV.MI</td>
-        <td>Xtrackers MSCI World Value UCITS ETF</td>
-        <td>Factor</td>
-        <td>Value</td>
-        <td><strong>7.5%</strong></td>
-        <td>75 €</td>
-        <td>81.9</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>IWQU.MI</td>
-        <td>iShares MSCI World Quality Factor UCITS ETF</td>
-        <td>Factor</td>
-        <td>Quality</td>
-        <td><strong>7.5%</strong></td>
-        <td>75 €</td>
-        <td>70.0</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>XAIX.MI</td>
-        <td>Xtrackers Artificial Intelligence & Big Data UCITS ETF</td>
-        <td>Thematic</td>
-        <td>Artificial Intelligence</td>
-        <td><strong>5.0%</strong></td>
-        <td>50 €</td>
-        <td>75.8</td>
-        <td>Tema strutturale forte, ma rischio euforia/concentrazione elevato.</td>
-    </tr>
-    
-    <tr>
-        <td>ISPY.MI</td>
-        <td>L&G Cyber Security UCITS ETF</td>
-        <td>Thematic</td>
-        <td>Cybersecurity</td>
-        <td><strong>5.0%</strong></td>
-        <td>50 €</td>
-        <td>64.3</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>SGLD.MI</td>
-        <td>Invesco Physical Gold ETC</td>
-        <td>Defensive</td>
-        <td>Gold</td>
-        <td><strong>5.0%</strong></td>
-        <td>50 €</td>
-        <td>77.2</td>
-        <td>Utile come protezione macro/geopolitica.</td>
-    </tr>
-    
-    <tr>
-        <td>AGGH.MI</td>
-        <td>iShares Core Global Aggregate Bond UCITS ETF</td>
-        <td>Defensive</td>
-        <td>Global Bonds</td>
-        <td><strong>5.0%</strong></td>
-        <td>50 €</td>
-        <td>35.9</td>
-        <td>Componente difensiva, utile per bilanciare rischio equity.</td>
-    </tr>
-    
-    </table>
-</div>
+  <h2>Top ETF Ranking</h2>
+  <table>
+    <thead><tr><th>Ticker</th><th>Nome ETF</th><th>Tema/Area</th><th>Score Finale</th><th>Stato</th><th>Rendimento 12M %</th><th>Volatilità %</th><th>Max Drawdown %</th><th>Note AI</th></tr></thead>
+    <tbody><tr><td>XDEV.MI</td><td>Xtrackers MSCI World Value UCITS ETF</td><td>Value</td><td>82.0</td><td>Buy Watchlist</td><td>60.59</td><td>13.94</td><td>-17.8</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>XAIX.MI</td><td>Xtrackers Artificial Intelligence &amp; Big Data UCITS ETF</td><td>Artificial Intelligence</td><td>76.0</td><td>Accumulate Carefully</td><td>55.33</td><td>21.09</td><td>-33.01</td><td>Tema strutturale forte, ma con rischio euforia e concentrazione.</td></tr>
+<tr><td>EIMI.MI</td><td>iShares Core MSCI Emerging Markets IMI UCITS ETF</td><td>Emerging Markets</td><td>72.7</td><td>Accumulate Carefully</td><td>42.29</td><td>16.44</td><td>-22.01</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>FGQI.MI</td><td>Fidelity Global Quality Income UCITS ETF</td><td>Quality Dividend</td><td>72.1</td><td>Accumulate Carefully</td><td>22.21</td><td>13.35</td><td>-19.89</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>VWCE.MI</td><td>Vanguard FTSE All-World UCITS ETF</td><td>Global Equity</td><td>71.5</td><td>Accumulate Carefully</td><td>24.25</td><td>13.74</td><td>-20.96</td><td>Buona base core di lungo periodo.</td></tr>
+<tr><td>SWDA.MI</td><td>iShares Core MSCI World UCITS ETF</td><td>Global Equity</td><td>70.3</td><td>Accumulate Carefully</td><td>21.84</td><td>14.2</td><td>-21.63</td><td>Buona base core di lungo periodo.</td></tr>
+<tr><td>IWQU.MI</td><td>iShares MSCI World Quality Factor UCITS ETF</td><td>Quality</td><td>69.5</td><td>Accumulate Carefully</td><td>17.38</td><td>14.16</td><td>-20.6</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>IWMO.MI</td><td>iShares MSCI World Momentum Factor UCITS ETF</td><td>Momentum</td><td>69.3</td><td>Accumulate Carefully</td><td>29.96</td><td>17.34</td><td>-23.45</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>VUAA.MI</td><td>Vanguard S&amp;P 500 UCITS ETF</td><td>USA Large Cap</td><td>66.6</td><td>Accumulate Carefully</td><td>23.5</td><td>15.2</td><td>-23.28</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>EQQQ.MI</td><td>Invesco Nasdaq-100 UCITS ETF</td><td>Nasdaq / Tech</td><td>63.5</td><td>Hold / Monitor</td><td>34.55</td><td>19.89</td><td>-31.11</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>EXSA.MI</td><td>iShares STOXX Europe 600 UCITS ETF</td><td>Europe</td><td>62.8</td><td>Hold / Monitor</td><td>15.23</td><td>14.53</td><td>-20.85</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>ISPY.MI</td><td>L&amp;G Cyber Security UCITS ETF</td><td>Cybersecurity</td><td>62.2</td><td>Hold / Monitor</td><td>26.3</td><td>24.61</td><td>-33.89</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>SGLD.MI</td><td>Invesco Physical Gold ETC</td><td>Gold</td><td>61.3</td><td>Hold / Monitor</td><td>28.17</td><td>16.11</td><td>-17.25</td><td>Utile come protezione macro/geopolitica. Prezzo sotto media 200: trend non ancora convincente.</td></tr>
+<tr><td>RBOT.MI</td><td>iShares Automation &amp; Robotics UCITS ETF</td><td>Robotics</td><td>60.7</td><td>Hold / Monitor</td><td>39.08</td><td>22.05</td><td>-35.29</td><td>Drawdown storico importante.</td></tr>
+<tr><td>DFNS.MI</td><td>VanEck Defense UCITS ETF</td><td>Defense</td><td>59.6</td><td>Hold / Monitor</td><td>9.75</td><td>21.61</td><td>-18.73</td><td>Tema sostenuto dal contesto geopolitico, da usare come satellite. Prezzo sotto media 200: trend non ancora convincente.</td></tr>
+<tr><td>MVOL.MI</td><td>iShares Edge MSCI World Minimum Volatility UCITS ETF</td><td>Low Volatility</td><td>59.0</td><td>Hold / Monitor</td><td>-0.14</td><td>10.2</td><td>-12.85</td><td>Monitorare secondo score, trend e rischio.</td></tr>
+<tr><td>SMH.MI</td><td>VanEck Semiconductor UCITS ETF</td><td>Semiconductors</td><td>54.4</td><td>Hold / Monitor</td><td>157.82</td><td>31.13</td><td>-37.84</td><td>Tema molto forte, ma ciclico e volatile. Volatilità elevata: ingresso da valutare con prudenza. Drawdown storico importante.</td></tr>
+<tr><td>WTAI.MI</td><td>WisdomTree Artificial Intelligence UCITS ETF</td><td>Artificial Intelligence</td><td>52.7</td><td>Hold / Monitor</td><td>76.91</td><td>28.28</td><td>-40.09</td><td>Tema strutturale forte, ma con rischio euforia e concentrazione. Volatilità elevata: ingresso da valutare con prudenza. Drawdown storico importante.</td></tr>
+<tr><td>AGGH.MI</td><td>iShares Core Global Aggregate Bond UCITS ETF</td><td>Global Bonds</td><td>38.9</td><td>Avoid for Now</td><td>1.17</td><td>4.67</td><td>-17.02</td><td>Componente difensiva utile per bilanciare il rischio equity. Prezzo sotto media 200: trend non ancora convincente.</td></tr>
+<tr><td>VAGF.MI</td><td>Vanguard Global Aggregate Bond UCITS ETF</td><td>Global Bonds</td><td>38.1</td><td>Avoid for Now</td><td>1.16</td><td>4.81</td><td>-18.72</td><td>Componente difensiva utile per bilanciare il rischio equity. Prezzo sotto media 200: trend non ancora convincente.</td></tr></tbody>
+  </table>
 
-<div class="card">
-    <h2>Top ETF Ranking</h2>
-    <table>
-        <tr>
-            <th>Ticker</th>
-            <th>ETF</th>
-            <th>Tema</th>
-            <th>Score</th>
-            <th>Stato</th>
-            <th>12M</th>
-            <th>Volatilità</th>
-            <th>Drawdown</th>
-            <th>Nota AI</th>
-        </tr>
-        
-    <tr>
-        <td>XDEV.MI</td>
-        <td>Xtrackers MSCI World Value UCITS ETF</td>
-        <td>Value</td>
-        <td><strong>81.9</strong></td>
-        <td>Buy Watchlist</td>
-        <td>60.91%</td>
-        <td>13.94%</td>
-        <td>-17.8%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>SGLD.MI</td>
-        <td>Invesco Physical Gold ETC</td>
-        <td>Gold</td>
-        <td><strong>77.2</strong></td>
-        <td>Accumulate Carefully</td>
-        <td>27.42%</td>
-        <td>16.12%</td>
-        <td>-16.95%</td>
-        <td>Utile come protezione macro/geopolitica.</td>
-    </tr>
-    
-    <tr>
-        <td>XAIX.MI</td>
-        <td>Xtrackers Artificial Intelligence & Big Data UCITS ETF</td>
-        <td>Artificial Intelligence</td>
-        <td><strong>75.8</strong></td>
-        <td>Accumulate Carefully</td>
-        <td>55.39%</td>
-        <td>21.09%</td>
-        <td>-33.01%</td>
-        <td>Tema strutturale forte, ma rischio euforia/concentrazione elevato.</td>
-    </tr>
-    
-    <tr>
-        <td>FGQI.MI</td>
-        <td>Fidelity Global Quality Income UCITS ETF</td>
-        <td>Quality Dividend</td>
-        <td><strong>72.6</strong></td>
-        <td>Accumulate Carefully</td>
-        <td>23.57%</td>
-        <td>13.36%</td>
-        <td>-19.89%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>EIMI.MI</td>
-        <td>iShares Core MSCI Emerging Markets IMI UCITS ETF</td>
-        <td>Emerging Markets</td>
-        <td><strong>71.9</strong></td>
-        <td>Accumulate Carefully</td>
-        <td>41.68%</td>
-        <td>16.44%</td>
-        <td>-22.01%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>VWCE.MI</td>
-        <td>Vanguard FTSE All-World UCITS ETF</td>
-        <td>Global Equity</td>
-        <td><strong>71.9</strong></td>
-        <td>Accumulate Carefully</td>
-        <td>25.27%</td>
-        <td>13.75%</td>
-        <td>-20.96%</td>
-        <td>Buona base core di lungo periodo.</td>
-    </tr>
-    
-    <tr>
-        <td>SWDA.MI</td>
-        <td>iShares Core MSCI World UCITS ETF</td>
-        <td>Global Equity</td>
-        <td><strong>70.9</strong></td>
-        <td>Accumulate Carefully</td>
-        <td>23.28%</td>
-        <td>14.21%</td>
-        <td>-21.63%</td>
-        <td>Buona base core di lungo periodo.</td>
-    </tr>
-    
-    <tr>
-        <td>IWQU.MI</td>
-        <td>iShares MSCI World Quality Factor UCITS ETF</td>
-        <td>Quality</td>
-        <td><strong>70.0</strong></td>
-        <td>Accumulate Carefully</td>
-        <td>18.66%</td>
-        <td>14.16%</td>
-        <td>-20.6%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>IWMO.MI</td>
-        <td>iShares MSCI World Momentum Factor UCITS ETF</td>
-        <td>Momentum</td>
-        <td><strong>68.9</strong></td>
-        <td>Accumulate Carefully</td>
-        <td>29.22%</td>
-        <td>17.34%</td>
-        <td>-23.45%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>VUAA.MI</td>
-        <td>Vanguard S&P 500 UCITS ETF</td>
-        <td>USA Large Cap</td>
-        <td><strong>67.4</strong></td>
-        <td>Accumulate Carefully</td>
-        <td>25.15%</td>
-        <td>15.21%</td>
-        <td>-23.28%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>ISPY.MI</td>
-        <td>L&G Cyber Security UCITS ETF</td>
-        <td>Cybersecurity</td>
-        <td><strong>64.3</strong></td>
-        <td>Hold / Monitor</td>
-        <td>30.45%</td>
-        <td>24.61%</td>
-        <td>-33.89%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>EQQQ.MI</td>
-        <td>Invesco Nasdaq-100 UCITS ETF</td>
-        <td>Nasdaq / Tech</td>
-        <td><strong>64.0</strong></td>
-        <td>Hold / Monitor</td>
-        <td>35.46%</td>
-        <td>19.9%</td>
-        <td>-31.11%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>EXSA.MI</td>
-        <td>iShares STOXX Europe 600 UCITS ETF</td>
-        <td>Europe</td>
-        <td><strong>63.1</strong></td>
-        <td>Hold / Monitor</td>
-        <td>15.89%</td>
-        <td>14.53%</td>
-        <td>-20.85%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>DFNS.MI</td>
-        <td>VanEck Defense UCITS ETF</td>
-        <td>Defense</td>
-        <td><strong>61.1</strong></td>
-        <td>Hold / Monitor</td>
-        <td>12.56%</td>
-        <td>21.62%</td>
-        <td>-18.73%</td>
-        <td>Tema sostenuto da contesto geopolitico, ma da usare come satellite.</td>
-    </tr>
-    
-    <tr>
-        <td>RBOT.MI</td>
-        <td>iShares Automation & Robotics UCITS ETF</td>
-        <td>Robotics</td>
-        <td><strong>60.9</strong></td>
-        <td>Hold / Monitor</td>
-        <td>39.26%</td>
-        <td>22.06%</td>
-        <td>-35.29%</td>
-        <td>Drawdown storico importante.</td>
-    </tr>
-    
-    <tr>
-        <td>MVOL.MI</td>
-        <td>iShares Edge MSCI World Minimum Volatility UCITS ETF</td>
-        <td>Low Volatility</td>
-        <td><strong>59.5</strong></td>
-        <td>Hold / Monitor</td>
-        <td>0.95%</td>
-        <td>10.2%</td>
-        <td>-12.85%</td>
-        <td>Monitorare secondo score e trend.</td>
-    </tr>
-    
-    <tr>
-        <td>SMH.MI</td>
-        <td>VanEck Semiconductor UCITS ETF</td>
-        <td>Semiconductors</td>
-        <td><strong>54.2</strong></td>
-        <td>Hold / Monitor</td>
-        <td>153.29%</td>
-        <td>31.13%</td>
-        <td>-37.84%</td>
-        <td>Tema molto forte, ma ciclico e volatile. Volatilità elevata. Drawdown storico importante.</td>
-    </tr>
-    
-    <tr>
-        <td>WTAI.MI</td>
-        <td>WisdomTree Artificial Intelligence UCITS ETF</td>
-        <td>Artificial Intelligence</td>
-        <td><strong>52.6</strong></td>
-        <td>Hold / Monitor</td>
-        <td>76.67%</td>
-        <td>28.29%</td>
-        <td>-40.09%</td>
-        <td>Tema strutturale forte, ma rischio euforia/concentrazione elevato. Volatilità elevata. Drawdown storico importante.</td>
-    </tr>
-    
-    <tr>
-        <td>AGGH.MI</td>
-        <td>iShares Core Global Aggregate Bond UCITS ETF</td>
-        <td>Global Bonds</td>
-        <td><strong>35.9</strong></td>
-        <td>Avoid for Now</td>
-        <td>0.81%</td>
-        <td>4.68%</td>
-        <td>-17.02%</td>
-        <td>Componente difensiva, utile per bilanciare rischio equity.</td>
-    </tr>
-    
-    <tr>
-        <td>VAGF.MI</td>
-        <td>Vanguard Global Aggregate Bond UCITS ETF</td>
-        <td>Global Bonds</td>
-        <td><strong>35.1</strong></td>
-        <td>Avoid for Now</td>
-        <td>0.94%</td>
-        <td>4.81%</td>
-        <td>-18.72%</td>
-        <td>Componente difensiva, utile per bilanciare rischio equity.</td>
-    </tr>
-    
-    </table>
-</div>
-
-<div class="footer">
-    Report informativo. Non costituisce consulenza finanziaria personalizzata.
-</div>
-
+  <div class="disclaimer">Report informativo. Non costituisce consulenza finanziaria personalizzata.</div>
+</main>
 </body>
 </html>
