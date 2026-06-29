@@ -1,16 +1,16 @@
 AlphaForge Intelligence v6 - Action First Report
-Aggiornato il 26/06/2026 20:15
+Aggiornato il 29/06/2026 20:19
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
 Cosa fare adesso:
 - EIMI.MI: valuta ingresso solo graduale. Prima controlla prezzo vicino a MA50: monitorare conferma.
+- XDEV.MI: valuta ingresso solo graduale. Prima controlla prezzo vicino a MA50: monitorare conferma.
 - VWCE.DE: valuta ingresso solo graduale. Prima controlla prezzo vicino a MA50: monitorare conferma.
-- SWDA.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
-- EXSA.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
-- SXR8.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
+- SWDA.MI: valuta ingresso solo graduale. Prima controlla prezzo vicino a MA50: monitorare conferma; vicino a resistenza 20D: attenzione a falso breakout.
+- SXR8.DE: valuta ingresso solo graduale. Prima controlla prezzo vicino a MA50: monitorare conferma; vicino a resistenza 20D: attenzione a falso breakout.
 
-Miglior ETF: XDEV.MI - score 81.6
+Miglior ETF: XDEV.MI - score 82.6
 Stato: Buy Watchlist
 
 Allocazione suggerita su 1000 EUR:
