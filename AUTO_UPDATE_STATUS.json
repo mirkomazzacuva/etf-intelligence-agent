@@ -1,8 +1,8 @@
 {
   "status": "success",
   "message": "Aggiornamento AlphaForge v6 completato",
-  "started_at": "2026-07-02T19:58:29+00:00",
-  "finished_at": "2026-07-02T19:58:52+00:00",
+  "started_at": "2026-07-03T19:55:44+00:00",
+  "finished_at": "2026-07-03T19:56:06+00:00",
   "version": "AlphaForge v6 Action First",
   "details": [
     {
@@ -21,7 +21,7 @@
       "script": "generate_watchlist.py",
       "returncode": 0,
       "stdout_tail": "Watchlist aggiornata: 9 strumenti\n",
-      "stderr_tail": "HTTP Error 500: \n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n"
+      "stderr_tail": "$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n$STM.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['STM.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n"
     },
     {
       "script": "generate_insights.py",
