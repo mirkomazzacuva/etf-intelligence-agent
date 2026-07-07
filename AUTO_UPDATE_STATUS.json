@@ -1,15 +1,15 @@
 {
   "status": "success",
   "message": "Aggiornamento AlphaForge v6 completato",
-  "started_at": "2026-07-06T20:19:26+00:00",
-  "finished_at": "2026-07-06T20:19:51+00:00",
+  "started_at": "2026-07-07T20:20:58+00:00",
+  "finished_at": "2026-07-07T20:25:12+00:00",
   "version": "AlphaForge v6 Action First",
   "details": [
     {
       "script": "update_etf_data_v3.py",
       "returncode": 0,
       "stdout_tail": "Analisi ETF: SWDA.MI\nAnalisi ETF: VWCE.DE\nAnalisi ETF: EIMI.MI\nAnalisi ETF: SXR8.DE\nAnalisi ETF: XDEV.MI\nAnalisi ETF: IWQU.MI\nAnalisi ETF: MVOL.MI\nAnalisi ETF: EUNA.MI\nAnalisi ETF: SGLD.MI\nAnalisi ETF: EXSA.DE\nAnalisi ETF: RBOT.MI\nAnalisi ETF: WCLD.MI\nAnalisi ETF: SMH\nAnalisi ETF: INRG.MI\nCreato ETF_Intelligence_Agent_UPDATED.xlsx con 14 righe\n",
-      "stderr_tail": "HTTP Error 404: {\"quoteSummary\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"Quote not found for symbol: EUNA.MI\"}}}\n$EUNA.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['EUNA.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\nHTTP Error 404: {\"quoteSummary\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"Quote not found for symbol: EUNA.MI\"}}}\n"
+      "stderr_tail": "Failed to get ticker 'VWCE.DE' reason: Failed to perform, curl: (28) Operation timed out after 10002 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.\n\n1 Failed download:\n['VWCE.DE']: Timeout('Failed to perform, curl: (28) Operation timed out after 30001 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.')\nHTTP Error 404: {\"quoteSummary\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"Quote not found for symbol: EUNA.MI\"}}}\n$EUNA.MI: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\n\n1 Failed download:\n['EUNA.MI']: possibly delisted; no price data found  (period=3y) (Yahoo error = \"No data found, symbol may be delisted\")\nHTTP Error 404: {\"quoteSummary\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"Quote not found for symbol: EUNA.MI\"}}}\n"
     },
     {
       "script": "allocation_engine.py",
