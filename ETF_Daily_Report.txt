@@ -1,5 +1,5 @@
 AlphaForge Intelligence v6 - Action First Report
-Aggiornato il 30/07/2026 19:59
+Aggiornato il 31/07/2026 20:00
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
@@ -10,8 +10,8 @@ Cosa fare adesso:
 - IWQU.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - SWDA.MI: Imposta alert prezzo/news. Resistenza 60D: 126.34. Trigger: prezzo vicino a MA50: monitorare conferma; vicino a supporto 60D: controllare tenuta e volumi.
 
-Miglior ETF: XDEV.MI - score 79.2
-Stato: Buy Watchlist
+Miglior ETF: XDEV.MI - score 77.9
+Stato: Accumulate Carefully
 
 Allocazione suggerita su 1000 EUR:
 - EXSA.DE: 18.33% - 183.3 EUR
