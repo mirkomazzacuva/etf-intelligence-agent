@@ -1,5 +1,5 @@
 AlphaForge Intelligence v6 - Action First Report
-Aggiornato il 13/08/2026 19:32
+Aggiornato il 14/08/2026 19:25
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 
@@ -10,7 +10,7 @@ Cosa fare adesso:
 - SWDA.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - IWQU.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 
-Miglior ETF: XDEV.MI - score 82.8
+Miglior ETF: XDEV.MI - score 83.0
 Stato: Buy Watchlist
 
 Allocazione suggerita su 1000 EUR:
