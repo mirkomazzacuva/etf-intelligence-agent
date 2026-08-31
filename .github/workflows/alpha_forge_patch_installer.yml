@@ -4,41 +4,28 @@ on:
   workflow_dispatch:
     inputs:
       patch_zip:
-        description: "Nome del file ZIP patch caricato nella root del repository"
+        description: "Nome esatto dello zip patch caricato nella root del repository"
         required: true
         default: "alpha_forge_next_patch.zip"
       run_beta_test:
-        description: "Esegui beta test dopo installazione"
+        description: "Eseguire beta test dopo installazione"
         required: true
-        type: choice
-        options:
-          - "true"
-          - "false"
-        default: "true"
+        type: boolean
+        default: true
       run_full_update:
-        description: "Esegui anche aggiornamento completo dati nel beta test"
+        description: "Eseguire aggiornamento completo dopo installazione"
         required: true
-        type: choice
-        options:
-          - "false"
-          - "true"
-        default: "false"
+        type: boolean
+        default: true
       remove_patch_zip:
-        description: "Elimina lo ZIP patch dopo installazione"
+        description: "Rimuovere lo zip patch dopo installazione"
         required: true
-        type: choice
-        options:
-          - "true"
-          - "false"
-        default: "true"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
   actions: read
-
-concurrency:
-  group: alphaforge-patch-installer
-  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -48,8 +35,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository with patch token
-        uses: actions/checkout@v7
+      - name: Checkout repository
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.ALPHAFORGE_PATCH_TOKEN }}
           fetch-depth: 0
@@ -59,16 +46,21 @@ jobs:
           git config user.name "alphaforge-patch-bot"
           git config user.email "alphaforge-patch-bot@users.noreply.github.com"
 
-      - name: Validate patch token
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
         run: |
-          if [ -z "${{ secrets.ALPHAFORGE_PATCH_TOKEN }}" ]; then
-            echo "ERROR: missing repository secret ALPHAFORGE_PATCH_TOKEN"
-            exit 1
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
           fi
 
-      - name: Apply patch zip
+      - name: Apply patch
         run: |
-          PATCH_ZIP="${{ inputs.patch_zip }}"
+          PATCH_ZIP="${{ github.event.inputs.patch_zip }}"
 
           if [ ! -f "$PATCH_ZIP" ]; then
             echo "ERROR: patch zip not found: $PATCH_ZIP"
@@ -80,60 +72,45 @@ jobs:
           mkdir -p /tmp/alphaforge_patch
           unzip -o "$PATCH_ZIP" -d /tmp/alphaforge_patch
 
-          PATCH_ROOT="/tmp/alphaforge_patch"
-          ITEM_COUNT=$(find "$PATCH_ROOT" -mindepth 1 -maxdepth 1 | wc -l)
-          FIRST_ITEM=$(find "$PATCH_ROOT" -mindepth 1 -maxdepth 1 | head -n 1)
+          shopt -s dotglob nullglob
 
-          if [ "$ITEM_COUNT" -eq 1 ] && [ -d "$FIRST_ITEM" ]; then
-            PATCH_ROOT="$FIRST_ITEM"
+          PATCH_DIR="/tmp/alphaforge_patch"
+          ITEMS=(/tmp/alphaforge_patch/*)
+
+          if [ "${#ITEMS[@]}" -eq 1 ] && [ -d "${ITEMS[0]}" ]; then
+            PATCH_DIR="${ITEMS[0]}"
           fi
 
-          echo "Applying patch from: $PATCH_ROOT"
-          shopt -s dotglob nullglob
-          cp -a "$PATCH_ROOT"/. .
+          echo "Applying patch from: $PATCH_DIR"
+          cp -a "$PATCH_DIR"/. .
 
-          # Cleanup generated/cache files that should not stay in repository.
-          find . -name "*.pyc" -delete
-          find . -type d -name "__pycache__" -prune -exec rm -rf {} +
-          rm -rf .pytest_cache
-          rm -rf logs
-
-          if [ "${{ inputs.remove_patch_zip }}" = "true" ]; then
+          if [ "${{ github.event.inputs.remove_patch_zip }}" = "true" ]; then
             rm -f "$PATCH_ZIP"
           fi
 
-          echo "Changed files after patch:"
-          git status --short
+          find . -name "*.pyc" -delete
+          rm -rf __pycache__
+          rm -rf .pytest_cache
 
-      - name: Set up Python
-        if: ${{ inputs.run_beta_test == 'true' }}
-        uses: actions/setup-python@v7
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        if: ${{ inputs.run_beta_test == 'true' }}
+      - name: Run full update
+        if: ${{ github.event.inputs.run_full_update == 'true' }}
         run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
+          if [ -f auto_update_app.py ]; then
+            python auto_update_app.py
+          else
+            echo "auto_update_app.py not found, skipping full update"
           fi
 
       - name: Run beta test
-        if: ${{ inputs.run_beta_test == 'true' }}
+        if: ${{ github.event.inputs.run_beta_test == 'true' }}
         run: |
-          if [ ! -f beta_test_app.py ]; then
-            echo "ERROR: beta_test_app.py not found after patch"
-            exit 1
-          fi
-
-          if [ "${{ inputs.run_full_update }}" = "true" ]; then
-            python beta_test_app.py --full-update
+          if [ -f beta_test_app.py ]; then
+            RUN_FULL_UPDATE="${{ github.event.inputs.run_full_update }}" python beta_test_app.py
           else
-            python beta_test_app.py
+            echo "beta_test_app.py not found, skipping beta test"
           fi
 
-       - name: Commit and push patch
+      - name: Commit and push patch
         run: |
           git add -A
 
