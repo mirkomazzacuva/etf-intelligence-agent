@@ -38,8 +38,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          token: ${{ secrets.ALPHAFORGE_PATCH_TOKEN }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Configure git
         run: |
@@ -50,6 +50,17 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+
+      - name: Check patch token
+        env:
+          PATCH_TOKEN: ${{ secrets.ALPHAFORGE_PATCH_TOKEN }}
+        run: |
+          if [ -z "$PATCH_TOKEN" ]; then
+            echo "ERROR: ALPHAFORGE_PATCH_TOKEN non è configurato nei repository secrets."
+            echo "Vai su Settings > Secrets and variables > Actions e crea il secret ALPHAFORGE_PATCH_TOKEN."
+            exit 1
+          fi
+          echo "Patch token found."
 
       - name: Install dependencies
         run: |
@@ -111,6 +122,8 @@ jobs:
           fi
 
       - name: Commit and push patch
+        env:
+          PATCH_TOKEN: ${{ secrets.ALPHAFORGE_PATCH_TOKEN }}
         run: |
           git add -A
 
@@ -118,6 +131,7 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Apply AlphaForge patch"
+            git remote set-url origin "https://x-access-token:${PATCH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
             git pull --rebase origin main
             git push origin HEAD:main
           fi
