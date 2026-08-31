@@ -133,13 +133,14 @@ jobs:
             python beta_test_app.py
           fi
 
-      - name: Commit and push patch
+       - name: Commit and push patch
         run: |
           git add -A
 
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Apply AlphaForge patch: ${{ inputs.patch_zip }}"
-            git push
+            git commit -m "Apply AlphaForge patch"
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi
