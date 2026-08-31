@@ -11,6 +11,10 @@ permissions:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+concurrency:
+  group: alphaforge-auto-update
+  cancel-in-progress: false
+
 jobs:
   update-data:
     runs-on: ubuntu-latest
@@ -18,6 +22,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -49,10 +55,15 @@ jobs:
           git add AlphaForge_Insights.csv AlphaForge_Insights.xlsx || true
           git add AlphaForge_Action_Plan.csv AlphaForge_Action_Plan.xlsx || true
           git add AlphaForge_Sector_Compass.csv AlphaForge_Sector_Compass.xlsx || true
+          git add AlphaForge_Fineco_Portfolio.csv AlphaForge_Fineco_Portfolio.xlsx || true
+          git add AlphaForge_Fineco_Portfolio_Summary.json || true
+          git add AlphaForge_Fineco_Advisor_Questions.csv AlphaForge_Fineco_Advisor_Questions.xlsx || true
+          git add data/fineco_portfolio_template_v8.csv || true
 
           if git diff --cached --quiet; then
             echo "No updated files to commit"
           else
-            git commit -m "Auto update AlphaForge sector data"
-            git push
+            git commit -m "Auto update AlphaForge data"
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi

@@ -1,0 +1,9 @@
+Priorita,Tema,Domanda,Perche
+1,Punto zero,Confermi che tutti gli ordini/PAC sono effettivamente eseguiti e da quale data decorrono?,Serve per calcolare correttamente rendimento e capitale versato.
+2,Costi totali,"Qual e' il costo annuo totale dei fondi, inclusi eventuali costi dei sottostanti?",I costi incidono sul rendimento netto nel lungo periodo.
+3,Sovrapposizione,"Quanto questi fondi duplicano Vanguard All-World, MSCI World, S&P 500 o tecnologia USA?",Evita di aggiungere strumenti che sembrano diversi ma contengono gli stessi mercati.
+4,Ruolo,"Qual e' il ruolo di ogni fondo: core, difensivo, satellite geografico o satellite tematico?",Ogni posizione deve avere un motivo chiaro.
+5,Benchmark,Quale benchmark useriamo per giudicare ciascun prodotto tra 6/12 mesi?,Il rendimento va confrontato con alternative coerenti.
+6,PAC,I due PAC sono sui settori giusti o aumentano troppo emergenti/tecnologia?,Il PAC crea esposizione crescente mese dopo mese.
+7,ESEMPIO_CORE,Per ESEMPIO_CORE: qual e' il ruolo nel portafoglio e con quale ETF/fondo lo confrontiamo?,Domanda specifica sul singolo strumento.
+8,ESEMPIO_PAC,Per ESEMPIO_PAC: quando parte la prima rata PAC e quale benchmark useriamo per valutarlo?,Domanda specifica sul singolo strumento.

@@ -1,31 +1,42 @@
-AlphaForge Intelligence v7 - Sector Compass Report
-Aggiornato il 31/08/2026 09:11
+AlphaForge Intelligence v8 - Fineco Portfolio Tracker
+Aggiornato il 31/08/2026 12:48
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
-Obiettivo: aiutare la conversazione con consulente Fineco su core, satelliti settoriali e strumenti candidati.
+Obiettivo: separare core gia' gestito, satelliti settoriali e controllo rendimento del portafoglio Fineco.
+
+Portafoglio Fineco:
+- Fase: Punto zero
+- Capitale una tantum: 5000.0 EUR
+- PAC mensile: 150.0 EUR
+- Capitale versato stimato: 5000.0 EUR
+- Rendimento stimato: 0.0%
+
+Cosa fare adesso:
+- Se hai sottoscritto oggi, non giudicare ancora la performance: crea il punto zero.
+- Verifica su Fineco data valuta, prima rata PAC, quote assegnate e prezzo medio.
+- Chiedi al consulente costi totali, sottostanti e benchmark di confronto.
 
 Bussola settoriale:
 - Core Globale: Da discutere ora | Valuta esposizione graduale con consulente | candidato: Vanguard FTSE All-World UCITS ETF (VWCE.DE)
-- Cybersecurity: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF cybersecurity UCITS (ISPY.L)
 - Tecnologia e AI: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF tecnologia globale / MSCI World Information Technology (XDWT.DE)
+- Cybersecurity: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF cybersecurity UCITS (ISPY.L)
 - Healthcare: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF healthcare globale / fondo sanitario (XDWH.DE)
-- Semiconduttori: Monitorare | Confronta ETF/fondo e costi | candidato: ETF semiconduttori UCITS / VanEck Semiconductor UCITS (VVSM.DE)
+- Semiconduttori: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF semiconduttori UCITS / VanEck Semiconductor UCITS (VVSM.DE)
 - Infrastrutture: Monitorare | Confronta ETF/fondo e costi | candidato: ETF infrastrutture globali / fondo infrastrutture (INFR.MI)
 
-Cosa fare adesso:
+Priorita' operative:
 - XDEV.MI: valuta ingresso solo graduale. Prima controlla prezzo vicino a MA50: monitorare conferma.
 - EXSA.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - MVOL.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - VWCE.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - SWDA.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 
-Allocazione modello su 1000 EUR:
-- EXSA.DE: 18.33% - 183.3 EUR
-- VWCE.DE: 18.33% - 183.3 EUR
-- SWDA.MI: 18.33% - 183.3 EUR
-- MVOL.MI: 6.67% - 66.7 EUR
-- SGLD.MI: 6.67% - 66.7 EUR
-- EUNA.MI: 6.67% - 66.7 EUR
+Domande per il consulente:
+- Punto zero: Confermi che tutti gli ordini/PAC sono effettivamente eseguiti e da quale data decorrono?
+- Costi totali: Qual e' il costo annuo totale dei fondi, inclusi eventuali costi dei sottostanti?
+- Sovrapposizione: Quanto questi fondi duplicano Vanguard All-World, MSCI World, S&P 500 o tecnologia USA?
+- Ruolo: Qual e' il ruolo di ogni fondo: core, difensivo, satellite geografico o satellite tematico?
+- Benchmark: Quale benchmark useriamo per giudicare ciascun prodotto tra 6/12 mesi?
+- PAC: I due PAC sono sui settori giusti o aumentano troppo emergenti/tecnologia?
 
-Portafoglio personale: usa la pagina Streamlit 'Portafoglio Fineco' per caricare il CSV/XLSX, verificare peso core/satellite e classificare fondi/ETF per settore.
-Prima di investire controllare sempre: KID, TER/costi, fiscalita, liquidita, valuta, dimensione fondo, sovrapposizione con All-World e adeguatezza con il consulente.
+Prima di investire controllare sempre: KID, costi, fiscalita', liquidita', valuta, dimensione fondo, sovrapposizione con All-World e adeguatezza con il consulente.

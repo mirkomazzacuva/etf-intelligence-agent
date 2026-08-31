@@ -58,3 +58,12 @@ DEFAULT_STOCK_WATCHLIST = [
     {"Ticker": "META", "Nome": "Meta Platforms", "Tipo": "Stock", "Area": "USA / Social & AI"},
     {"Ticker": "TSLA", "Nome": "Tesla", "Tipo": "Stock", "Area": "USA / EV"},
 ]
+
+# AlphaForge v8 - Fineco Portfolio Tracker
+FINECO_BASELINE_FILE = Path("data/fineco_portfolio_baseline.csv")
+FINECO_TEMPLATE_V8_FILE = Path("data/fineco_portfolio_template_v8.csv")
+FINECO_PORTFOLIO_OUTPUT_CSV = Path("AlphaForge_Fineco_Portfolio.csv")
+FINECO_PORTFOLIO_OUTPUT_XLSX = Path("AlphaForge_Fineco_Portfolio.xlsx")
+FINECO_PORTFOLIO_SUMMARY_FILE = Path("AlphaForge_Fineco_Portfolio_Summary.json")
+FINECO_ADVISOR_QUESTIONS_CSV = Path("AlphaForge_Fineco_Advisor_Questions.csv")
+FINECO_ADVISOR_QUESTIONS_XLSX = Path("AlphaForge_Fineco_Advisor_Questions.xlsx")

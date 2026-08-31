@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pandas as pd
 
@@ -8,6 +9,9 @@ from core.config import (
     ACTION_PLAN_OUTPUT_CSV,
     ALLOCATION_FILE,
     DASHBOARD_FILE,
+    FINECO_ADVISOR_QUESTIONS_CSV,
+    FINECO_PORTFOLIO_OUTPUT_CSV,
+    FINECO_PORTFOLIO_SUMMARY_FILE,
     INSIGHTS_OUTPUT_CSV,
     RANKING_FILE,
     REPORT_FILE,
@@ -27,8 +31,20 @@ def read_status() -> dict:
     return {"status": "unknown"}
 
 
-def _read_csv(path) -> pd.DataFrame:
-    return pd.read_csv(path) if path.exists() else pd.DataFrame()
+def _read_csv(path: Path) -> pd.DataFrame:
+    try:
+        return pd.read_csv(path) if path.exists() else pd.DataFrame()
+    except Exception:  # noqa: BLE001
+        return pd.DataFrame()
+
+
+def _read_json(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        return {}
 
 
 def generate_dashboard() -> None:
@@ -40,13 +56,38 @@ def generate_dashboard() -> None:
     insights = _read_csv(INSIGHTS_OUTPUT_CSV)
     action_plan = _read_csv(ACTION_PLAN_OUTPUT_CSV)
     sector_compass = _read_csv(SECTOR_COMPASS_OUTPUT_CSV)
+    fineco_portfolio = _read_csv(FINECO_PORTFOLIO_OUTPUT_CSV)
+    fineco_questions = _read_csv(FINECO_ADVISOR_QUESTIONS_CSV)
+    fineco_summary = _read_json(FINECO_PORTFOLIO_SUMMARY_FILE)
     status = read_status()
     REPORT_FILE.write_text(
-        build_text_report(ranking, allocation, watchlist, insights, action_plan, sector_compass),
+        build_text_report(
+            ranking,
+            allocation,
+            watchlist,
+            insights,
+            action_plan,
+            sector_compass,
+            fineco_portfolio,
+            fineco_summary,
+            fineco_questions,
+        ),
         encoding="utf-8",
     )
-    render_dashboard_html(ranking, allocation, status, watchlist, DASHBOARD_FILE, insights, action_plan, sector_compass)
-    print(f"Dashboard v7 generata: {DASHBOARD_FILE}")
+    render_dashboard_html(
+        ranking,
+        allocation,
+        status,
+        watchlist,
+        DASHBOARD_FILE,
+        insights,
+        action_plan,
+        sector_compass,
+        fineco_portfolio,
+        fineco_summary,
+        fineco_questions,
+    )
+    print(f"Dashboard v8 generata: {DASHBOARD_FILE}")
 
 
 if __name__ == "__main__":

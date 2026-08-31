@@ -27,6 +27,10 @@ permissions:
   contents: write
   actions: read
 
+concurrency:
+  group: alphaforge-patch-installer
+  cancel-in-progress: false
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -130,7 +134,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Apply AlphaForge patch"
+            git commit -m "Apply AlphaForge patch: ${{ github.event.inputs.patch_zip }}"
             git remote set-url origin "https://x-access-token:${PATCH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
             git pull --rebase origin main
             git push origin HEAD:main
