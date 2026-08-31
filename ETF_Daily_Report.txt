@@ -1,5 +1,5 @@
 AlphaForge Intelligence v8 - Fineco Portfolio Tracker
-Aggiornato il 31/08/2026 12:48
+Aggiornato il 31/08/2026 22:57
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 Obiettivo: separare core gia' gestito, satelliti settoriali e controllo rendimento del portafoglio Fineco.
@@ -21,7 +21,7 @@ Bussola settoriale:
 - Tecnologia e AI: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF tecnologia globale / MSCI World Information Technology (XDWT.DE)
 - Cybersecurity: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF cybersecurity UCITS (ISPY.L)
 - Healthcare: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF healthcare globale / fondo sanitario (XDWH.DE)
-- Semiconduttori: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF semiconduttori UCITS / VanEck Semiconductor UCITS (VVSM.DE)
+- Semiconduttori: Monitorare | Confronta ETF/fondo e costi | candidato: ETF semiconduttori UCITS / VanEck Semiconductor UCITS (VVSM.DE)
 - Infrastrutture: Monitorare | Confronta ETF/fondo e costi | candidato: ETF infrastrutture globali / fondo infrastrutture (INFR.MI)
 
 Priorita' operative:
