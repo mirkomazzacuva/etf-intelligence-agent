@@ -26,6 +26,8 @@ REQUIRED_FILES = [
     ".github/workflows/beta_test_app.yml",
     ".github/workflows/alpha_forge_patch_installer.yml",
     "data/portfolio_template.csv",
+    "data/sector_universe.csv",
+    "data/fineco_portfolio_template.csv",
 ]
 
 OUTPUT_FILES = [
@@ -40,6 +42,8 @@ OUTPUT_FILES = [
     "AlphaForge_Insights.xlsx",
     "AlphaForge_Action_Plan.csv",
     "AlphaForge_Action_Plan.xlsx",
+    "AlphaForge_Sector_Compass.csv",
+    "AlphaForge_Sector_Compass.xlsx",
 ]
 
 CORE_MODULES = [
@@ -57,6 +61,7 @@ CORE_MODULES = [
     "core.action_guide_engine",
     "core.report_engine",
     "core.ui_theme",
+    "core.sector_compass_engine",
 ]
 
 
@@ -194,6 +199,30 @@ class BetaTester:
             except Exception as exc:  # noqa: BLE001
                 self.fail("Template portafoglio", str(exc))
 
+
+
+        if Path("AlphaForge_Sector_Compass.csv").exists():
+            try:
+                sectors = pd.read_csv("AlphaForge_Sector_Compass.csv")
+                missing = [col for col in ["Settore", "Bucket", "Cosa fare", "Sector Score", "ETF/Fondo candidato"] if col not in sectors.columns]
+                if missing:
+                    self.fail("Sector Compass", f"Mancano colonne: {', '.join(missing)}")
+                else:
+                    self.ok("Sector Compass", f"OK, {len(sectors)} settori")
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Sector Compass", str(exc))
+
+        if Path("data/fineco_portfolio_template.csv").exists():
+            try:
+                template = pd.read_csv("data/fineco_portfolio_template.csv")
+                missing = [col for col in ["Ticker", "Nome Strumento", "Settore AlphaForge", "Valore EUR"] if col not in template.columns]
+                if missing:
+                    self.fail("Template Fineco", f"Mancano colonne: {', '.join(missing)}")
+                else:
+                    self.ok("Template Fineco", f"OK, {len(template)} righe")
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Template Fineco", str(exc))
+
         if Path("AUTO_UPDATE_STATUS.json").exists():
             try:
                 status = json.loads(Path("AUTO_UPDATE_STATUS.json").read_text(encoding="utf-8"))
@@ -207,12 +236,12 @@ class BetaTester:
         if Path("index.html").exists():
             try:
                 html = Path("index.html").read_text(encoding="utf-8", errors="ignore")
-                if "AlphaForge v6" in html and "Action First" in html:
-                    self.ok("Dashboard pubblica v6", "AlphaForge v6 Decision & Portfolio presente")
-                elif "AlphaForge v4" in html:
-                    self.warn("Dashboard pubblica v6", "index.html non ancora v6: esegui full update")
+                if "AlphaForge v7" in html and "Sector Compass" in html:
+                    self.ok("Dashboard pubblica v7", "AlphaForge v7 Sector Compass presente")
+                elif "AlphaForge v6" in html or "AlphaForge v5" in html or "AlphaForge v4" in html:
+                    self.warn("Dashboard pubblica v7", "index.html non ancora v7: esegui full update")
                 else:
-                    self.warn("Dashboard pubblica v6", "Marker v6 non trovato")
+                    self.warn("Dashboard pubblica v7", "Marker v7 non trovato")
             except Exception as exc:  # noqa: BLE001
                 self.fail("Dashboard pubblica", str(exc))
 
@@ -245,7 +274,7 @@ class BetaTester:
         warn = sum(1 for c in self.checks if c.status == "WARN")
         fail = sum(1 for c in self.checks if c.status == "FAIL")
         lines = [
-            "# AlphaForge Beta Test Report",
+            "# AlphaForge v7 Beta Test Report",
             "",
             f"Check totali: {len(self.checks)}",
             f"OK: {ok}",

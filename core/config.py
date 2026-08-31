@@ -17,6 +17,12 @@ ACTION_PLAN_OUTPUT_XLSX = Path("AlphaForge_Action_Plan.xlsx")
 ACTION_PLAN_OUTPUT_CSV = Path("AlphaForge_Action_Plan.csv")
 PORTFOLIO_TEMPLATE_FILE = Path("data/portfolio_template.csv")
 
+# AlphaForge v7 - Sector Compass
+SECTOR_UNIVERSE_FILE = Path("data/sector_universe.csv")
+SECTOR_COMPASS_OUTPUT_CSV = Path("AlphaForge_Sector_Compass.csv")
+SECTOR_COMPASS_OUTPUT_XLSX = Path("AlphaForge_Sector_Compass.xlsx")
+FINECO_PORTFOLIO_TEMPLATE_FILE = Path("data/fineco_portfolio_template.csv")
+
 DEFAULT_ETF_UNIVERSE = [
     {"Ticker": "SWDA.MI", "Nome ETF": "iShares Core MSCI World", "Categoria": "Core", "Tema/Area": "Azionario globale sviluppato"},
     {"Ticker": "VWCE.DE", "Nome ETF": "Vanguard FTSE All-World", "Categoria": "Core", "Tema/Area": "Azionario globale"},

@@ -11,6 +11,7 @@ from core.config import (
     INSIGHTS_OUTPUT_CSV,
     RANKING_FILE,
     REPORT_FILE,
+    SECTOR_COMPASS_OUTPUT_CSV,
     STATUS_FILE,
     WATCHLIST_OUTPUT_CSV,
 )
@@ -26,18 +27,26 @@ def read_status() -> dict:
     return {"status": "unknown"}
 
 
+def _read_csv(path) -> pd.DataFrame:
+    return pd.read_csv(path) if path.exists() else pd.DataFrame()
+
+
 def generate_dashboard() -> None:
     if not RANKING_FILE.exists() or not ALLOCATION_FILE.exists():
         raise FileNotFoundError("Mancano ranking o allocazione")
     ranking = pd.read_excel(RANKING_FILE)
     allocation = pd.read_excel(ALLOCATION_FILE, sheet_name="Suggested_Allocation")
-    watchlist = pd.read_csv(WATCHLIST_OUTPUT_CSV) if WATCHLIST_OUTPUT_CSV.exists() else pd.DataFrame()
-    insights = pd.read_csv(INSIGHTS_OUTPUT_CSV) if INSIGHTS_OUTPUT_CSV.exists() else pd.DataFrame()
-    action_plan = pd.read_csv(ACTION_PLAN_OUTPUT_CSV) if ACTION_PLAN_OUTPUT_CSV.exists() else pd.DataFrame()
+    watchlist = _read_csv(WATCHLIST_OUTPUT_CSV)
+    insights = _read_csv(INSIGHTS_OUTPUT_CSV)
+    action_plan = _read_csv(ACTION_PLAN_OUTPUT_CSV)
+    sector_compass = _read_csv(SECTOR_COMPASS_OUTPUT_CSV)
     status = read_status()
-    REPORT_FILE.write_text(build_text_report(ranking, allocation, watchlist, insights, action_plan), encoding="utf-8")
-    render_dashboard_html(ranking, allocation, status, watchlist, DASHBOARD_FILE, insights, action_plan)
-    print(f"Dashboard v6 generata: {DASHBOARD_FILE}")
+    REPORT_FILE.write_text(
+        build_text_report(ranking, allocation, watchlist, insights, action_plan, sector_compass),
+        encoding="utf-8",
+    )
+    render_dashboard_html(ranking, allocation, status, watchlist, DASHBOARD_FILE, insights, action_plan, sector_compass)
+    print(f"Dashboard v7 generata: {DASHBOARD_FILE}")
 
 
 if __name__ == "__main__":

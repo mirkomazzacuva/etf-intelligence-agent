@@ -1,22 +1,22 @@
 name: Beta test ETF Intelligence App
 
 on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "15 7 * * 1-5"
   workflow_dispatch:
     inputs:
       run_full_update:
-        description: "Esegui anche aggiornamento completo dati"
+        description: "Run full data update before checks"
         required: true
+        default: "false"
         type: choice
         options:
           - "false"
           - "true"
-        default: "false"
-  pull_request:
-    branches: ["main"]
-  push:
-    branches: ["main"]
-  schedule:
-    - cron: "15 7 * * 1-5"
 
 permissions:
   contents: read
@@ -30,10 +30,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -58,6 +58,5 @@ jobs:
           path: |
             BETA_TEST_REPORT.md
             BETA_TEST_STATUS.json
-            streamlit_smoke.log
             BETA_FULL_UPDATE.log
-          if-no-files-found: ignore
+            streamlit_smoke.log

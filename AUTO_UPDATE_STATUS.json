@@ -1,9 +1,9 @@
 {
   "status": "success",
-  "message": "Aggiornamento AlphaForge v6 completato",
-  "started_at": "2026-08-29T01:48:36+00:00",
-  "finished_at": "2026-08-29T01:48:59+00:00",
-  "version": "AlphaForge v6 Action First",
+  "message": "Aggiornamento AlphaForge v7 completato",
+  "started_at": "2026-08-31T09:11:23+00:00",
+  "finished_at": "2026-08-31T09:11:58+00:00",
+  "version": "AlphaForge v7 Sector Compass",
   "details": [
     {
       "script": "update_etf_data_v3.py",
@@ -36,15 +36,21 @@
       "stderr_tail": ""
     },
     {
+      "script": "generate_sector_compass.py",
+      "returncode": 0,
+      "stdout_tail": "Sector Compass generata: 12 settori\n",
+      "stderr_tail": "HTTP Error 404: {\"quoteSummary\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"Quote not found for symbol: EUNA.MI\"}}}\n$EUNA.MI: No data found, symbol may be delisted\n\n1 Failed download:\n['EUNA.MI']: No data found, symbol may be delisted\n"
+    },
+    {
       "script": "generate_dashboard.py",
       "returncode": 0,
-      "stdout_tail": "Dashboard v6 generata: index.html\n",
+      "stdout_tail": "Dashboard v7 generata: index.html\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_dashboard.py",
       "returncode": 0,
-      "stdout_tail": "Dashboard v6 generata: index.html\n",
+      "stdout_tail": "Dashboard v7 generata: index.html\n",
       "stderr_tail": ""
     }
   ]

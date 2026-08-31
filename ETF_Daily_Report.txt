@@ -1,28 +1,31 @@
-AlphaForge Intelligence v6 - Action First Report
-Aggiornato il 29/08/2026 01:48
+AlphaForge Intelligence v7 - Sector Compass Report
+Aggiornato il 31/08/2026 09:11
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
+Obiettivo: aiutare la conversazione con consulente Fineco su core, satelliti settoriali e strumenti candidati.
+
+Bussola settoriale:
+- Core Globale: Da discutere ora | Valuta esposizione graduale con consulente | candidato: Vanguard FTSE All-World UCITS ETF (VWCE.DE)
+- Cybersecurity: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF cybersecurity UCITS (ISPY.L)
+- Tecnologia e AI: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF tecnologia globale / MSCI World Information Technology (XDWT.DE)
+- Healthcare: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF healthcare globale / fondo sanitario (XDWH.DE)
+- Semiconduttori: Monitorare | Confronta ETF/fondo e costi | candidato: ETF semiconduttori UCITS / VanEck Semiconductor UCITS (VVSM.DE)
+- Infrastrutture: Monitorare | Confronta ETF/fondo e costi | candidato: ETF infrastrutture globali / fondo infrastrutture (INFR.MI)
 
 Cosa fare adesso:
 - XDEV.MI: valuta ingresso solo graduale. Prima controlla prezzo vicino a MA50: monitorare conferma.
 - EXSA.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - MVOL.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - VWCE.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
-- IWQU.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
+- SWDA.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 
-Miglior ETF: XDEV.MI - score 78.8
-Stato: Buy Watchlist
-
-Allocazione suggerita su 1000 EUR:
+Allocazione modello su 1000 EUR:
 - EXSA.DE: 18.33% - 183.3 EUR
 - VWCE.DE: 18.33% - 183.3 EUR
 - SWDA.MI: 18.33% - 183.3 EUR
 - MVOL.MI: 6.67% - 66.7 EUR
 - SGLD.MI: 6.67% - 66.7 EUR
 - EUNA.MI: 6.67% - 66.7 EUR
-- XDEV.MI: 7.5% - 75.0 EUR
-- IWQU.MI: 7.5% - 75.0 EUR
 
-Portafoglio personale: usa la pagina Streamlit 'Portafoglio' per caricare CSV/XLSX, controllare concentrazione, rischio e gap target.
-
-Usare sempre size, diversificazione, costi, fiscalità, liquidità e profilo personale come filtri finali.
+Portafoglio personale: usa la pagina Streamlit 'Portafoglio Fineco' per caricare il CSV/XLSX, verificare peso core/satellite e classificare fondi/ETF per settore.
+Prima di investire controllare sempre: KID, TER/costi, fiscalita, liquidita, valuta, dimensione fondo, sovrapposizione con All-World e adeguatezza con il consulente.

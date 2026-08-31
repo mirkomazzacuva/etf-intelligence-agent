@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -45,18 +45,14 @@ jobs:
           git add ETF_Allocation_Model.xlsx || true
           git add ETF_Daily_Report.txt || true
           git add index.html || true
-          git add AlphaForge_Watchlist.xlsx || true
-          git add AlphaForge_Watchlist.csv || true
-          git add AlphaForge_Insights.xlsx || true
-          git add AlphaForge_Insights.csv || true
-          git add AlphaForge_Action_Plan.xlsx || true
-          git add AlphaForge_Action_Plan.csv || true
-          git add data/watchlist.csv || true
-          git add data/portfolio_template.csv || true
+          git add AlphaForge_Watchlist.csv AlphaForge_Watchlist.xlsx || true
+          git add AlphaForge_Insights.csv AlphaForge_Insights.xlsx || true
+          git add AlphaForge_Action_Plan.csv AlphaForge_Action_Plan.xlsx || true
+          git add AlphaForge_Sector_Compass.csv AlphaForge_Sector_Compass.xlsx || true
 
           if git diff --cached --quiet; then
             echo "No updated files to commit"
           else
-            git commit -m "Auto update AlphaForge data"
+            git commit -m "Auto update AlphaForge sector data"
             git push
           fi
