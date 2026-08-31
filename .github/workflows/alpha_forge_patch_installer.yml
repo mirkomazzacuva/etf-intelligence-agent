@@ -49,7 +49,7 @@ jobs:
 
     steps:
       - name: Checkout repository with patch token
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.ALPHAFORGE_PATCH_TOKEN }}
           fetch-depth: 0
@@ -107,7 +107,7 @@ jobs:
 
       - name: Set up Python
         if: ${{ inputs.run_beta_test == 'true' }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
