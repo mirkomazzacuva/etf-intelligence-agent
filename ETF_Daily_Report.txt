@@ -1,5 +1,5 @@
 AlphaForge Intelligence v8 - Fineco Portfolio Tracker
-Aggiornato il 31/08/2026 22:57
+Aggiornato il 01/09/2026 21:10
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 Obiettivo: separare core gia' gestito, satelliti settoriali e controllo rendimento del portafoglio Fineco.
