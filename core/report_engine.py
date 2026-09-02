@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from html import escape
 from pathlib import Path
@@ -8,111 +9,201 @@ from typing import Any
 import pandas as pd
 
 try:
-    from core.action_guide_engine import build_action_brief, build_focus_board
+    from core.config import FINECO_FUNDS_PUBLIC_FILE
 except Exception:  # noqa: BLE001
-    class _Brief:
-        narrative = ["Dati operativi non disponibili: esegui l'aggiornamento completo."]
-
-    def build_action_brief(action_plan=None, insights=None):  # type: ignore[no-redef]
-        return _Brief()
-
-    def build_focus_board(action_plan=None, insights=None, limit: int = 12):  # type: ignore[no-redef]
-        return pd.DataFrame()
-
-
-def format_number(value: object, digits: int = 2) -> str:
-    try:
-        if pd.isna(value):
-            return ""
-        if isinstance(value, (float, int)):
-            return f"{float(value):,.{digits}f}".replace(",", "X").replace(".", ",").replace("X", ".")
-        return str(value)
-    except Exception:  # noqa: BLE001
-        return str(value)
+    FINECO_FUNDS_PUBLIC_FILE = Path("data/fineco_funds_public.csv")
 
 
 def _as_float(value: object, default: float = 0.0) -> float:
     try:
         if pd.isna(value):
             return default
+        if isinstance(value, str):
+            text = value.replace("€", "").replace("EUR", "").replace("%", "").replace(" ", "").strip()
+            if text == "":
+                return default
+            if "," in text and "." in text:
+                if text.rfind(",") > text.rfind("."):
+                    text = text.replace(".", "").replace(",", ".")
+                else:
+                    text = text.replace(",", "")
+            elif "," in text:
+                text = text.replace(",", ".")
+            value = text
         return float(value)
     except Exception:  # noqa: BLE001
         return default
+
+
+def format_number(value: object, digits: int = 2) -> str:
+    try:
+        if pd.isna(value):
+            return ""
+        return f"{float(value):,.{digits}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    except Exception:  # noqa: BLE001
+        return str(value if value is not None else "")
+
+
+def euro(value: object, digits: int = 0) -> str:
+    return f"{format_number(value, digits)} €"
+
+
+def _read_public_funds() -> pd.DataFrame:
+    try:
+        return pd.read_csv(FINECO_FUNDS_PUBLIC_FILE) if Path(FINECO_FUNDS_PUBLIC_FILE).exists() else pd.DataFrame()
+    except Exception:  # noqa: BLE001
+        return pd.DataFrame()
+
+
+def _portfolio_totals(fineco_portfolio: pd.DataFrame | None, fineco_summary: dict | None) -> dict[str, float]:
+    public = _read_public_funds()
+    if not public.empty:
+        return {
+            "one_off": float(public.get("Importo Iniziale EUR", pd.Series(dtype=float)).apply(_as_float).sum()),
+            "pac": float(public.get("PAC Mensile EUR", pd.Series(dtype=float)).apply(_as_float).sum()),
+            "bollo": float(public.get("Bollo Una Tantum EUR", pd.Series(dtype=float)).apply(_as_float).sum()),
+            "tracked": float(len(public)),
+        }
+    if fineco_portfolio is not None and not fineco_portfolio.empty:
+        one_off_col = "Importo Iniziale EUR" if "Importo Iniziale EUR" in fineco_portfolio.columns else None
+        pac_col = "PAC Mensile EUR" if "PAC Mensile EUR" in fineco_portfolio.columns else None
+        return {
+            "one_off": float(fineco_portfolio[one_off_col].apply(_as_float).sum()) if one_off_col else 0.0,
+            "pac": float(fineco_portfolio[pac_col].apply(_as_float).sum()) if pac_col else 0.0,
+            "bollo": 42.0,
+            "tracked": float(len(fineco_portfolio)),
+        }
+    summary = fineco_summary or {}
+    return {
+        "one_off": _as_float(summary.get("capitale_una_tantum_eur", 0)),
+        "pac": _as_float(summary.get("pac_mensile_eur", 0)),
+        "bollo": 42.0,
+        "tracked": _as_float(summary.get("numero_strumenti", 0)),
+    }
 
 
 def _badge(value: object) -> str:
     text = str(value or "n/d")
     low = text.lower()
     cls = ""
-    if any(x in low for x in ["success", "core", "graduale", "da discutere", "punto zero", "ok", "alta"]):
+    if any(x in low for x in ["positivo", "favorevole", "ok", "core", "punto zero", "success"]):
         cls = " good"
-    elif any(x in low for x in ["monitor", "pullback", "attendi", "watch", "verifica", "pac"]):
+    elif any(x in low for x in ["monitor", "laterale", "neutro", "pac", "rimbalzo", "watch"]):
         cls = " watch"
-    elif any(x in low for x in ["risk", "rischio", "alto", "avoid", "evita", "riduci", "bassa"]):
+    elif any(x in low for x in ["attenzione", "debole", "rischio", "negative", "pressione", "caro", "elevato"]):
         cls = " danger"
     return f"<span class='pill{cls}'>{escape(text)}</span>"
 
 
-def _score_bar(value: object) -> str:
-    score = max(0.0, min(100.0, _as_float(value)))
-    label = format_number(score, 1)
-    return f"<div class='scorebar'><span style='width:{score:.0f}%'></span><b>{escape(label)}</b></div>"
-
-
 def _format_cell(col: str, value: object) -> str:
-    score_cols = {"Score Finale", "Priority Score", "Sector Score", "Momentum Score", "Risk Score", "Priorita Strategica", "Portfolio Health Score"}
-    badge_cols = {"Stato", "Azione Suggerita", "Entry Zone", "Risk Flag", "Trend", "Tipo", "Categoria", "Decisione", "Bucket", "Cosa fare", "AF Bucket", "Priorita", "Priorità", "Tipo Copertura", "Strumento preferito", "Fase", "Stato lettura", "Ruolo"}
-    if col in score_cols:
-        return _score_bar(value)
+    if value is None:
+        return ""
+    if isinstance(value, float) and pd.isna(value):
+        return ""
+    badge_cols = {"Trend proxy", "Azione pratica", "Ruolo", "Tipo Versamento", "Categoria AlphaForge", "Bias prossimi giorni", "Cosa fare", "Lettura", "Impatto possibile", "Fase", "Stato lettura"}
+    pct_cols = {"Rendimento proxy 1D %", "Rendimento proxy 1M %", "Rendimento proxy 3M %", "Rendimento proxy 1Y %", "Rendimento %", "Costo annuo %", "Peso attuale %"}
+    eur_cols = {"Importo iniziale EUR", "PAC mensile EUR", "Importo Iniziale EUR", "PAC Mensile EUR", "Capitale versato stimato EUR", "Valore attuale stimato EUR", "Guadagno/Perdita EUR", "Bollo una tantum EUR"}
     if col in badge_cols:
         return _badge(value)
+    if col in pct_cols:
+        return f"<span class='num'>{escape(format_number(value, 2))}%</span>"
+    if col in eur_cols:
+        return f"<span class='num'>{escape(euro(value, 0))}</span>"
     if isinstance(value, (float, int)):
-        return escape(format_number(value))
-    return escape(str(value if value is not None else ""))
+        return f"<span class='num'>{escape(format_number(value, 2))}</span>"
+    text = str(value)
+    if text.startswith("http"):
+        return f"<a href='{escape(text)}' target='_blank'>link</a>"
+    return escape(text)
 
 
 def compact_table(df: pd.DataFrame | None, columns: list[str], limit: int = 10) -> str:
     if df is None or df.empty:
         return "<p class='muted'>Nessun dato disponibile.</p>"
-    cols = [col for col in columns if col in df.columns]
+    cols = [c for c in columns if c in df.columns]
     if not cols:
         return "<p class='muted'>Colonne non disponibili.</p>"
-    long_cols = {
-        "Note AI", "Trigger Monitoraggio", "Azione Suggerita", "Scenario Base", "Scenario Negativo",
-        "Azione Pratica", "Cosa fare adesso", "Cosa fare in pratica", "Perché", "Perche", "Perche guardarlo",
-        "Rischio principale", "Nota Fineco/Consulente", "ETF/Fondo candidato", "Cosa fare", "Domanda", "Perche",
-        "Domanda consulente", "Stato lettura", "Note"
-    }
     rows: list[str] = []
     for _, row in df.head(limit).iterrows():
         cells = []
         for col in cols:
-            css = " class='long'" if col in long_cols else ""
+            css = " class='long'" if col in {"Nome Strumento", "Azione pratica", "Titolo", "Domanda", "Perche", "Nota", "Note"} else ""
             cells.append(f"<td{css}>{_format_cell(col, row.get(col, ''))}</td>")
         rows.append(f"<tr>{''.join(cells)}</tr>")
-    th = "".join(f"<th>{escape(col)}</th>" for col in cols)
+    th = "".join(f"<th>{escape(c)}</th>" for c in cols)
     return f"<div class='table-wrap'><table><thead><tr>{th}</tr></thead><tbody>{''.join(rows)}</tbody></table></div>"
 
 
-def _best_row(df: pd.DataFrame | None, col: str) -> dict[str, Any]:
-    if df is None or df.empty or col not in df.columns:
-        return {}
-    try:
-        return df.sort_values(col, ascending=False, na_position="last").iloc[0].to_dict()
-    except Exception:  # noqa: BLE001
-        return {}
+def _line_chart_svg(history: pd.DataFrame, fund_name: str, width: int = 520, height: int = 210) -> str:
+    if history is None or history.empty:
+        return ""
+    if "Nome Strumento" not in history.columns or "Normalized 100" not in history.columns or "Date" not in history.columns:
+        return ""
+    df = history[history["Nome Strumento"].astype(str) == str(fund_name)].copy()
+    if df.empty:
+        return ""
+    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+    df["Normalized 100"] = pd.to_numeric(df["Normalized 100"], errors="coerce")
+    df = df.dropna(subset=["Date", "Normalized 100"]).sort_values("Date")
+    if len(df) < 2:
+        return ""
+    if len(df) > 140:
+        step = max(1, len(df) // 140)
+        df = df.iloc[::step].copy()
+    vals = df["Normalized 100"].tolist()
+    min_v, max_v = min(vals), max(vals)
+    if min_v == max_v:
+        min_v -= 1
+        max_v += 1
+    pad = (max_v - min_v) * 0.12
+    min_v -= pad
+    max_v += pad
+    left, right, top, bottom = 42, 12, 18, 34
+    plot_w = width - left - right
+    plot_h = height - top - bottom
+    pts: list[str] = []
+    for i, value in enumerate(vals):
+        x = left + (i / max(1, len(vals) - 1)) * plot_w
+        y = top + (max_v - value) / (max_v - min_v) * plot_h
+        pts.append(f"{x:.1f},{y:.1f}")
+    latest = vals[-1]
+    first = vals[0]
+    change = latest - first
+    cls = "pos" if change >= 0 else "neg"
+    start_date = df["Date"].iloc[0].strftime("%d/%m")
+    end_date = df["Date"].iloc[-1].strftime("%d/%m")
+    label = f"{latest:.1f}".replace(".", ",")
+    change_label = f"{change:+.1f}".replace(".", ",")
+    # simple horizontal grid lines
+    grid = []
+    for ratio in [0, .5, 1]:
+        y = top + ratio * plot_h
+        grid.append(f"<line x1='{left}' y1='{y:.1f}' x2='{width-right}' y2='{y:.1f}' class='gridline'/>")
+    return f"""
+    <div class='mini-chart'>
+      <div class='chart-head'><b>{escape(fund_name)}</b><span class='{cls}'>{escape(change_label)} pt</span></div>
+      <svg viewBox='0 0 {width} {height}' role='img' aria-label='Grafico {escape(fund_name)}'>
+        {''.join(grid)}
+        <text x='0' y='{top+4}' class='axis'>{escape(format_number(max_v,1))}</text>
+        <text x='0' y='{top+plot_h:.0f}' class='axis'>{escape(format_number(min_v,1))}</text>
+        <polyline points='{' '.join(pts)}' class='spark {cls}' fill='none'/>
+        <circle cx='{pts[-1].split(',')[0]}' cy='{pts[-1].split(',')[1]}' r='4' class='dot {cls}'/>
+        <text x='{left}' y='{height-8}' class='axis'>{escape(start_date)}</text>
+        <text x='{width-right-54}' y='{height-8}' class='axis'>{escape(end_date)}</text>
+        <text x='{width-right-65}' y='{top+16}' class='last {cls}'>{escape(label)}</text>
+      </svg>
+    </div>"""
 
 
-def _count_bucket(df: pd.DataFrame | None, col: str, value: str) -> int:
-    if df is None or df.empty or col not in df.columns:
-        return 0
-    return int(df[col].astype(str).eq(value).sum())
-
-
-def _portfolio_is_example(fineco_portfolio: pd.DataFrame | None) -> bool:
-    if fineco_portfolio is None or fineco_portfolio.empty or "ISIN" not in fineco_portfolio.columns:
-        return True
-    return bool(fineco_portfolio["ISIN"].astype(str).str.startswith("ESEMPIO").all())
+def _charts_grid(history: pd.DataFrame | None, performance: pd.DataFrame | None) -> str:
+    if history is None or history.empty or "Nome Strumento" not in history.columns:
+        return "<p class='muted'>Grafici non ancora disponibili. Lancia l'Auto update o apri la pagina Grafici e premi Aggiorna.</p>"
+    names = history["Nome Strumento"].dropna().astype(str).drop_duplicates().tolist()[:7]
+    cards = [_line_chart_svg(history, name) for name in names]
+    cards = [c for c in cards if c]
+    if not cards:
+        return "<p class='muted'>Storico presente ma non sufficiente per disegnare i grafici.</p>"
+    return f"<div class='charts-grid'>{''.join(cards)}</div>"
 
 
 def build_text_report(
@@ -130,50 +221,26 @@ def build_text_report(
     news_summary: dict | None = None,
 ) -> str:
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
-    brief = build_action_brief(action_plan, insights)
-    summary = fineco_summary or {}
+    totals = _portfolio_totals(fineco_portfolio, fineco_summary)
     lines = [
-        "AlphaForge Intelligence v9 - News & Performance Radar",
+        "AlphaForge v9.1 - Investing-style Fineco Radar",
         f"Aggiornato il {now}",
         "",
-        "Report informativo. Non costituisce consulenza finanziaria personalizzata.",
-        "Obiettivo: separare core gia' gestito, satelliti settoriali e controllo rendimento del portafoglio Fineco.",
+        f"Una tantum corretta: {totals['one_off']:.0f} EUR",
+        f"PAC mensile corretto: {totals['pac']:.0f} EUR/mese",
+        f"Bollo una tantum stimato: {totals['bollo']:.0f} EUR",
         "",
-        "Portafoglio Fineco:",
-        f"- Fase: {summary.get('fase', 'Non configurato')}",
-        f"- Capitale una tantum: {summary.get('capitale_una_tantum_eur', 'n/d')} EUR",
-        f"- PAC mensile: {summary.get('pac_mensile_eur', 'n/d')} EUR",
-        f"- Capitale versato stimato: {summary.get('capitale_versato_stimato_eur', 'n/d')} EUR",
-        f"- Rendimento stimato: {summary.get('rendimento_pct', 'n/d')}%",
-        "",
-        "Cosa fare adesso:",
-        "- Se hai sottoscritto oggi, non giudicare ancora la performance: crea il punto zero.",
-        "- Verifica su Fineco data valuta, prima rata PAC, quote assegnate e prezzo medio.",
-        "- Chiedi al consulente costi totali, sottostanti e benchmark di confronto.",
-        "",
-        "Bussola settoriale:",
+        "Cosa guardare: NAV Fineco ufficiale, performance proxy, news radar, costi annui e benchmark coerenti.",
+        "Nota: report informativo, non consulenza finanziaria.",
     ]
-    if sector_compass is not None and not sector_compass.empty:
-        for _, row in sector_compass.head(6).iterrows():
-            lines.append(f"- {row.get('Settore','')}: {row.get('Bucket','')} | {row.get('Cosa fare','')} | candidato: {row.get('ETF/Fondo candidato','')} ({row.get('Ticker ETF/Fondo','')})")
-    else:
-        lines.append("- Bussola settoriale non disponibile.")
-    lines += ["", "Priorita' operative:"]
-    for line in getattr(brief, "narrative", [])[:6]:
-        lines.append(f"- {line}")
     if fund_performance is not None and not fund_performance.empty:
-        lines += ["", "Andamento fondi/proxy:"]
+        lines += ["", "Performance proxy:"]
         for _, row in fund_performance.head(7).iterrows():
-            lines.append(f"- {row.get('Nome Strumento','')}: 1M {row.get('Rendimento proxy 1M %','n/d')}% | 3M {row.get('Rendimento proxy 3M %','n/d')}% | {row.get('Trend proxy','n/d')}")
+            lines.append(f"- {row.get('Nome Strumento','')}: 1M {row.get('Rendimento proxy 1M %','n/d')}%, 3M {row.get('Rendimento proxy 3M %','n/d')}%, trend {row.get('Trend proxy','n/d')}")
     if news_summary and isinstance(news_summary, dict):
         lines += ["", "News radar:"]
         for item in news_summary.get("funds", [])[:7]:
             lines.append(f"- {item.get('Nome Strumento','')}: {item.get('Bias prossimi giorni','n/d')} | {item.get('Cosa fare','n/d')}")
-    if fineco_questions is not None and not fineco_questions.empty:
-        lines += ["", "Domande per il consulente:"]
-        for _, row in fineco_questions.head(6).iterrows():
-            lines.append(f"- {row.get('Tema','')}: {row.get('Domanda','')}")
-    lines += ["", "Prima di investire controllare sempre: KID, costi, fiscalita', liquidita', valuta, dimensione fondo, sovrapposizione con All-World e adeguatezza con il consulente."]
     return "\n".join(lines)
 
 
@@ -195,140 +262,62 @@ def render_dashboard_html(
     news_summary: dict | None = None,
 ) -> None:
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
-    best = _best_row(ranking, "Score Finale")
-    best_sector = _best_row(sector_compass, "Sector Score")
-    best_priority = _best_row(insights, "Priority Score")
-    status_text = status.get("status", "unknown") if isinstance(status, dict) else "unknown"
-    focus = build_focus_board(action_plan, insights, limit=12)
-    summary = fineco_summary or {}
-    is_example = _portfolio_is_example(fineco_portfolio)
+    totals = _portfolio_totals(fineco_portfolio, fineco_summary)
+    status_text = str(status.get("status", "unknown") if isinstance(status, dict) else "unknown")
+    status_version = str(status.get("version", "AlphaForge v9.1") if isinstance(status, dict) else "AlphaForge v9.1")
+    phase = str((fineco_summary or {}).get("fase", "Punto zero"))
+    message = str((fineco_summary or {}).get("messaggio_principale", "Portafoglio appena avviato: controlla quote, NAV e PAC."))
 
-    if sector_compass is not None and not sector_compass.empty:
-        sector_compass = sector_compass.sort_values("Sector Score", ascending=False, na_position="last")
-    core_count = _count_bucket(sector_compass, "Bucket", "Da discutere ora")
-    strategic_watch = _count_bucket(sector_compass, "Bucket", "Watchlist strategica")
-    risky_count = _count_bucket(sector_compass, "Bucket", "Tema forte ma rischioso")
-    first_sector = best_sector.get("Settore", "n/d")
-    first_action = best_sector.get("Cosa fare", "Classifica prima il portafoglio e discuti eventuali satelliti con il consulente.")
+    public = _read_public_funds()
+    funds_for_table = public if not public.empty else fineco_portfolio
+    if funds_for_table is not None and not funds_for_table.empty:
+        funds_for_table = funds_for_table.copy()
+        if "Importo Iniziale EUR" in funds_for_table.columns and "PAC Mensile EUR" in funds_for_table.columns:
+            funds_for_table["Capitale/PAC"] = funds_for_table.apply(lambda r: euro(r.get("Importo Iniziale EUR", 0), 0) if _as_float(r.get("Importo Iniziale EUR", 0)) > 0 else euro(r.get("PAC Mensile EUR", 0), 0) + "/mese", axis=1)
 
-    phase = summary.get("fase", "Non configurato")
-    one_off = summary.get("capitale_una_tantum_eur", 0)
-    pac_monthly = summary.get("pac_mensile_eur", 0)
-    invested = summary.get("capitale_versato_stimato_eur", 0)
-    perf = summary.get("rendimento_pct", 0)
-    health = summary.get("portfolio_health_score", 0)
-    portfolio_message = summary.get("messaggio_principale", "Carica il portafoglio Fineco nella pagina Streamlit per il tracking privato.")
-
-    privacy_note = "Dashboard pubblica in modalita' privacy: non pubblica dati personali. Carica il CSV reale solo nell'app Streamlit o usa repo privato." if is_example else "Portafoglio configurato nel repo: ricordati che questa pagina e' pubblica se il repository e' pubblico."
-
-    news_funds = news_summary.get("funds", []) if isinstance(news_summary, dict) else []
-    positive_news = len([x for x in news_funds if "favorevole" in str(x.get("Bias prossimi giorni", "")).lower()])
-    negative_news = len([x for x in news_funds if "attenzione" in str(x.get("Bias prossimi giorni", "")).lower()])
-    tracked_funds = 0 if fund_performance is None or fund_performance.empty else len(fund_performance)
-
+    news_funds = pd.DataFrame((news_summary or {}).get("funds", [])) if isinstance(news_summary, dict) else pd.DataFrame()
     css = """
     <style>
-    :root { --bg:#040711; --bg2:#081126; --panel:rgba(17,26,52,.88); --border:rgba(255,255,255,.13); --text:#f5f8ff; --muted:#a8b8dd; --green:#69e6c2; --blue:#8eb5ff; --gold:#ffd37a; --red:#ff8f98; --purple:#c4a7ff; }
-    * { box-sizing:border-box; } html { scroll-behavior:smooth; } body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--text); background:radial-gradient(circle at 10% -6%, rgba(105,230,194,.22), transparent 27%), radial-gradient(circle at 90% 0%, rgba(142,181,255,.25), transparent 30%), linear-gradient(180deg,var(--bg),var(--bg2) 48%,#050711); }
-    body:before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.22; background-image:linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size:42px 42px; mask-image:linear-gradient(to bottom, black, transparent 78%); }
-    .container { width:min(1280px, calc(100% - 32px)); margin:0 auto; padding:30px 0 58px; } .nav { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; color:var(--muted); font-size:13px; } .nav b { color:var(--text); letter-spacing:-.02em; }
-    .hero { position:relative; overflow:hidden; border:1px solid var(--border); border-radius:34px; padding:34px; background:linear-gradient(135deg, rgba(22,43,74,.96), rgba(9,15,32,.90)); box-shadow:0 28px 100px rgba(0,0,0,.44); } .hero:after { content:""; position:absolute; right:-130px; bottom:-190px; width:460px; height:460px; background:radial-gradient(circle, rgba(105,230,194,.24), transparent 62%); }
-    .pill { display:inline-flex; align-items:center; gap:7px; padding:6px 11px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.07); color:#dfe8ff; font-weight:850; font-size:12px; white-space:nowrap; } .pill.good { color:var(--green); background:rgba(105,230,194,.13); border-color:rgba(105,230,194,.25); } .pill.watch { color:var(--gold); background:rgba(255,211,122,.13); border-color:rgba(255,211,122,.26); } .pill.danger { color:var(--red); background:rgba(255,143,152,.13); border-color:rgba(255,143,152,.26); }
-    h1 { position:relative; z-index:1; margin:14px 0 10px; font-size:clamp(38px, 7vw, 72px); line-height:.94; letter-spacing:-.065em; max-width:1080px; } .subtitle { position:relative; z-index:1; max-width:980px; color:var(--muted); font-size:18px; line-height:1.62; margin:0; }
-    .grid { position:relative; z-index:1; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:14px; margin-top:26px; } .card { min-height:112px; padding:17px; border-radius:22px; background:linear-gradient(145deg, rgba(255,255,255,.082), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.12); } .card .label { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; } .card .value { margin-top:7px; font-size:24px; font-weight:900; } .card .hint { margin-top:4px; color:var(--muted); font-size:12px; line-height:1.35; } .span2 { grid-column:span 2; } .span3 { grid-column:span 3; }
-    section { margin-top:22px; padding:24px; border-radius:30px; background:var(--panel); border:1px solid var(--border); box-shadow:0 18px 60px rgba(0,0,0,.25); } h2 { margin:0 0 8px; font-size:28px; letter-spacing:-.035em; } .muted { color:var(--muted); line-height:1.55; } .big-action { margin-top:18px; padding:20px; border-radius:24px; border:1px solid rgba(105,230,194,.25); background:linear-gradient(135deg, rgba(105,230,194,.13), rgba(142,181,255,.08)); font-size:18px; line-height:1.55; font-weight:820; }
-    .decision-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:16px; } .decision { padding:16px; border-radius:20px; background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.10); } .decision b { display:block; font-size:22px; margin-top:6px; }
-    .advisor { border-color:rgba(255,211,122,.25); background:linear-gradient(135deg, rgba(255,211,122,.10), rgba(255,255,255,.04)); } .privacy { border-color:rgba(142,181,255,.25); background:linear-gradient(135deg, rgba(142,181,255,.10), rgba(255,255,255,.04)); }
-    .table-wrap { overflow:auto; border-radius:18px; border:1px solid rgba(255,255,255,.09); margin-top:14px; } table { width:100%; border-collapse:collapse; min-width:920px; } th,td { padding:12px 13px; border-bottom:1px solid rgba(255,255,255,.075); text-align:left; vertical-align:top; font-size:13px; } th { position:sticky; top:0; background:rgba(9,15,32,.96); color:#d9e4ff; font-size:12px; text-transform:uppercase; letter-spacing:.06em; } td.long { min-width:270px; color:#dbe6ff; line-height:1.42; } tr:hover td { background:rgba(255,255,255,.035); }
-    .scorebar { min-width:112px; height:24px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; position:relative; border:1px solid rgba(255,255,255,.08); } .scorebar span { display:block; height:100%; background:linear-gradient(90deg, var(--green), var(--blue)); } .scorebar b { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:12px; }
-    .two { display:grid; grid-template-columns:1fr 1fr; gap:18px; } .footer { margin-top:24px; color:var(--muted); font-size:13px; line-height:1.5; } a { color:var(--green); }
-    @media (max-width:980px){ .grid,.decision-grid,.two{grid-template-columns:1fr 1fr}.span2,.span3{grid-column:span 1} } @media (max-width:640px){ .container{width:min(100% - 18px,1280px)} .hero,section{border-radius:22px;padding:20px}.grid,.decision-grid,.two{grid-template-columns:1fr} h1{font-size:40px} }
+    :root{--bg:#f4f6fb;--panel:#fff;--text:#111827;--muted:#64748b;--line:#e2e8f0;--green:#0f9f6e;--red:#dc2626;--blue:#2563eb;--amber:#d97706;--dark:#0f172a;}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.wrap{width:min(100% - 28px,1420px);margin:0 auto;padding:20px 0 34px}.topbar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 16px;box-shadow:0 8px 22px rgba(15,23,42,.05);position:sticky;top:8px;z-index:10}.brand{font-weight:900;letter-spacing:-.02em}.hero{margin-top:16px;border-radius:24px;padding:28px;background:linear-gradient(135deg,#0f172a 0%,#172554 56%,#064e3b 100%);color:white;box-shadow:0 22px 55px rgba(15,23,42,.22)}h1{font-size:46px;line-height:1;margin:12px 0 10px;letter-spacing:-.05em}.subtitle{color:#dbeafe;font-size:17px;max-width:900px;line-height:1.5}.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 10px;background:#e0f2fe;color:#075985;font-size:12px;font-weight:850;white-space:nowrap}.pill.good{background:#dcfce7;color:#166534}.pill.watch{background:#fef3c7;color:#92400e}.pill.danger{background:#fee2e2;color:#991b1b}.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 28px rgba(15,23,42,.06)}.hero .card{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.18);backdrop-filter:blur(8px)}.label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:900}.hero .label{color:#bfdbfe}.value{font-size:30px;font-weight:950;letter-spacing:-.04em;margin-top:4px}.hint{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.35}.hero .hint{color:#dbeafe}section{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 10px 28px rgba(15,23,42,.05)}h2{font-size:24px;margin:0 0 8px;letter-spacing:-.035em}.muted{color:var(--muted);line-height:1.55}.two{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.callout{padding:16px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:16px;font-weight:750;line-height:1.45}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:15px;margin-top:12px}table{border-collapse:collapse;width:100%;min-width:960px}th,td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}th{background:#f8fafc;text-transform:uppercase;font-size:11px;letter-spacing:.06em;color:#475569;position:sticky;top:0}td.long{min-width:260px}.num{font-variant-numeric:tabular-nums;font-weight:750}.charts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}.mini-chart{background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px;box-shadow:0 8px 20px rgba(15,23,42,.04)}.chart-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:6px;font-size:13px}.pos{color:var(--green)}.neg{color:var(--red)}svg{width:100%;height:auto}.gridline{stroke:#e5e7eb;stroke-width:1}.spark{stroke-width:2.5}.spark.pos{stroke:var(--green)}.spark.neg{stroke:var(--red)}.dot.pos{fill:var(--green)}.dot.neg{fill:var(--red)}.axis{font-size:11px;fill:#64748b}.last{font-size:13px;font-weight:900}.footer{margin-top:18px;color:var(--muted);font-size:13px;line-height:1.5}@media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}.two,.three,.charts-grid{grid-template-columns:1fr}h1{font-size:38px}}@media(max-width:620px){.wrap{width:min(100% - 16px,1420px)}.grid{grid-template-columns:1fr}.hero,section{border-radius:18px;padding:18px}h1{font-size:32px}}
     </style>
     """
-
     html = f"""<!doctype html>
-<html lang='it'>
-<head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>AlphaForge v9 News & Performance Radar</title>{css}</head>
-<body><div class='container'>
-  <div class='nav'><b>AlphaForge Trader</b><span>{_badge('Stato update: ' + str(status_text))}</span></div>
+<html lang='it'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>AlphaForge v9.1 Fineco Radar</title>{css}</head>
+<body><div class='wrap'>
+  <div class='topbar'><div class='brand'>📊 AlphaForge Trader</div><div>{_badge('Update: ' + status_text)} {_badge(status_version)}</div></div>
   <div class='hero'>
-    <span class='pill good'>✦ AlphaForge v9 News & Performance Radar</span>
-    <h1>Portafoglio, notizie e grafici in un’unica vista.</h1>
-    <p class='subtitle'>Pensato per monitorare i fondi/PAC Fineco: punto zero, costi, notizie rilevanti, bias di breve periodo e andamento proxy quasi real-time dove disponibile.</p>
+    <span class='pill good'>AlphaForge v9.1</span> <span class='pill'>Investing-style Fineco Radar</span>
+    <h1>Portafoglio Fineco, grafici e notizie in una vista sola.</h1>
+    <p class='subtitle'>Dashboard rapida tipo watchlist: importi corretti, PAC, costi, news finanziarie rilevanti e andamento dei proxy per capire cosa monitorare nei prossimi giorni.</p>
     <div class='grid'>
-      <div class='card span2'><div class='label'>Fase portafoglio</div><div class='value'>{escape(str(phase))}</div><div class='hint'>{escape(str(portfolio_message))}</div></div>
-      <div class='card'><div class='label'>Una tantum</div><div class='value'>{escape(format_number(one_off,0))} €</div><div class='hint'>Capitale iniziale</div></div>
-      <div class='card'><div class='label'>PAC mensile</div><div class='value'>{escape(format_number(pac_monthly,0))} €</div><div class='hint'>Versamenti programmati</div></div>
-      <div class='card'><div class='label'>Versato stimato</div><div class='value'>{escape(format_number(invested,0))} €</div><div class='hint'>Da baseline</div></div>
-      <div class='card'><div class='label'>Fondi tracciati</div><div class='value'>{tracked_funds}</div><div class='hint'>Con proxy e news radar</div></div>
+      <div class='card'><div class='label'>Investito una tantum</div><div class='value'>{escape(euro(totals['one_off'],0))}</div><div class='hint'>Corretto: 5 fondi x 5.000 €</div></div>
+      <div class='card'><div class='label'>PAC mensile</div><div class='value'>{escape(euro(totals['pac'],0))}</div><div class='hint'>Corretto: 2 PAC x 150 €/mese</div></div>
+      <div class='card'><div class='label'>Bollo una tantum</div><div class='value'>{escape(euro(totals['bollo'],0))}</div><div class='hint'>6 € per prodotto</div></div>
+      <div class='card'><div class='label'>Fondi/PAC caricati</div><div class='value'>{int(totals['tracked'])}</div><div class='hint'>Universo Fineco pubblico</div></div>
+      <div class='card'><div class='label'>Fase</div><div class='value'>{escape(phase)}</div><div class='hint'>Non giudicare ancora il rendimento</div></div>
     </div>
   </div>
 
-  <section class='privacy'>
-    <h2>1. Cosa fare adesso</h2>
-    <p class='muted'>{escape(str(privacy_note))}</p>
-    <div class='big-action'>Se i fondi/PAC sono stati sottoscritti oggi, non giudicare il rendimento: verifica data valuta, quote assegnate, prezzo medio, prima rata PAC, costi e benchmark. Il primo controllo utile e' tra 1 mese; la prima valutazione seria tra 6-12 mesi.</div>
-    <div class='decision-grid'>
-      <div class='decision'><span class='muted'>Oggi</span><b>Punto zero</b><small class='muted'>Registra importi, quote, date.</small></div>
-      <div class='decision'><span class='muted'>1 mese</span><b>Controllo esecuzione</b><small class='muted'>PAC e NAV valorizzati.</small></div>
-      <div class='decision'><span class='muted'>3-6 mesi</span><b>Pesi e sovrapposizioni</b><small class='muted'>Core, Europa, emergenti, tech.</small></div>
-      <div class='decision'><span class='muted'>12 mesi</span><b>Rendimento vs benchmark</b><small class='muted'>Valutazione più sensata.</small></div>
-    </div>
-  </section>
-
-
-  <section>
-    <h2>2. News radar sui tuoi fondi</h2>
-    <p class='muted'>Legge notizie pubbliche collegate ai settori dei tuoi fondi e produce un bias prudente di breve periodo. Non e' una previsione: serve a capire cosa monitorare nei giorni successivi.</p>
-    <div class='decision-grid'>
-      <div class='decision'><span class='muted'>Bias favorevoli</span><b>{positive_news}</b><small class='muted'>Notizie con lettura positiva</small></div>
-      <div class='decision'><span class='muted'>Bias di attenzione</span><b>{negative_news}</b><small class='muted'>Notizie potenzialmente negative</small></div>
-      <div class='decision'><span class='muted'>Fondi coperti</span><b>{tracked_funds}</b><small class='muted'>Con query news dedicate</small></div>
-      <div class='decision'><span class='muted'>Uso pratico</span><b>Monitorare</b><small class='muted'>Non comprare/vendere automaticamente</small></div>
-    </div>
-    {compact_table(pd.DataFrame(news_funds), ['Nome Strumento','Categoria AlphaForge','News trovate','News Score Totale','Bias prossimi giorni','Cosa fare'], 8)}
-  </section>
-
-  <section>
-    <h2>3. Andamento fondi e proxy</h2>
-    <p class='muted'>Per fondi comuni il NAV non e' intraday: viene normalmente aggiornato una volta al giorno. Dove possibile AlphaForge usa un ETF proxy per dare una lettura quasi real-time/market proxy.</p>
-    {compact_table(fund_performance, ['ISIN','Nome Strumento','Categoria AlphaForge','Proxy Ticker','Rendimento proxy 1M %','Rendimento proxy 3M %','Rendimento proxy 1Y %','Trend proxy','Costo annuo %','Azione pratica','Fonte dato'], 12)}
-  </section>
-
-  <section>
-    <h2>4. Tracker Fineco</h2>
-    <p class='muted'>Questa tabella e' utile soprattutto nell'app Streamlit, dove puoi caricare il CSV reale senza pubblicarlo nella dashboard.</p>
-    {compact_table(fineco_portfolio, ['ISIN','Nome Strumento','Ruolo','Tipo Versamento','Data Inizio','Capitale versato stimato EUR','Valore attuale stimato EUR','Guadagno/Perdita EUR','Rendimento %','Peso attuale %','Stato lettura'], 12)}
-  </section>
-
-  <section class='advisor'>
-    <h2>5. Domande da portare al consulente Fineco</h2>
-    <p class='muted'>Queste sono le domande piu' utili prima di aggiungere nuovi settori o strumenti.</p>
-    {compact_table(fineco_questions, ['Priorita','Tema','Domanda','Perche'], 12)}
-  </section>
-
-  <section>
-    <h2>6. Bussola settoriale</h2>
-    <p class='muted'>Dopo aver capito il portafoglio esistente, scegli pochi settori satellite da discutere. ETF/fondo come default; azione singola solo per quota piccola e consapevole.</p>
-    {compact_table(sector_compass, ['Priorita','Settore','Bucket','Cosa fare','Sector Score','Strumento preferito','Ticker ETF/Fondo','ETF/Fondo candidato','Range pratico','Perche guardarlo','Rischio principale','Nota Fineco/Consulente'], 12)}
-  </section>
+  <section><h2>Vista rapida</h2><div class='callout'>{escape(message)}</div></section>
 
   <div class='two'>
-    <section><h2>7. Priorita' operative</h2><p class='muted'>Da leggere dopo il portafoglio e la bussola settoriale.</p>{compact_table(focus, ['Priorita','Ticker','AF Bucket','Decisione','Cosa fare in pratica','Priority Score','Entry Zone','Risk Flag'], 8)}</section>
-    <section><h2>8. Strumenti candidati</h2><p class='muted'>Lista candidati da verificare su Fineco: costi, KID, disponibilita' e adeguatezza.</p>{compact_table(sector_compass, ['Settore','Strumento preferito','Ticker ETF/Fondo','ETF/Fondo candidato','Azioni leader','Range pratico'], 10)}</section>
+    <section><h2>Watchlist fondi/PAC</h2><p class='muted'>Importi caricati correttamente: 25.000 € una tantum + 300 €/mese di PAC.</p>{compact_table(funds_for_table, ['ISIN','Nome Strumento','Tipo Versamento','Capitale/PAC','Costo Annuo %','Ruolo','Categoria AlphaForge','Proxy Ticker'], 12)}</section>
+    <section><h2>Performance proxy</h2><p class='muted'>Non è il NAV ufficiale Fineco: serve a leggere il mercato sottostante quasi in tempo reale.</p>{compact_table(fund_performance, ['Nome Strumento','Proxy usato','Rendimento proxy 1D %','Rendimento proxy 1M %','Rendimento proxy 3M %','Rendimento proxy 1Y %','Trend proxy'], 12)}</section>
   </div>
 
-  <section>
-    <h2>9. Allocazione modello</h2>
-    <p class='muted'>Esempio informativo su 1000 EUR. Non sostituisce la consulenza e non considera il tuo patrimonio totale.</p>
-    {compact_table(allocation, ['Ticker','Nome ETF','Categoria','Peso Target %','Importo su 1000 EUR','Razionale'], 8)}
-  </section>
+  <section><h2>Grafici fondi/proxy</h2><p class='muted'>Grafici normalizzati a base 100. Se non compaiono, l'Auto update non ha ancora scaricato lo storico proxy o serve cambiare ticker proxy.</p>{_charts_grid(fund_history, fund_performance)}</section>
 
-  <section>
-    <h2>10. Lettura prudente</h2>
-    <p class='muted'>Aggiornato il {escape(now)}. Miglior ETF quantitativo: <b>{escape(str(best.get('Ticker', 'n/d')))}</b>. Migliore priorita' strumento: <b>{escape(str(best_priority.get('Ticker', 'n/d')))}</b>. Settore da discutere per primo: <b>{escape(str(first_sector))}</b> ({escape(str(first_action))}).</p>
-    <p class='muted'>Informazioni a scopo educativo e di monitoraggio. Non costituiscono consulenza finanziaria personalizzata, sollecitazione all'investimento o garanzia di rendimento. Verificare sempre KID, costi, liquidita', fiscalita', adeguatezza e disponibilita' su Fineco.</p>
-  </section>
-  <div class='footer'>AlphaForge v9 News & Performance Radar · Punto zero portafoglio + bussola settoriale · File generati automaticamente da GitHub Actions.</div>
+  <section><h2>News radar</h2><p class='muted'>Lettura prudente delle notizie finanziarie collegate ai settori dei fondi. Non e' una previsione certa.</p>{compact_table(news_funds, ['Nome Strumento','Categoria AlphaForge','News trovate','News Score Totale','Bias prossimi giorni','Cosa fare'], 8)}{compact_table(news_radar, ['Nome Strumento','Titolo','Fonte','News Score','Lettura','Impatto possibile','Link'], 12)}</section>
+
+  <div class='two'>
+    <section><h2>Tracker Fineco</h2><p class='muted'>Valore reale da aggiornare con NAV/controvalore Fineco.</p>{compact_table(fineco_portfolio, ['ISIN','Nome Strumento','Tipo Versamento','Capitale versato stimato EUR','Valore attuale stimato EUR','Rendimento %','Peso attuale %','Stato lettura'], 12)}</section>
+    <section><h2>Cosa controllare</h2><div class='three'><div class='card'><div class='label'>Subito</div><div class='value'>Quote</div><div class='hint'>Data valuta, NAV, prezzo medio.</div></div><div class='card'><div class='label'>1 mese</div><div class='value'>PAC</div><div class='hint'>Verifica i due addebiti da 150 €.</div></div><div class='card'><div class='label'>12 mesi</div><div class='value'>Benchmark</div><div class='hint'>Confronta rendimento e costi.</div></div></div>{compact_table(fineco_questions, ['Priorita','Tema','Domanda','Perche'], 8)}</section>
+  </div>
+
+  <section><h2>Bussola settoriale</h2>{compact_table(sector_compass, ['Priorita','Settore','Bucket','Cosa fare','Sector Score','ETF/Fondo candidato','Rischio principale'], 10)}</section>
+
+  <section><h2>Avvertenza</h2><p class='muted'>Aggiornato il {escape(now)}. Informazioni a scopo educativo e di monitoraggio. Non costituiscono consulenza finanziaria personalizzata, sollecitazione all'investimento o garanzia di rendimento. Per i fondi comuni il valore ufficiale resta il NAV/controvalore Fineco.</p></section>
+  <div class='footer'>AlphaForge v9.1 Investing-style Fineco Radar · File generati automaticamente da GitHub Actions.</div>
 </div></body></html>"""
     output.write_text(html, encoding="utf-8")

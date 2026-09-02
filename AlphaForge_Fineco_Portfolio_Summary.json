@@ -1,16 +1,16 @@
 {
-  "version": "AlphaForge v8 Fineco Portfolio Tracker",
+  "version": "AlphaForge v9.1 Investing UI Portfolio Tracker",
   "data_analisi": "2026-09-02",
   "fase": "Punto zero",
-  "numero_strumenti": 2,
-  "capitale_una_tantum_eur": 5000.0,
-  "pac_mensile_eur": 150.0,
-  "capitale_versato_stimato_eur": 5000.0,
-  "valore_attuale_stimato_eur": 5000.0,
+  "numero_strumenti": 7,
+  "capitale_una_tantum_eur": 25000.0,
+  "pac_mensile_eur": 300.0,
+  "capitale_versato_stimato_eur": 25000.0,
+  "valore_attuale_stimato_eur": 25000.0,
   "guadagno_perdita_eur": 0.0,
   "rendimento_pct": 0.0,
-  "peso_core_pct": 100.0,
-  "peso_satellite_pct": 0.0,
-  "portfolio_health_score": 65.0,
-  "messaggio_principale": "Portafoglio appena avviato: registra baseline, verifica costi/KID e non valutare ancora la performance. PAC programmato: 150 EUR/mese."
+  "peso_core_pct": 60.0,
+  "peso_satellite_pct": 40.0,
+  "portfolio_health_score": 72.0,
+  "messaggio_principale": "Portafoglio appena avviato: una tantum corretta e PAC attivi in baseline. Non valutare ancora la performance; controlla quote, NAV e costi. PAC programmato: 300 EUR/mese."
 }

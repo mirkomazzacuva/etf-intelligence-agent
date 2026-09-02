@@ -94,7 +94,7 @@ def build_news_radar() -> tuple[pd.DataFrame, dict[str, Any]]:
 
     if funds.empty:
         empty = pd.DataFrame()
-        return empty, {"version": "AlphaForge v9 News Radar", "generated_at": generated_at, "message": "Nessun fondo configurato"}
+        return empty, {"version": "AlphaForge v9.1 News Radar", "generated_at": generated_at, "message": "Nessun fondo configurato"}
 
     for _, fund in funds.iterrows():
         query = str(fund.get("News Query", "") or fund.get("Nome Strumento", ""))
@@ -135,7 +135,7 @@ def build_news_radar() -> tuple[pd.DataFrame, dict[str, Any]]:
 
     radar = pd.DataFrame(rows)
     summary = {
-        "version": "AlphaForge v9 News Radar",
+        "version": "AlphaForge v9.1 News Radar",
         "generated_at": generated_at,
         "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
         "funds": summary_rows,

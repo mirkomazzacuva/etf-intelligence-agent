@@ -21,12 +21,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
@@ -58,7 +58,11 @@ jobs:
           git add AlphaForge_Fineco_Portfolio.csv AlphaForge_Fineco_Portfolio.xlsx || true
           git add AlphaForge_Fineco_Portfolio_Summary.json || true
           git add AlphaForge_Fineco_Advisor_Questions.csv AlphaForge_Fineco_Advisor_Questions.xlsx || true
-          git add data/fineco_portfolio_template_v8.csv || true
+          git add AlphaForge_Fund_Performance.csv AlphaForge_Fund_Performance.xlsx || true
+          git add AlphaForge_Fund_Price_History.csv AlphaForge_Fund_Price_History.xlsx || true
+          git add AlphaForge_News_Radar.csv AlphaForge_News_Radar.xlsx || true
+          git add AlphaForge_News_Radar_Summary.json || true
+          git add data/fineco_portfolio_baseline.csv data/fineco_funds_public.csv data/fineco_portfolio_template_v8.csv || true
 
           if git diff --cached --quiet; then
             echo "No updated files to commit"

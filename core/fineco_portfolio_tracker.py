@@ -18,6 +18,7 @@ from core.config import (
     FINECO_PORTFOLIO_OUTPUT_XLSX,
     FINECO_PORTFOLIO_SUMMARY_FILE,
     FINECO_TEMPLATE_V8_FILE,
+    FINECO_FUNDS_PUBLIC_FILE,
 )
 
 REQUIRED_COLUMNS = [
@@ -230,6 +231,42 @@ def normalize_portfolio(df: pd.DataFrame) -> pd.DataFrame:
     return out[REQUIRED_COLUMNS]
 
 
+def public_funds_to_portfolio(path: Path = FINECO_FUNDS_PUBLIC_FILE) -> pd.DataFrame:
+    """Build the Fineco portfolio baseline from the public fund universe.
+
+    This keeps the app consistent even when the dedicated baseline file is
+    missing: 5 one-off funds x 5,000 EUR and 2 PAC x 150 EUR/month.
+    """
+    if not path.exists():
+        return pd.DataFrame()
+    src = pd.read_csv(path)
+    rows: list[dict[str, Any]] = []
+    for _, row in src.iterrows():
+        initial = _as_float(row.get("Importo Iniziale EUR"))
+        pac = _as_float(row.get("PAC Mensile EUR"))
+        current = initial if initial > 0 else 0.0
+        rows.append({
+            "ISIN": row.get("ISIN", ""),
+            "Nome Strumento": row.get("Nome Strumento", ""),
+            "Tipo": row.get("Tipo", "Fondo"),
+            "Ruolo": row.get("Ruolo", ""),
+            "Settore AlphaForge": row.get("Categoria AlphaForge", ""),
+            "Tipo Versamento": row.get("Tipo Versamento", ""),
+            "Data Inizio": row.get("Data Inizio", "2026-08-31"),
+            "Importo Iniziale EUR": initial,
+            "PAC Mensile EUR": pac,
+            "Capitale Versato Manuale EUR": 0,
+            "Valore Attuale EUR": current,
+            "Quote": "",
+            "Prezzo Medio": "",
+            "Costi Annui % Stimati": row.get("Costo Annuo %", 0),
+            "Benchmark/Confronto": row.get("Proxy Nome", ""),
+            "Prima Rata PAC Conteggiata": "No",
+            "Note": row.get("Nota", ""),
+        })
+    return normalize_portfolio(pd.DataFrame(rows))
+
+
 def default_baseline() -> pd.DataFrame:
     return normalize_portfolio(pd.DataFrame(FALLBACK_ROWS))
 
@@ -240,6 +277,13 @@ def load_fineco_portfolio(path: Path | None = None) -> pd.DataFrame:
         if source.suffix.lower() in {".xlsx", ".xls"}:
             return normalize_portfolio(pd.read_excel(source))
         return normalize_portfolio(pd.read_csv(source))
+
+    # v9.1: if the public fund universe is present, use it as the baseline.
+    # This prevents the dashboard from showing only 5,000 EUR from the old template.
+    public_portfolio = public_funds_to_portfolio()
+    if not public_portfolio.empty:
+        return public_portfolio
+
     if FINECO_TEMPLATE_V8_FILE.exists():
         return normalize_portfolio(pd.read_csv(FINECO_TEMPLATE_V8_FILE))
     return default_baseline()
@@ -297,7 +341,7 @@ def analyse_fineco_portfolio(portfolio: pd.DataFrame, as_of: date | None = None)
     stage = "Punto zero" if out["Giorni da inizio"].max() < 30 else ("Prima verifica" if out["Giorni da inizio"].max() < 180 else "Monitoraggio")
     health = _portfolio_health_score(out, core_weight, satellite_weight, total_value)
     summary = {
-        "version": "AlphaForge v8 Fineco Portfolio Tracker",
+        "version": "AlphaForge v9.1 Investing UI Portfolio Tracker",
         "data_analisi": as_of.isoformat(),
         "fase": stage,
         "numero_strumenti": int(len(out)),
@@ -362,7 +406,7 @@ def _portfolio_health_score(out: pd.DataFrame, core_weight: float, satellite_wei
 
 def _main_message(stage: str, total_invested: float, monthly_pac: float) -> str:
     if stage == "Punto zero":
-        return f"Portafoglio appena avviato: registra baseline, verifica costi/KID e non valutare ancora la performance. PAC programmato: {monthly_pac:.0f} EUR/mese."
+        return f"Portafoglio appena avviato: una tantum corretta e PAC attivi in baseline. Non valutare ancora la performance; controlla quote, NAV e costi. PAC programmato: {monthly_pac:.0f} EUR/mese."
     return "Confronta rendimento, pesi e benchmark; porta al consulente solo le anomalie importanti."
 
 

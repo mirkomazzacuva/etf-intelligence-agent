@@ -1,9 +1,9 @@
 {
   "status": "success",
-  "message": "Aggiornamento AlphaForge v9 completato",
-  "started_at": "2026-09-02T13:36:27+00:00",
-  "finished_at": "2026-09-02T13:37:08+00:00",
-  "version": "AlphaForge v9 News & Performance Radar",
+  "message": "Aggiornamento AlphaForge v9.1 completato",
+  "started_at": "2026-09-02T14:15:39+00:00",
+  "finished_at": "2026-09-02T14:16:20+00:00",
+  "version": "AlphaForge v9.1 Investing-style Fineco Radar",
   "details": [
     {
       "script": "update_etf_data_v3.py",
@@ -44,7 +44,7 @@
     {
       "script": "generate_fineco_portfolio.py",
       "returncode": 0,
-      "stdout_tail": "Fineco portfolio tracker aggiornato: 2 strumenti, capitale stimato 5000.0 EUR, fase Punto zero\n",
+      "stdout_tail": "Fineco portfolio tracker aggiornato: 7 strumenti, capitale stimato 25000.0 EUR, fase Punto zero\n",
       "stderr_tail": ""
     },
     {
@@ -56,19 +56,19 @@
     {
       "script": "generate_news_radar.py",
       "returncode": 0,
-      "stdout_tail": "News radar generato: 34 notizie, 7 strumenti\n",
+      "stdout_tail": "News radar generato: 29 notizie, 7 strumenti\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_dashboard.py",
       "returncode": 0,
-      "stdout_tail": "Dashboard v9 generata: index.html\n",
+      "stdout_tail": "Dashboard v9.1 generata: index.html\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_dashboard.py",
       "returncode": 0,
-      "stdout_tail": "Dashboard v9 generata: index.html\n",
+      "stdout_tail": "Dashboard v9.1 generata: index.html\n",
       "stderr_tail": ""
     }
   ]

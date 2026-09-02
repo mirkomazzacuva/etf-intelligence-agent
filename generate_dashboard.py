@@ -102,7 +102,7 @@ def generate_dashboard() -> None:
         news_radar,
         news_summary,
     )
-    print(f"Dashboard v9 generata: {DASHBOARD_FILE}")
+    print(f"Dashboard v9.1 generata: {DASHBOARD_FILE}")
 
 
 if __name__ == "__main__":

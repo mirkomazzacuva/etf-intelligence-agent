@@ -16,26 +16,25 @@ else:
     IMPORT_ERROR = None
 
 st.set_page_config(page_title="Notizie fondi Fineco", page_icon="📰", layout="wide")
-st.title("📰 Notizie e segnali sui fondi Fineco")
-st.caption("News radar prudente: non predice il futuro, ma aiuta a capire cosa monitorare nei prossimi giorni.")
+st.title("📰 Notizie fondi Fineco")
+st.caption("Resoconto finanziario collegato ai tuoi fondi/PAC: cosa può aiutare o penalizzare i prossimi giorni.")
 
-st.info(
-    "Per i fondi comuni il NAV non è real-time: le notizie servono per leggere il contesto. "
-    "Il bias 'favorevole/attenzione/neutro' non è un consiglio di acquisto o vendita."
-)
+st.info("Il bias non è una previsione certa: è una lettura prudente delle notizie per capire se un settore è favorito, neutro o sotto pressione.")
 
-col1, col2 = st.columns([1, 1])
+col1, col2, col3 = st.columns([1, 1, 2])
 with col1:
-    refresh = st.button("🔄 Aggiorna news ora", use_container_width=True)
+    refresh = st.button("🔄 Aggiorna news", use_container_width=True)
 with col2:
-    st.write("Fonte: Google News RSS pubblico + lettura keyword AlphaForge")
+    st.metric("Fonte", "Google News RSS")
+with col3:
+    st.write("Le query sono collegate ai fondi: tecnologia/cloud, emergenti, dividend, multi-asset, Europa.")
 
 if IMPORT_ERROR is not None:
     st.error(f"Modulo news non disponibile: {IMPORT_ERROR}")
     st.stop()
 
 if refresh and save_news_radar is not None:
-    with st.spinner("Aggiornamento news in corso..."):
+    with st.spinner("Aggiorno news radar..."):
         radar, summary = save_news_radar()
     st.success(f"News aggiornate: {len(radar)} righe")
 else:
@@ -46,21 +45,20 @@ else:
 
 funds = pd.DataFrame(summary.get("funds", [])) if isinstance(summary, dict) else pd.DataFrame()
 
-st.subheader("Bias per fondo")
+st.subheader("Bias sintetico per fondo")
 if funds.empty:
-    st.warning("Nessun riepilogo news disponibile. Premi 'Aggiorna news ora' oppure lancia l'Auto update.")
+    st.warning("Nessun riepilogo news disponibile. Premi Aggiorna news oppure lancia Auto update.")
 else:
     st.dataframe(funds, use_container_width=True, hide_index=True)
 
-st.subheader("Ultime notizie rilevate")
+st.subheader("Feed notizie rilevanti")
 if radar.empty:
     st.warning("Nessuna notizia disponibile.")
 else:
-    cols = [c for c in ["Nome Strumento", "Categoria AlphaForge", "Titolo", "Fonte", "News Score", "Lettura", "Impatto possibile", "Link"] if c in radar.columns]
-    st.dataframe(radar[cols], use_container_width=True, hide_index=True)
+    if "News Score" in radar.columns:
+        radar = radar.sort_values("News Score", ascending=False, na_position="last")
+    cols = ["Nome Strumento", "Categoria AlphaForge", "Titolo", "Fonte", "News Score", "Lettura", "Impatto possibile", "Link"]
+    st.dataframe(radar[[c for c in cols if c in radar.columns]], use_container_width=True, hide_index=True)
 
 st.markdown("### Come usarlo")
-st.write(
-    "Se vedi molte notizie negative su un settore, non significa vendere subito: significa evitare di aumentare l'esposizione "
-    "senza aver capito se il rischio è temporaneo o strutturale. Se vedi notizie positive, non inseguire il prezzo: usa PAC, ingressi graduali o alert."
-)
+st.write("Se un fondo ha bias di attenzione non significa vendere: significa non aumentare alla cieca. Se il bias è favorevole non significa comprare subito: meglio usare PAC, ingressi graduali o confronto col consulente.")

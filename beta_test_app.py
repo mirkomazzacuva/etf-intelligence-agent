@@ -268,7 +268,7 @@ class BetaTester:
         if Path("AlphaForge_Fineco_Portfolio_Summary.json").exists():
             try:
                 summary = json.loads(Path("AlphaForge_Fineco_Portfolio_Summary.json").read_text(encoding="utf-8"))
-                if summary.get("version") == "AlphaForge v8 Fineco Portfolio Tracker":
+                if str(summary.get("version", "")).startswith(("AlphaForge v8", "AlphaForge v9")):
                     self.ok("Fineco summary", str(summary.get("fase", "n/d")))
                 else:
                     self.warn("Fineco summary", str(summary.get("version", "versione mancante")))
@@ -320,8 +320,8 @@ class BetaTester:
         if Path("index.html").exists():
             try:
                 html = Path("index.html").read_text(encoding="utf-8", errors="ignore")
-                if "AlphaForge v9" in html and "News & Performance Radar" in html:
-                    self.ok("Dashboard pubblica v9", "AlphaForge v9 News & Performance Radar presente")
+                if "AlphaForge v9.1" in html or ("AlphaForge v9" in html and "News" in html):
+                    self.ok("Dashboard pubblica v9", "AlphaForge v9/v9.1 presente")
                 elif "AlphaForge v8" in html or "AlphaForge v7" in html or "AlphaForge v6" in html or "AlphaForge v5" in html or "AlphaForge v4" in html:
                     self.warn("Dashboard pubblica v9", "index.html non ancora v9: esegui full update")
                 else:
@@ -358,7 +358,7 @@ class BetaTester:
         warn = sum(1 for c in self.checks if c.status == "WARN")
         fail = sum(1 for c in self.checks if c.status == "FAIL")
         lines = [
-            "# AlphaForge v9 Beta Test Report",
+            "# AlphaForge v9.1 Beta Test Report",
             "",
             f"Check totali: {len(self.checks)}",
             f"OK: {ok}",

@@ -1,16 +1,16 @@
 {
-  "version": "AlphaForge v9 News Radar",
-  "generated_at": "2026-09-02T13:37:04+00:00",
+  "version": "AlphaForge v9.1 News Radar",
+  "generated_at": "2026-09-02T14:16:17+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
       "ISIN": "IE0003YRHWF4",
       "Nome Strumento": "Sustainable Future Connectivity FAM Fund",
       "Categoria AlphaForge": "Tecnologia e AI",
-      "News trovate": 5,
-      "News Score Totale": 1,
-      "Bias prossimi giorni": "Potenzialmente favorevole",
-      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
+      "News trovate": 0,
+      "News Score Totale": 0,
+      "Bias prossimi giorni": "Neutro: nessuna notizia rilevante trovata",
+      "Cosa fare": "Nessuna azione: attendere nuove notizie o aggiornare manualmente"
     },
     {
       "ISIN": "IE00BD2PJG29",
@@ -53,7 +53,7 @@
       "Nome Strumento": "Fineco AM Passive Underlyings 8",
       "Categoria AlphaForge": "Multi asset crescita",
       "News trovate": 5,
-      "News Score Totale": -2,
+      "News Score Totale": -3,
       "Bias prossimi giorni": "Attenzione / pressione negativa",
       "Cosa fare": "Scenario negativo: non aumentare esposizione, monitorare supporti/NAV"
     },
