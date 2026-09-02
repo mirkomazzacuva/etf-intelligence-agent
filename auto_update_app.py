@@ -16,10 +16,12 @@ DATA_SCRIPTS = [
     "generate_decisions.py",
     "generate_sector_compass.py",
     "generate_fineco_portfolio.py",
+    "generate_fund_performance.py",
+    "generate_news_radar.py",
 ]
 
 DASHBOARD_SCRIPT = "generate_dashboard.py"
-VERSION = "AlphaForge v8 Fineco Portfolio Tracker"
+VERSION = "AlphaForge v9 News & Performance Radar"
 
 
 def now_iso() -> str:
@@ -74,7 +76,7 @@ def run_dashboard(details: list[dict], started_at: str) -> int:
 def main() -> int:
     started_at = now_iso()
     details: list[dict] = []
-    write_status("running", "Aggiornamento AlphaForge v8 in corso", details, started_at=started_at)
+    write_status("running", "Aggiornamento AlphaForge v9 in corso", details, started_at=started_at)
 
     for script in DATA_SCRIPTS:
         if not ensure_script_exists(script, details, started_at):
@@ -85,16 +87,16 @@ def main() -> int:
             write_status("failed", f"Aggiornamento fallito su {script}", details, started_at=started_at)
             return int(result["returncode"])
 
-    write_status("success", "Dati AlphaForge v8 aggiornati; dashboard in generazione", details, started_at=started_at)
+    write_status("success", "Dati AlphaForge v9 aggiornati; dashboard in generazione", details, started_at=started_at)
     if run_dashboard(details, started_at) != 0:
         return 1
 
     # Write final success and regenerate once more so index.html shows status=success.
-    write_status("success", "Aggiornamento AlphaForge v8 completato", details, started_at=started_at)
+    write_status("success", "Aggiornamento AlphaForge v9 completato", details, started_at=started_at)
     if run_dashboard(details, started_at) != 0:
         return 1
 
-    write_status("success", "Aggiornamento AlphaForge v8 completato", details, started_at=started_at)
+    write_status("success", "Aggiornamento AlphaForge v9 completato", details, started_at=started_at)
     return 0
 
 

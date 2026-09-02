@@ -10,11 +10,13 @@ from core.config import (
     ACTION_PLAN_OUTPUT_CSV,
     FINECO_PORTFOLIO_OUTPUT_CSV,
     FINECO_PORTFOLIO_SUMMARY_FILE,
+    FINECO_FUND_PERFORMANCE_CSV,
+    FINECO_NEWS_RADAR_CSV,
     SECTOR_COMPASS_OUTPUT_CSV,
     STATUS_FILE,
 )
 
-st.set_page_config(page_title="AlphaForge v8", page_icon="⚒️", layout="wide")
+st.set_page_config(page_title="AlphaForge v9", page_icon="⚒️", layout="wide")
 
 
 def read_json(path: Path) -> dict:
@@ -35,9 +37,11 @@ summary = read_json(FINECO_PORTFOLIO_SUMMARY_FILE)
 sectors = read_csv(SECTOR_COMPASS_OUTPUT_CSV)
 actions = read_csv(ACTION_PLAN_OUTPUT_CSV)
 fineco = read_csv(FINECO_PORTFOLIO_OUTPUT_CSV)
+fund_perf = read_csv(FINECO_FUND_PERFORMANCE_CSV)
+news = read_csv(FINECO_NEWS_RADAR_CSV)
 
-st.title("⚒️ AlphaForge v8 - Fineco Portfolio Tracker")
-st.caption("Portafoglio prima, settori dopo. Dashboard pensata per lavorare insieme al consulente Fineco.")
+st.title("⚒️ AlphaForge v9 - News & Performance Radar")
+st.caption("Portafoglio Fineco, notizie finanziarie e grafici proxy per capire cosa monitorare.")
 
 with st.sidebar:
     st.subheader("Aggiornamento")
@@ -55,7 +59,7 @@ c1, c2, c3, c4 = st.columns(4)
 c1.metric("Fase", summary.get("fase", "n/d"))
 c2.metric("Una tantum", f"{summary.get('capitale_una_tantum_eur', 0):,.0f} €".replace(",", "."))
 c3.metric("PAC mensile", f"{summary.get('pac_mensile_eur', 0):,.0f} €".replace(",", "."))
-c4.metric("Health score", summary.get("portfolio_health_score", "n/d"))
+c4.metric("Fondi tracciati", len(fineco) if not fineco.empty else "n/d")
 
 st.subheader("Cosa fare adesso")
 steps = pd.DataFrame([
@@ -75,6 +79,24 @@ with right:
     st.subheader("Priorità operative")
     cols = ["Ticker", "Decisione chiara", "Cosa fare adesso", "Bucket operativo"]
     st.dataframe(actions[[c for c in cols if c in actions.columns]].head(8), use_container_width=True, hide_index=True)
+
+
+st.subheader("News e andamento proxy")
+col_news, col_perf = st.columns(2)
+with col_news:
+    st.write("Ultime notizie rilevate")
+    if not news.empty:
+        ncols = [c for c in ["Nome Strumento", "Titolo", "Lettura", "Impatto possibile"] if c in news.columns]
+        st.dataframe(news[ncols].head(8), use_container_width=True, hide_index=True)
+    else:
+        st.info("Esegui Auto update o apri la pagina Notizie fondi Fineco.")
+with col_perf:
+    st.write("Riepilogo performance proxy")
+    if not fund_perf.empty:
+        pcols = [c for c in ["Nome Strumento", "Proxy Ticker", "Rendimento proxy 1M %", "Rendimento proxy 3M %", "Trend proxy", "Azione pratica"] if c in fund_perf.columns]
+        st.dataframe(fund_perf[pcols].head(8), use_container_width=True, hide_index=True)
+    else:
+        st.info("Esegui Auto update o apri la pagina Grafici fondi Fineco.")
 
 st.subheader("Tracker Fineco pubblico")
 if not fineco.empty:

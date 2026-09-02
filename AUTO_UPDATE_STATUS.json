@@ -1,9 +1,9 @@
 {
   "status": "success",
-  "message": "Aggiornamento AlphaForge v8 completato",
-  "started_at": "2026-09-01T21:10:00+00:00",
-  "finished_at": "2026-09-01T21:10:38+00:00",
-  "version": "AlphaForge v8 Fineco Portfolio Tracker",
+  "message": "Aggiornamento AlphaForge v9 completato",
+  "started_at": "2026-09-02T13:36:27+00:00",
+  "finished_at": "2026-09-02T13:37:08+00:00",
+  "version": "AlphaForge v9 News & Performance Radar",
   "details": [
     {
       "script": "update_etf_data_v3.py",
@@ -48,15 +48,27 @@
       "stderr_tail": ""
     },
     {
-      "script": "generate_dashboard.py",
+      "script": "generate_fund_performance.py",
       "returncode": 0,
-      "stdout_tail": "Dashboard v8 generata: index.html\n",
+      "stdout_tail": "Performance fondi/proxy generata: 7 strumenti, 1759 punti storici\n",
+      "stderr_tail": ""
+    },
+    {
+      "script": "generate_news_radar.py",
+      "returncode": 0,
+      "stdout_tail": "News radar generato: 34 notizie, 7 strumenti\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_dashboard.py",
       "returncode": 0,
-      "stdout_tail": "Dashboard v8 generata: index.html\n",
+      "stdout_tail": "Dashboard v9 generata: index.html\n",
+      "stderr_tail": ""
+    },
+    {
+      "script": "generate_dashboard.py",
+      "returncode": 0,
+      "stdout_tail": "Dashboard v9 generata: index.html\n",
       "stderr_tail": ""
     }
   ]

@@ -67,3 +67,13 @@ FINECO_PORTFOLIO_OUTPUT_XLSX = Path("AlphaForge_Fineco_Portfolio.xlsx")
 FINECO_PORTFOLIO_SUMMARY_FILE = Path("AlphaForge_Fineco_Portfolio_Summary.json")
 FINECO_ADVISOR_QUESTIONS_CSV = Path("AlphaForge_Fineco_Advisor_Questions.csv")
 FINECO_ADVISOR_QUESTIONS_XLSX = Path("AlphaForge_Fineco_Advisor_Questions.xlsx")
+
+# AlphaForge v9 - News & quasi-real-time fund tracking
+FINECO_FUNDS_PUBLIC_FILE = Path("data/fineco_funds_public.csv")
+FINECO_FUND_PERFORMANCE_CSV = Path("AlphaForge_Fund_Performance.csv")
+FINECO_FUND_PERFORMANCE_XLSX = Path("AlphaForge_Fund_Performance.xlsx")
+FINECO_FUND_PRICE_HISTORY_CSV = Path("AlphaForge_Fund_Price_History.csv")
+FINECO_FUND_PRICE_HISTORY_XLSX = Path("AlphaForge_Fund_Price_History.xlsx")
+FINECO_NEWS_RADAR_CSV = Path("AlphaForge_News_Radar.csv")
+FINECO_NEWS_RADAR_XLSX = Path("AlphaForge_News_Radar.xlsx")
+FINECO_NEWS_RADAR_SUMMARY = Path("AlphaForge_News_Radar_Summary.json")

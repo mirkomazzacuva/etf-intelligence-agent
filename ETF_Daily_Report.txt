@@ -1,5 +1,5 @@
-AlphaForge Intelligence v8 - Fineco Portfolio Tracker
-Aggiornato il 01/09/2026 21:10
+AlphaForge Intelligence v9 - News & Performance Radar
+Aggiornato il 02/09/2026 13:37
 
 Report informativo. Non costituisce consulenza finanziaria personalizzata.
 Obiettivo: separare core gia' gestito, satelliti settoriali e controllo rendimento del portafoglio Fineco.
@@ -21,15 +21,33 @@ Bussola settoriale:
 - Tecnologia e AI: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF tecnologia globale / MSCI World Information Technology (XDWT.DE)
 - Cybersecurity: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF cybersecurity UCITS (ISPY.L)
 - Healthcare: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF healthcare globale / fondo sanitario (XDWH.DE)
-- Semiconduttori: Monitorare | Confronta ETF/fondo e costi | candidato: ETF semiconduttori UCITS / VanEck Semiconductor UCITS (VVSM.DE)
+- Semiconduttori: Da discutere ora | Valuta esposizione graduale con consulente | candidato: ETF semiconduttori UCITS / VanEck Semiconductor UCITS (VVSM.DE)
 - Infrastrutture: Monitorare | Confronta ETF/fondo e costi | candidato: ETF infrastrutture globali / fondo infrastrutture (INFR.MI)
 
 Priorita' operative:
 - XDEV.MI: valuta ingresso solo graduale. Prima controlla prezzo vicino a MA50: monitorare conferma.
-- EXSA.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - MVOL.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - VWCE.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
 - SWDA.MI: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
+- SXR8.DE: priorita' alta, ma attendi conferma prezzo/volume prima di agire.
+
+Andamento fondi/proxy:
+- Sustainable Future Connectivity FAM Fund: 1M 10.61% | 3M 28.95% | Trend positivo
+- FAM MSCI Emerging Markets Index Fund: 1M 1.11% | 3M 1.48% | Laterale / neutro
+- Core Dividend: 1M 0.36% | 3M 5.34% | Laterale / neutro
+- Fineco AM Passive Underlyings 7: 1M -1.16% | 3M 2.42% | Laterale / neutro
+- Fineco AM Passive Underlyings 6: 1M -1.16% | 3M 2.42% | Laterale / neutro
+- Fineco AM Passive Underlyings 8: 1M -1.16% | 3M 2.42% | Laterale / neutro
+- Fidelity Euro 50 Index Fund: 1M -1.56% | 3M 4.2% | Laterale / neutro
+
+News radar:
+- Sustainable Future Connectivity FAM Fund: Potenzialmente favorevole | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
+- FAM MSCI Emerging Markets Index Fund: Neutro / da monitorare | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
+- Core Dividend: Neutro / da monitorare | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
+- Fineco AM Passive Underlyings 7: Potenzialmente favorevole | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
+- Fineco AM Passive Underlyings 6: Potenzialmente favorevole | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
+- Fineco AM Passive Underlyings 8: Attenzione / pressione negativa | Scenario negativo: non aumentare esposizione, monitorare supporti/NAV
+- Fidelity Euro 50 Index Fund: Attenzione / pressione negativa | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
 
 Domande per il consulente:
 - Punto zero: Confermi che tutti gli ordini/PAC sono effettivamente eseguiti e da quale data decorrono?

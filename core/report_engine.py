@@ -125,12 +125,15 @@ def build_text_report(
     fineco_portfolio: pd.DataFrame | None = None,
     fineco_summary: dict | None = None,
     fineco_questions: pd.DataFrame | None = None,
+    fund_performance: pd.DataFrame | None = None,
+    news_radar: pd.DataFrame | None = None,
+    news_summary: dict | None = None,
 ) -> str:
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
     brief = build_action_brief(action_plan, insights)
     summary = fineco_summary or {}
     lines = [
-        "AlphaForge Intelligence v8 - Fineco Portfolio Tracker",
+        "AlphaForge Intelligence v9 - News & Performance Radar",
         f"Aggiornato il {now}",
         "",
         "Report informativo. Non costituisce consulenza finanziaria personalizzata.",
@@ -158,6 +161,14 @@ def build_text_report(
     lines += ["", "Priorita' operative:"]
     for line in getattr(brief, "narrative", [])[:6]:
         lines.append(f"- {line}")
+    if fund_performance is not None and not fund_performance.empty:
+        lines += ["", "Andamento fondi/proxy:"]
+        for _, row in fund_performance.head(7).iterrows():
+            lines.append(f"- {row.get('Nome Strumento','')}: 1M {row.get('Rendimento proxy 1M %','n/d')}% | 3M {row.get('Rendimento proxy 3M %','n/d')}% | {row.get('Trend proxy','n/d')}")
+    if news_summary and isinstance(news_summary, dict):
+        lines += ["", "News radar:"]
+        for item in news_summary.get("funds", [])[:7]:
+            lines.append(f"- {item.get('Nome Strumento','')}: {item.get('Bias prossimi giorni','n/d')} | {item.get('Cosa fare','n/d')}")
     if fineco_questions is not None and not fineco_questions.empty:
         lines += ["", "Domande per il consulente:"]
         for _, row in fineco_questions.head(6).iterrows():
@@ -178,6 +189,10 @@ def render_dashboard_html(
     fineco_portfolio: pd.DataFrame | None = None,
     fineco_summary: dict | None = None,
     fineco_questions: pd.DataFrame | None = None,
+    fund_performance: pd.DataFrame | None = None,
+    fund_history: pd.DataFrame | None = None,
+    news_radar: pd.DataFrame | None = None,
+    news_summary: dict | None = None,
 ) -> None:
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
     best = _best_row(ranking, "Score Finale")
@@ -206,6 +221,11 @@ def render_dashboard_html(
 
     privacy_note = "Dashboard pubblica in modalita' privacy: non pubblica dati personali. Carica il CSV reale solo nell'app Streamlit o usa repo privato." if is_example else "Portafoglio configurato nel repo: ricordati che questa pagina e' pubblica se il repository e' pubblico."
 
+    news_funds = news_summary.get("funds", []) if isinstance(news_summary, dict) else []
+    positive_news = len([x for x in news_funds if "favorevole" in str(x.get("Bias prossimi giorni", "")).lower()])
+    negative_news = len([x for x in news_funds if "attenzione" in str(x.get("Bias prossimi giorni", "")).lower()])
+    tracked_funds = 0 if fund_performance is None or fund_performance.empty else len(fund_performance)
+
     css = """
     <style>
     :root { --bg:#040711; --bg2:#081126; --panel:rgba(17,26,52,.88); --border:rgba(255,255,255,.13); --text:#f5f8ff; --muted:#a8b8dd; --green:#69e6c2; --blue:#8eb5ff; --gold:#ffd37a; --red:#ff8f98; --purple:#c4a7ff; }
@@ -228,19 +248,19 @@ def render_dashboard_html(
 
     html = f"""<!doctype html>
 <html lang='it'>
-<head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>AlphaForge v8 Fineco Portfolio Tracker</title>{css}</head>
+<head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>AlphaForge v9 News & Performance Radar</title>{css}</head>
 <body><div class='container'>
   <div class='nav'><b>AlphaForge Trader</b><span>{_badge('Stato update: ' + str(status_text))}</span></div>
   <div class='hero'>
-    <span class='pill good'>✦ AlphaForge v8 Fineco Portfolio Tracker</span>
-    <h1>Prima il portafoglio, poi i settori.</h1>
-    <p class='subtitle'>Pensato per un uso realistico con Fineco e consulente: crea il punto zero dei fondi/PAC, misura rendimento e pesi nel tempo, poi valuta solo eventuali satelliti settoriali.</p>
+    <span class='pill good'>✦ AlphaForge v9 News & Performance Radar</span>
+    <h1>Portafoglio, notizie e grafici in un’unica vista.</h1>
+    <p class='subtitle'>Pensato per monitorare i fondi/PAC Fineco: punto zero, costi, notizie rilevanti, bias di breve periodo e andamento proxy quasi real-time dove disponibile.</p>
     <div class='grid'>
       <div class='card span2'><div class='label'>Fase portafoglio</div><div class='value'>{escape(str(phase))}</div><div class='hint'>{escape(str(portfolio_message))}</div></div>
       <div class='card'><div class='label'>Una tantum</div><div class='value'>{escape(format_number(one_off,0))} €</div><div class='hint'>Capitale iniziale</div></div>
       <div class='card'><div class='label'>PAC mensile</div><div class='value'>{escape(format_number(pac_monthly,0))} €</div><div class='hint'>Versamenti programmati</div></div>
       <div class='card'><div class='label'>Versato stimato</div><div class='value'>{escape(format_number(invested,0))} €</div><div class='hint'>Da baseline</div></div>
-      <div class='card'><div class='label'>Health score</div><div class='value'>{escape(format_number(health,1))}</div><div class='hint'>Qualità struttura, non rendimento</div></div>
+      <div class='card'><div class='label'>Fondi tracciati</div><div class='value'>{tracked_funds}</div><div class='hint'>Con proxy e news radar</div></div>
     </div>
   </div>
 
@@ -256,40 +276,59 @@ def render_dashboard_html(
     </div>
   </section>
 
+
   <section>
-    <h2>2. Tracker Fineco</h2>
+    <h2>2. News radar sui tuoi fondi</h2>
+    <p class='muted'>Legge notizie pubbliche collegate ai settori dei tuoi fondi e produce un bias prudente di breve periodo. Non e' una previsione: serve a capire cosa monitorare nei giorni successivi.</p>
+    <div class='decision-grid'>
+      <div class='decision'><span class='muted'>Bias favorevoli</span><b>{positive_news}</b><small class='muted'>Notizie con lettura positiva</small></div>
+      <div class='decision'><span class='muted'>Bias di attenzione</span><b>{negative_news}</b><small class='muted'>Notizie potenzialmente negative</small></div>
+      <div class='decision'><span class='muted'>Fondi coperti</span><b>{tracked_funds}</b><small class='muted'>Con query news dedicate</small></div>
+      <div class='decision'><span class='muted'>Uso pratico</span><b>Monitorare</b><small class='muted'>Non comprare/vendere automaticamente</small></div>
+    </div>
+    {compact_table(pd.DataFrame(news_funds), ['Nome Strumento','Categoria AlphaForge','News trovate','News Score Totale','Bias prossimi giorni','Cosa fare'], 8)}
+  </section>
+
+  <section>
+    <h2>3. Andamento fondi e proxy</h2>
+    <p class='muted'>Per fondi comuni il NAV non e' intraday: viene normalmente aggiornato una volta al giorno. Dove possibile AlphaForge usa un ETF proxy per dare una lettura quasi real-time/market proxy.</p>
+    {compact_table(fund_performance, ['ISIN','Nome Strumento','Categoria AlphaForge','Proxy Ticker','Rendimento proxy 1M %','Rendimento proxy 3M %','Rendimento proxy 1Y %','Trend proxy','Costo annuo %','Azione pratica','Fonte dato'], 12)}
+  </section>
+
+  <section>
+    <h2>4. Tracker Fineco</h2>
     <p class='muted'>Questa tabella e' utile soprattutto nell'app Streamlit, dove puoi caricare il CSV reale senza pubblicarlo nella dashboard.</p>
     {compact_table(fineco_portfolio, ['ISIN','Nome Strumento','Ruolo','Tipo Versamento','Data Inizio','Capitale versato stimato EUR','Valore attuale stimato EUR','Guadagno/Perdita EUR','Rendimento %','Peso attuale %','Stato lettura'], 12)}
   </section>
 
   <section class='advisor'>
-    <h2>3. Domande da portare al consulente Fineco</h2>
+    <h2>5. Domande da portare al consulente Fineco</h2>
     <p class='muted'>Queste sono le domande piu' utili prima di aggiungere nuovi settori o strumenti.</p>
     {compact_table(fineco_questions, ['Priorita','Tema','Domanda','Perche'], 12)}
   </section>
 
   <section>
-    <h2>4. Bussola settoriale</h2>
+    <h2>6. Bussola settoriale</h2>
     <p class='muted'>Dopo aver capito il portafoglio esistente, scegli pochi settori satellite da discutere. ETF/fondo come default; azione singola solo per quota piccola e consapevole.</p>
     {compact_table(sector_compass, ['Priorita','Settore','Bucket','Cosa fare','Sector Score','Strumento preferito','Ticker ETF/Fondo','ETF/Fondo candidato','Range pratico','Perche guardarlo','Rischio principale','Nota Fineco/Consulente'], 12)}
   </section>
 
   <div class='two'>
-    <section><h2>5. Priorita' operative</h2><p class='muted'>Da leggere dopo il portafoglio e la bussola settoriale.</p>{compact_table(focus, ['Priorita','Ticker','AF Bucket','Decisione','Cosa fare in pratica','Priority Score','Entry Zone','Risk Flag'], 8)}</section>
-    <section><h2>6. Strumenti candidati</h2><p class='muted'>Lista candidati da verificare su Fineco: costi, KID, disponibilita' e adeguatezza.</p>{compact_table(sector_compass, ['Settore','Strumento preferito','Ticker ETF/Fondo','ETF/Fondo candidato','Azioni leader','Range pratico'], 10)}</section>
+    <section><h2>7. Priorita' operative</h2><p class='muted'>Da leggere dopo il portafoglio e la bussola settoriale.</p>{compact_table(focus, ['Priorita','Ticker','AF Bucket','Decisione','Cosa fare in pratica','Priority Score','Entry Zone','Risk Flag'], 8)}</section>
+    <section><h2>8. Strumenti candidati</h2><p class='muted'>Lista candidati da verificare su Fineco: costi, KID, disponibilita' e adeguatezza.</p>{compact_table(sector_compass, ['Settore','Strumento preferito','Ticker ETF/Fondo','ETF/Fondo candidato','Azioni leader','Range pratico'], 10)}</section>
   </div>
 
   <section>
-    <h2>7. Allocazione modello</h2>
+    <h2>9. Allocazione modello</h2>
     <p class='muted'>Esempio informativo su 1000 EUR. Non sostituisce la consulenza e non considera il tuo patrimonio totale.</p>
     {compact_table(allocation, ['Ticker','Nome ETF','Categoria','Peso Target %','Importo su 1000 EUR','Razionale'], 8)}
   </section>
 
   <section>
-    <h2>8. Lettura prudente</h2>
+    <h2>10. Lettura prudente</h2>
     <p class='muted'>Aggiornato il {escape(now)}. Miglior ETF quantitativo: <b>{escape(str(best.get('Ticker', 'n/d')))}</b>. Migliore priorita' strumento: <b>{escape(str(best_priority.get('Ticker', 'n/d')))}</b>. Settore da discutere per primo: <b>{escape(str(first_sector))}</b> ({escape(str(first_action))}).</p>
     <p class='muted'>Informazioni a scopo educativo e di monitoraggio. Non costituiscono consulenza finanziaria personalizzata, sollecitazione all'investimento o garanzia di rendimento. Verificare sempre KID, costi, liquidita', fiscalita', adeguatezza e disponibilita' su Fineco.</p>
   </section>
-  <div class='footer'>AlphaForge v8 Fineco Portfolio Tracker · Punto zero portafoglio + bussola settoriale · File generati automaticamente da GitHub Actions.</div>
+  <div class='footer'>AlphaForge v9 News & Performance Radar · Punto zero portafoglio + bussola settoriale · File generati automaticamente da GitHub Actions.</div>
 </div></body></html>"""
     output.write_text(html, encoding="utf-8")

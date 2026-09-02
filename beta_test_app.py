@@ -30,6 +30,9 @@ REQUIRED_FILES = [
     "data/fineco_portfolio_template.csv",
     "data/fineco_portfolio_template_v8.csv",
     "generate_fineco_portfolio.py",
+    "generate_fund_performance.py",
+    "generate_news_radar.py",
+    "data/fineco_funds_public.csv",
 ]
 
 OUTPUT_FILES = [
@@ -51,6 +54,13 @@ OUTPUT_FILES = [
     "AlphaForge_Fineco_Portfolio_Summary.json",
     "AlphaForge_Fineco_Advisor_Questions.csv",
     "AlphaForge_Fineco_Advisor_Questions.xlsx",
+    "AlphaForge_Fund_Performance.csv",
+    "AlphaForge_Fund_Performance.xlsx",
+    "AlphaForge_Fund_Price_History.csv",
+    "AlphaForge_Fund_Price_History.xlsx",
+    "AlphaForge_News_Radar.csv",
+    "AlphaForge_News_Radar.xlsx",
+    "AlphaForge_News_Radar_Summary.json",
 ]
 
 CORE_MODULES = [
@@ -70,6 +80,8 @@ CORE_MODULES = [
     "core.ui_theme",
     "core.sector_compass_engine",
     "core.fineco_portfolio_tracker",
+    "core.fund_market_engine",
+    "core.news_radar_engine",
 ]
 
 
@@ -263,6 +275,38 @@ class BetaTester:
             except Exception as exc:  # noqa: BLE001
                 self.fail("Fineco summary", str(exc))
 
+        if Path("AlphaForge_Fund_Performance.csv").exists():
+            try:
+                perf = pd.read_csv("AlphaForge_Fund_Performance.csv")
+                missing = [col for col in ["ISIN", "Nome Strumento", "Proxy Ticker", "Trend proxy", "Azione pratica"] if col not in perf.columns]
+                if missing:
+                    self.fail("Performance fondi", f"Mancano colonne: {', '.join(missing)}")
+                else:
+                    self.ok("Performance fondi", f"OK, {len(perf)} strumenti")
+            except Exception as exc:  # noqa: BLE001
+                self.fail("Performance fondi", str(exc))
+
+        if Path("AlphaForge_News_Radar.csv").exists():
+            try:
+                news = pd.read_csv("AlphaForge_News_Radar.csv")
+                missing = [col for col in ["ISIN", "Nome Strumento", "Titolo", "News Score", "Lettura"] if col not in news.columns]
+                if missing:
+                    self.fail("News radar", f"Mancano colonne: {', '.join(missing)}")
+                else:
+                    self.ok("News radar", f"OK, {len(news)} righe")
+            except Exception as exc:  # noqa: BLE001
+                self.fail("News radar", str(exc))
+
+        if Path("AlphaForge_News_Radar_Summary.json").exists():
+            try:
+                news_summary = json.loads(Path("AlphaForge_News_Radar_Summary.json").read_text(encoding="utf-8"))
+                if news_summary.get("version") == "AlphaForge v9 News Radar":
+                    self.ok("News summary", "AlphaForge v9 News Radar")
+                else:
+                    self.warn("News summary", str(news_summary.get("version", "versione mancante")))
+            except Exception as exc:  # noqa: BLE001
+                self.fail("News summary", str(exc))
+
         if Path("AUTO_UPDATE_STATUS.json").exists():
             try:
                 status = json.loads(Path("AUTO_UPDATE_STATUS.json").read_text(encoding="utf-8"))
@@ -276,12 +320,12 @@ class BetaTester:
         if Path("index.html").exists():
             try:
                 html = Path("index.html").read_text(encoding="utf-8", errors="ignore")
-                if "AlphaForge v8" in html and "Fineco Portfolio Tracker" in html:
-                    self.ok("Dashboard pubblica v8", "AlphaForge v8 Fineco Portfolio Tracker presente")
-                elif "AlphaForge v7" in html or "AlphaForge v6" in html or "AlphaForge v5" in html or "AlphaForge v4" in html:
-                    self.warn("Dashboard pubblica v8", "index.html non ancora v8: esegui full update")
+                if "AlphaForge v9" in html and "News & Performance Radar" in html:
+                    self.ok("Dashboard pubblica v9", "AlphaForge v9 News & Performance Radar presente")
+                elif "AlphaForge v8" in html or "AlphaForge v7" in html or "AlphaForge v6" in html or "AlphaForge v5" in html or "AlphaForge v4" in html:
+                    self.warn("Dashboard pubblica v9", "index.html non ancora v9: esegui full update")
                 else:
-                    self.warn("Dashboard pubblica v8", "Marker v8 non trovato")
+                    self.warn("Dashboard pubblica v9", "Marker v9 non trovato")
             except Exception as exc:  # noqa: BLE001
                 self.fail("Dashboard pubblica", str(exc))
 
@@ -314,7 +358,7 @@ class BetaTester:
         warn = sum(1 for c in self.checks if c.status == "WARN")
         fail = sum(1 for c in self.checks if c.status == "FAIL")
         lines = [
-            "# AlphaForge v8.1 Beta Test Report",
+            "# AlphaForge v9 Beta Test Report",
             "",
             f"Check totali: {len(self.checks)}",
             f"OK: {ok}",

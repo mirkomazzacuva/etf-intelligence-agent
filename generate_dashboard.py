@@ -12,6 +12,10 @@ from core.config import (
     FINECO_ADVISOR_QUESTIONS_CSV,
     FINECO_PORTFOLIO_OUTPUT_CSV,
     FINECO_PORTFOLIO_SUMMARY_FILE,
+    FINECO_FUND_PERFORMANCE_CSV,
+    FINECO_FUND_PRICE_HISTORY_CSV,
+    FINECO_NEWS_RADAR_CSV,
+    FINECO_NEWS_RADAR_SUMMARY,
     INSIGHTS_OUTPUT_CSV,
     RANKING_FILE,
     REPORT_FILE,
@@ -59,6 +63,10 @@ def generate_dashboard() -> None:
     fineco_portfolio = _read_csv(FINECO_PORTFOLIO_OUTPUT_CSV)
     fineco_questions = _read_csv(FINECO_ADVISOR_QUESTIONS_CSV)
     fineco_summary = _read_json(FINECO_PORTFOLIO_SUMMARY_FILE)
+    fund_performance = _read_csv(FINECO_FUND_PERFORMANCE_CSV)
+    fund_history = _read_csv(FINECO_FUND_PRICE_HISTORY_CSV)
+    news_radar = _read_csv(FINECO_NEWS_RADAR_CSV)
+    news_summary = _read_json(FINECO_NEWS_RADAR_SUMMARY)
     status = read_status()
     REPORT_FILE.write_text(
         build_text_report(
@@ -71,6 +79,9 @@ def generate_dashboard() -> None:
             fineco_portfolio,
             fineco_summary,
             fineco_questions,
+            fund_performance,
+            news_radar,
+            news_summary,
         ),
         encoding="utf-8",
     )
@@ -86,8 +97,12 @@ def generate_dashboard() -> None:
         fineco_portfolio,
         fineco_summary,
         fineco_questions,
+        fund_performance,
+        fund_history,
+        news_radar,
+        news_summary,
     )
-    print(f"Dashboard v8 generata: {DASHBOARD_FILE}")
+    print(f"Dashboard v9 generata: {DASHBOARD_FILE}")
 
 
 if __name__ == "__main__":
