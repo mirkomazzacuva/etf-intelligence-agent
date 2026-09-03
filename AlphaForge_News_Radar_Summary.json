@@ -1,6 +1,6 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-09-02T21:11:28+00:00",
+  "generated_at": "2026-09-03T21:10:48+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
@@ -16,7 +16,7 @@
       "ISIN": "IE00BD2PJG29",
       "Nome Strumento": "FAM MSCI Emerging Markets Index Fund",
       "Categoria AlphaForge": "Emerging Markets",
-      "News trovate": 3,
+      "News trovate": 2,
       "News Score Totale": 0,
       "Bias prossimi giorni": "Neutro / da monitorare",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
@@ -25,7 +25,7 @@
       "ISIN": "LU0981915779",
       "Nome Strumento": "Core Dividend",
       "Categoria AlphaForge": "Dividend globale",
-      "News trovate": 5,
+      "News trovate": 4,
       "News Score Totale": 0,
       "Bias prossimi giorni": "Neutro / da monitorare",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
@@ -34,7 +34,7 @@
       "ISIN": "IE0005TOUMC7",
       "Nome Strumento": "Fineco AM Passive Underlyings 7",
       "Categoria AlphaForge": "Multi asset",
-      "News trovate": 5,
+      "News trovate": 3,
       "News Score Totale": 1,
       "Bias prossimi giorni": "Potenzialmente favorevole",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
@@ -43,7 +43,7 @@
       "ISIN": "IE000KTYLDC4",
       "Nome Strumento": "Fineco AM Passive Underlyings 6",
       "Categoria AlphaForge": "Multi asset prudente",
-      "News trovate": 5,
+      "News trovate": 3,
       "News Score Totale": 1,
       "Bias prossimi giorni": "Potenzialmente favorevole",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
@@ -52,19 +52,19 @@
       "ISIN": "IE000DWG3DP6",
       "Nome Strumento": "Fineco AM Passive Underlyings 8",
       "Categoria AlphaForge": "Multi asset crescita",
-      "News trovate": 5,
-      "News Score Totale": -2,
+      "News trovate": 4,
+      "News Score Totale": -1,
       "Bias prossimi giorni": "Attenzione / pressione negativa",
-      "Cosa fare": "Scenario negativo: non aumentare esposizione, monitorare supporti/NAV"
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
       "ISIN": "LU0261952682",
       "Nome Strumento": "Fidelity Euro 50 Index Fund",
       "Categoria AlphaForge": "Europa",
       "News trovate": 5,
-      "News Score Totale": -1,
+      "News Score Totale": -2,
       "Bias prossimi giorni": "Attenzione / pressione negativa",
-      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
+      "Cosa fare": "Scenario negativo: non aumentare esposizione, monitorare supporti/NAV"
     }
   ]
 }
