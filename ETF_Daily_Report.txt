@@ -1,5 +1,5 @@
 AlphaForge v9.1 - Investing-style Fineco Radar
-Aggiornato il 03/09/2026 21:10
+Aggiornato il 04/09/2026 20:53
 
 Una tantum corretta: 25000 EUR
 PAC mensile corretto: 300 EUR/mese
@@ -9,13 +9,13 @@ Cosa guardare: NAV Fineco ufficiale, performance proxy, news radar, costi annui 
 Nota: report informativo, non consulenza finanziaria.
 
 Performance proxy:
-- Sustainable Future Connectivity FAM Fund: 1M 9.09%, 3M 30.7%, trend Positivo
-- FAM MSCI Emerging Markets Index Fund: 1M 1.64%, 3M 2.32%, trend Laterale
-- Core Dividend: 1M 1.39%, 3M 6.84%, trend Laterale
-- Fineco AM Passive Underlyings 7: 1M -0.33%, 3M 4.21%, trend Laterale
-- Fineco AM Passive Underlyings 6: 1M -0.33%, 3M 4.21%, trend Laterale
-- Fineco AM Passive Underlyings 8: 1M -0.33%, 3M 4.21%, trend Laterale
-- Fidelity Euro 50 Index Fund: 1M -0.87%, 3M 5.04%, trend Laterale
+- Sustainable Future Connectivity FAM Fund: 1M 8.47%, 3M 32.06%, trend Positivo
+- FAM MSCI Emerging Markets Index Fund: 1M 3.6%, 3M 4.64%, trend Rimbalzo breve
+- Core Dividend: 1M 0.95%, 3M 7.24%, trend Laterale
+- Fineco AM Passive Underlyings 7: 1M -0.51%, 3M 5.43%, trend Laterale
+- Fineco AM Passive Underlyings 6: 1M -0.51%, 3M 5.43%, trend Laterale
+- Fineco AM Passive Underlyings 8: 1M -0.51%, 3M 5.43%, trend Laterale
+- Fidelity Euro 50 Index Fund: 1M -1.07%, 3M 5.63%, trend Laterale
 
 News radar:
 - Sustainable Future Connectivity FAM Fund: Neutro: nessuna notizia rilevante trovata | Nessuna azione: attendere nuove notizie o aggiornare manualmente
@@ -23,5 +23,5 @@ News radar:
 - Core Dividend: Neutro / da monitorare | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
 - Fineco AM Passive Underlyings 7: Potenzialmente favorevole | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
 - Fineco AM Passive Underlyings 6: Potenzialmente favorevole | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
-- Fineco AM Passive Underlyings 8: Attenzione / pressione negativa | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
-- Fidelity Euro 50 Index Fund: Attenzione / pressione negativa | Scenario negativo: non aumentare esposizione, monitorare supporti/NAV
+- Fineco AM Passive Underlyings 8: Attenzione / pressione negativa | Scenario negativo: non aumentare esposizione, monitorare supporti/NAV
+- Fidelity Euro 50 Index Fund: Neutro / da monitorare | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
