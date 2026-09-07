@@ -77,3 +77,9 @@ FINECO_FUND_PRICE_HISTORY_XLSX = Path("AlphaForge_Fund_Price_History.xlsx")
 FINECO_NEWS_RADAR_CSV = Path("AlphaForge_News_Radar.csv")
 FINECO_NEWS_RADAR_XLSX = Path("AlphaForge_News_Radar.xlsx")
 FINECO_NEWS_RADAR_SUMMARY = Path("AlphaForge_News_Radar_Summary.json")
+
+# AlphaForge v10 - Fineco decision cockpit
+FINECO_ACTUAL_VALUES_FILE = Path("data/fineco_actual_values.csv")
+FINECO_DECISION_COCKPIT_CSV = Path("AlphaForge_Fineco_Decision_Cockpit.csv")
+FINECO_DECISION_COCKPIT_XLSX = Path("AlphaForge_Fineco_Decision_Cockpit.xlsx")
+FINECO_DECISION_SUMMARY_FILE = Path("AlphaForge_Fineco_Decision_Summary.json")

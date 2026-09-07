@@ -1,27 +1,20 @@
-AlphaForge v9.1 - Investing-style Fineco Radar
-Aggiornato il 04/09/2026 20:53
+AlphaForge v10 Decision Cockpit
+Aggiornato il 07/09/2026 11:21
 
-Una tantum corretta: 25000 EUR
-PAC mensile corretto: 300 EUR/mese
-Bollo una tantum stimato: 42 EUR
+Capitale versato: 25000.0 EUR
+Valore attuale: 25000.0 EUR
+Margine netto: -30.0 EUR
+Proiezione 3M base: 26282.41 EUR
+Proiezione 1Y base: 30359.05 EUR
+Decisione sintesi: Tieni: portafoglio troppo recente, ora serve solo controllo dati e NAV
 
-Cosa guardare: NAV Fineco ufficiale, performance proxy, news radar, costi annui e benchmark coerenti.
-Nota: report informativo, non consulenza finanziaria.
+Nota: il margine esatto richiede il controvalore Fineco reale. Le proiezioni sono scenari, non previsioni garantite.
 
-Performance proxy:
-- Sustainable Future Connectivity FAM Fund: 1M 8.47%, 3M 32.06%, trend Positivo
-- FAM MSCI Emerging Markets Index Fund: 1M 3.6%, 3M 4.64%, trend Rimbalzo breve
-- Core Dividend: 1M 0.95%, 3M 7.24%, trend Laterale
-- Fineco AM Passive Underlyings 7: 1M -0.51%, 3M 5.43%, trend Laterale
-- Fineco AM Passive Underlyings 6: 1M -0.51%, 3M 5.43%, trend Laterale
-- Fineco AM Passive Underlyings 8: 1M -0.51%, 3M 5.43%, trend Laterale
-- Fidelity Euro 50 Index Fund: 1M -1.07%, 3M 5.63%, trend Laterale
-
-News radar:
-- Sustainable Future Connectivity FAM Fund: Neutro: nessuna notizia rilevante trovata | Nessuna azione: attendere nuove notizie o aggiornare manualmente
-- FAM MSCI Emerging Markets Index Fund: Neutro / da monitorare | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
-- Core Dividend: Neutro / da monitorare | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
-- Fineco AM Passive Underlyings 7: Potenzialmente favorevole | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
-- Fineco AM Passive Underlyings 6: Potenzialmente favorevole | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
-- Fineco AM Passive Underlyings 8: Attenzione / pressione negativa | Scenario negativo: non aumentare esposizione, monitorare supporti/NAV
-- Fidelity Euro 50 Index Fund: Neutro / da monitorare | Scenario neutro: continuare monitoraggio e confrontare con andamento fondi
+Decisioni per fondo:
+- Sustainable Future Connectivity FAM Fund: margine 0.0 EUR, 1Y 1893.75 EUR, Tieni / attendi dati reali
+- FAM MSCI Emerging Markets Index Fund: margine 0.0 EUR, 1Y 1928.46 EUR, Tieni / attendi dati reali
+- Core Dividend: margine -6.0 EUR, 1Y 5685.52 EUR, Tieni ora, ma sotto esame costi
+- Fineco AM Passive Underlyings 7: margine -6.0 EUR, 1Y 5230.5 EUR, Tieni / attendi dati reali
+- Fineco AM Passive Underlyings 6: margine -6.0 EUR, 1Y 5230.5 EUR, Tieni / attendi dati reali
+- Fineco AM Passive Underlyings 8: margine -6.0 EUR, 1Y 5230.5 EUR, Tieni / attendi dati reali
+- Fidelity Euro 50 Index Fund: margine -6.0 EUR, 1Y 5159.82 EUR, Tieni / attendi dati reali

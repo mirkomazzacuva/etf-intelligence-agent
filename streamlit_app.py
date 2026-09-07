@@ -13,39 +13,33 @@ except Exception:  # noqa: BLE001
 
 from core.config import (
     ACTION_PLAN_OUTPUT_CSV,
+    FINECO_ACTUAL_VALUES_FILE,
+    FINECO_DECISION_COCKPIT_CSV,
+    FINECO_DECISION_SUMMARY_FILE,
     FINECO_FUND_PERFORMANCE_CSV,
     FINECO_FUND_PRICE_HISTORY_CSV,
-    FINECO_FUNDS_PUBLIC_FILE,
     FINECO_NEWS_RADAR_CSV,
     FINECO_NEWS_RADAR_SUMMARY,
     FINECO_PORTFOLIO_OUTPUT_CSV,
-    FINECO_PORTFOLIO_SUMMARY_FILE,
     SECTOR_COMPASS_OUTPUT_CSV,
     STATUS_FILE,
 )
 
-st.set_page_config(page_title="AlphaForge v9.1", page_icon="📊", layout="wide")
-
+st.set_page_config(page_title="AlphaForge v10", page_icon="📈", layout="wide")
 
 CSS = """
 <style>
-:root { --af-bg:#f5f7fb; --af-card:#ffffff; --af-border:#e2e8f0; --af-text:#111827; --af-muted:#64748b; --af-green:#0f9f6e; --af-red:#dc2626; --af-blue:#2563eb; --af-amber:#d97706; }
+:root { --af-bg:#f3f5f8; --af-card:#ffffff; --af-border:#d9dee7; --af-text:#111827; --af-muted:#667085; --af-green:#068647; --af-red:#d92d20; --af-blue:#175cd3; --af-amber:#b54708; }
 .stApp { background: var(--af-bg); }
-.block-container { padding-top: 1.4rem; padding-bottom: 2.5rem; max-width: 1400px; }
-.af-hero { background: linear-gradient(135deg,#0f172a 0%,#172554 55%,#064e3b 100%); padding: 24px 26px; border-radius: 22px; color: white; margin-bottom: 18px; box-shadow: 0 18px 45px rgba(15,23,42,.18); }
-.af-hero h1 { margin: 0; font-size: 42px; letter-spacing: -0.04em; }
-.af-hero p { color: #dbeafe; margin: 8px 0 0; font-size: 16px; }
-.af-kpi { background: var(--af-card); border: 1px solid var(--af-border); border-radius: 18px; padding: 16px 18px; box-shadow: 0 10px 28px rgba(15,23,42,.06); min-height: 105px; }
-.af-kpi .label { color: var(--af-muted); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
-.af-kpi .value { color: var(--af-text); font-size: 30px; font-weight: 900; margin-top: 4px; }
-.af-kpi .hint { color: var(--af-muted); font-size: 12px; margin-top: 4px; }
-.af-panel { background: var(--af-card); border: 1px solid var(--af-border); border-radius: 18px; padding: 18px; box-shadow: 0 10px 28px rgba(15,23,42,.05); }
-.af-chip { display:inline-block; padding: 4px 9px; border-radius:999px; background:#e0f2fe; color:#075985; font-size:12px; font-weight:800; margin-right:5px; }
+.block-container { padding-top: 1.1rem; padding-bottom: 2.5rem; max-width: 1450px; }
+.af-hero { background: #0b1220; padding: 22px 24px; border-radius: 18px; color: white; margin-bottom: 16px; box-shadow: 0 18px 38px rgba(15,23,42,.22); }
+.af-hero h1 { font-size: 42px; line-height: 1; margin: 10px 0 8px; letter-spacing: -.05em; }
+.af-hero p { color: #d0d5dd; font-size: 16px; margin: 0; }
+.af-chip { display:inline-block; padding: 4px 10px; border-radius:999px; background:#e0f2fe; color:#075985; font-size:12px; font-weight:900; margin-right:6px; }
 .af-chip.green { background:#dcfce7; color:#166534; }
-.af-chip.red { background:#fee2e2; color:#991b1b; }
-.af-chip.amber { background:#fef3c7; color:#92400e; }
-div[data-testid="stMetric"] { background: var(--af-card); border:1px solid var(--af-border); padding:14px; border-radius:16px; box-shadow:0 8px 22px rgba(15,23,42,.05); }
+div[data-testid="stMetric"] { background: var(--af-card); border:1px solid var(--af-border); padding:14px; border-radius:15px; box-shadow:0 8px 20px rgba(15,23,42,.05); }
 [data-testid="stDataFrame"] { border-radius: 14px; overflow: hidden; }
+.af-note { background:#eff6ff; border:1px solid #bfdbfe; border-radius:14px; padding:14px; font-weight:700; color:#1e3a8a; }
 </style>
 """
 st.markdown(CSS, unsafe_allow_html=True)
@@ -65,108 +59,81 @@ def read_csv(path: Path) -> pd.DataFrame:
         return pd.DataFrame()
 
 
-def euro(value: float | int | str | None) -> str:
+def euro(value: object, digits: int = 0) -> str:
     try:
-        return f"{float(value):,.0f} €".replace(",", ".")
+        return f"{float(value):,.{digits}f} €".replace(",", "X").replace(".", ",").replace("X", ".")
     except Exception:  # noqa: BLE001
         return "n/d"
 
 
-def pct(value: float | int | str | None) -> str:
+def pct(value: object) -> str:
     try:
         return f"{float(value):+.2f}%".replace(".", ",")
     except Exception:  # noqa: BLE001
         return "n/d"
 
 
-def portfolio_totals(funds: pd.DataFrame, summary: dict) -> dict[str, float]:
-    if not funds.empty:
-        one_off = pd.to_numeric(funds.get("Importo Iniziale EUR", 0), errors="coerce").fillna(0).sum()
-        pac = pd.to_numeric(funds.get("PAC Mensile EUR", 0), errors="coerce").fillna(0).sum()
-        bollo = pd.to_numeric(funds.get("Bollo Una Tantum EUR", 0), errors="coerce").fillna(0).sum()
-        tracked = len(funds)
-        return {"one_off": float(one_off), "pac": float(pac), "bollo": float(bollo), "tracked": float(tracked)}
-    return {
-        "one_off": float(summary.get("capitale_una_tantum_eur", 0) or 0),
-        "pac": float(summary.get("pac_mensile_eur", 0) or 0),
-        "bollo": 42.0,
-        "tracked": float(summary.get("numero_strumenti", 0) or 0),
-    }
-
-
 status = read_json(STATUS_FILE)
-summary = read_json(FINECO_PORTFOLIO_SUMMARY_FILE)
+decision_summary = read_json(FINECO_DECISION_SUMMARY_FILE)
 news_summary = read_json(FINECO_NEWS_RADAR_SUMMARY)
-funds = read_csv(FINECO_FUNDS_PUBLIC_FILE)
+decision = read_csv(FINECO_DECISION_COCKPIT_CSV)
 fineco = read_csv(FINECO_PORTFOLIO_OUTPUT_CSV)
 fund_perf = read_csv(FINECO_FUND_PERFORMANCE_CSV)
 fund_history = read_csv(FINECO_FUND_PRICE_HISTORY_CSV)
 news = read_csv(FINECO_NEWS_RADAR_CSV)
+actual_values = read_csv(FINECO_ACTUAL_VALUES_FILE)
 sectors = read_csv(SECTOR_COMPASS_OUTPUT_CSV)
 actions = read_csv(ACTION_PLAN_OUTPUT_CSV)
-tot = portfolio_totals(funds, summary)
 
 st.markdown(
     """
 <div class="af-hero">
-  <div><span class="af-chip green">AlphaForge v9.1</span><span class="af-chip">Investing-style dashboard</span></div>
-  <h1>Il tuo portafoglio Fineco sotto controllo</h1>
-  <p>Vista rapida tipo watchlist: importi corretti, PAC, costi, news radar e grafici proxy quasi real-time.</p>
+  <div><span class="af-chip green">AlphaForge v10</span><span class="af-chip">Decision Cockpit</span></div>
+  <h1>Margine, proiezioni e decisione pratica</h1>
+  <p>Vista semplice: quanto stai guadagnando/perdendo, dove potresti essere tra 3 mesi e 1 anno, e cosa monitorare prima di pensare a uno switch.</p>
 </div>
 """,
     unsafe_allow_html=True,
 )
 
 k1, k2, k3, k4, k5 = st.columns(5)
-k1.markdown(f"<div class='af-kpi'><div class='label'>Investito una tantum</div><div class='value'>{euro(tot['one_off'])}</div><div class='hint'>5 fondi x 5.000 €</div></div>", unsafe_allow_html=True)
-k2.markdown(f"<div class='af-kpi'><div class='label'>PAC mensile</div><div class='value'>{euro(tot['pac'])}</div><div class='hint'>2 PAC x 150 €/mese</div></div>", unsafe_allow_html=True)
-k3.markdown(f"<div class='af-kpi'><div class='label'>Bollo una tantum</div><div class='value'>{euro(tot['bollo'])}</div><div class='hint'>6 € per prodotto</div></div>", unsafe_allow_html=True)
-k4.markdown(f"<div class='af-kpi'><div class='label'>Fondi/PAC</div><div class='value'>{int(tot['tracked'])}</div><div class='hint'>Strumenti caricati</div></div>", unsafe_allow_html=True)
-k5.markdown(f"<div class='af-kpi'><div class='label'>Stato</div><div class='value'>{summary.get('fase', 'Punto zero')}</div><div class='hint'>{status.get('version', 'v9.1')}</div></div>", unsafe_allow_html=True)
+k1.metric("Capitale versato", euro(decision_summary.get("capitale_versato_eur", 0)))
+k2.metric("Valore attuale", euro(decision_summary.get("valore_attuale_eur", 0)))
+k3.metric("Margine netto", euro(decision_summary.get("margine_netto_eur", 0)), pct(decision_summary.get("margine_netto_pct", 0)))
+k4.metric("Proiezione 3 mesi", euro(decision_summary.get("proiezione_3m_base_eur", 0)))
+k5.metric("Proiezione 1 anno", euro(decision_summary.get("proiezione_1y_base_eur", 0)))
 
-st.info("Nota: per i fondi comuni il valore ufficiale resta il NAV Fineco, di norma giornaliero. I grafici usano proxy ETF/mercato per leggere il contesto prima dell'aggiornamento del NAV.")
+st.markdown(f"<div class='af-note'>{decision_summary.get('decisione_sintesi', 'Tieni e monitora')}</div>", unsafe_allow_html=True)
+st.caption("Per i fondi comuni il NAV ufficiale non è real-time. Se vuoi il margine esatto, aggiorna data/fineco_actual_values.csv con il controvalore Fineco reale.")
 
-tab1, tab2, tab3, tab4 = st.tabs(["📌 Panoramica", "📈 Grafici", "📰 Notizie", "🧭 Cosa controllare"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["📌 Decisione", "📈 Grafici", "📰 News", "✍️ Valori Fineco", "🧭 Dettagli"])
 
 with tab1:
-    left, right = st.columns([1.35, 1])
-    with left:
-        st.subheader("Watchlist fondi/PAC")
-        if funds.empty:
-            st.warning("File data/fineco_funds_public.csv non trovato.")
-        else:
-            view = funds.copy()
-            view["Capitale/PAC"] = view.apply(lambda r: euro(r.get("Importo Iniziale EUR", 0)) if float(r.get("Importo Iniziale EUR", 0) or 0) > 0 else euro(r.get("PAC Mensile EUR", 0)) + "/mese", axis=1)
-            cols = ["ISIN", "Nome Strumento", "Tipo Versamento", "Capitale/PAC", "Costo Annuo %", "Ruolo", "Categoria AlphaForge", "Proxy Ticker"]
-            st.dataframe(view[[c for c in cols if c in view.columns]], use_container_width=True, hide_index=True)
-    with right:
-        st.subheader("Peso iniziale una tantum")
-        if not funds.empty:
-            alloc = funds[pd.to_numeric(funds["Importo Iniziale EUR"], errors="coerce").fillna(0) > 0].copy()
-            if px is not None and not alloc.empty:
-                fig = px.pie(alloc, names="Nome Strumento", values="Importo Iniziale EUR", hole=0.55)
-                fig.update_layout(height=380, margin=dict(l=10, r=10, t=10, b=10), legend=dict(orientation="h"))
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.dataframe(alloc[["Nome Strumento", "Importo Iniziale EUR"]], use_container_width=True, hide_index=True)
-
-    st.subheader("Performance proxy")
-    if fund_perf.empty:
-        st.warning("Nessuna performance proxy disponibile. Lancia Auto update oppure apri la pagina Grafici e premi Aggiorna.")
+    st.subheader("Decisione per fondo")
+    if decision.empty:
+        st.warning("Decision cockpit non ancora disponibile. Lancia Auto update completo.")
     else:
-        cols = ["Nome Strumento", "Proxy usato", "Rendimento proxy 1D %", "Rendimento proxy 1M %", "Rendimento proxy 3M %", "Rendimento proxy 1Y %", "Trend proxy", "Azione pratica"]
-        st.dataframe(fund_perf[[c for c in cols if c in fund_perf.columns]], use_container_width=True, hide_index=True)
+        cols = [
+            "Fondo/PAC", "Tipo", "Capitale versato EUR", "Valore attuale EUR", "Margine netto EUR", "Margine netto %",
+            "Costo annuo %", "Proiezione 3M base EUR", "Proiezione 1Y base EUR", "Decisione pratica", "Quando valutare switch",
+        ]
+        st.dataframe(decision[[c for c in cols if c in decision.columns]], use_container_width=True, hide_index=True)
+
+        st.subheader("Margine netto per fondo")
+        if px is not None:
+            fig = px.bar(decision, x="Fondo/PAC", y="Margine netto EUR", hover_data=["Decisione pratica", "Costo annuo %"])
+            fig.update_layout(height=430, xaxis_title="", yaxis_title="Margine netto EUR", margin=dict(l=20, r=20, t=20, b=80))
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.bar_chart(decision.set_index("Fondo/PAC")["Margine netto EUR"], use_container_width=True)
 
 with tab2:
-    st.subheader("Grafico normalizzato a 100")
+    st.subheader("Andamento fondi/proxy")
     if fund_history.empty:
-        st.warning("Storico proxy non disponibile. Il prossimo Auto update dovrebbe crearlo. Se resta vuoto, bisogna cambiare ticker proxy.")
-        if not funds.empty:
-            st.dataframe(funds[["Nome Strumento", "Proxy Ticker", "Proxy Tickers", "Proxy Nome"]], use_container_width=True, hide_index=True)
+        st.warning("Grafici non disponibili. Il prossimo Auto update dovrebbe scaricare lo storico proxy.")
     else:
         names = sorted(fund_history["Nome Strumento"].dropna().unique().tolist())
-        default = names[:7]
-        selected = st.multiselect("Fondi da confrontare", names, default=default)
+        selected = st.multiselect("Fondi da confrontare", names, default=names[:7])
         view = fund_history[fund_history["Nome Strumento"].isin(selected)].copy()
         if px is not None and not view.empty:
             fig = px.line(view, x="Date", y="Normalized 100", color="Nome Strumento", hover_data=["Proxy usato"] if "Proxy usato" in view.columns else None)
@@ -176,6 +143,11 @@ with tab2:
             chart = view.pivot_table(index="Date", columns="Nome Strumento", values="Normalized 100", aggfunc="last")
             st.line_chart(chart, use_container_width=True)
 
+    st.subheader("Performance proxy")
+    if not fund_perf.empty:
+        cols = ["Nome Strumento", "Proxy usato", "Rendimento proxy 1D %", "Rendimento proxy 1M %", "Rendimento proxy 3M %", "Rendimento proxy 1Y %", "Trend proxy", "Azione pratica"]
+        st.dataframe(fund_perf[[c for c in cols if c in fund_perf.columns]], use_container_width=True, hide_index=True)
+
 with tab3:
     st.subheader("News radar")
     funds_summary = pd.DataFrame(news_summary.get("funds", [])) if isinstance(news_summary, dict) else pd.DataFrame()
@@ -183,27 +155,25 @@ with tab3:
         st.dataframe(funds_summary, use_container_width=True, hide_index=True)
     if not news.empty:
         cols = ["Nome Strumento", "Categoria AlphaForge", "Titolo", "Fonte", "News Score", "Lettura", "Impatto possibile", "Link"]
-        st.dataframe(news[[c for c in cols if c in news.columns]].head(30), use_container_width=True, hide_index=True)
-    if news.empty and funds_summary.empty:
-        st.warning("Nessuna news disponibile. Lancia Auto update o apri la pagina Notizie e premi Aggiorna.")
+        st.dataframe(news[[c for c in cols if c in news.columns]].head(40), use_container_width=True, hide_index=True)
 
 with tab4:
-    st.subheader("Cosa controllare adesso")
-    checklist = pd.DataFrame([
-        {"Quando": "Subito", "Controllo": "Importi", "Dettaglio": "Una tantum corretta: 25.000 €. PAC: 300 €/mese."},
-        {"Quando": "Subito", "Controllo": "Esecuzione", "Dettaglio": "Data valuta, quote assegnate, prezzo medio, NAV Fineco."},
-        {"Quando": "1 mese", "Controllo": "PAC", "Dettaglio": "Verifica partenza dei due PAC da 150 €/mese."},
-        {"Quando": "3-6 mesi", "Controllo": "Pesi", "Dettaglio": "Controlla se tecnologia/emergenti stanno diventando troppo pesanti."},
-        {"Quando": "12 mesi", "Controllo": "Performance", "Dettaglio": "Confronta ogni fondo col suo proxy/benchmark e col costo annuo."},
-    ])
-    st.dataframe(checklist, use_container_width=True, hide_index=True)
+    st.subheader("Valori Fineco manuali")
+    st.write("Per vedere il margine reale, copia da Fineco il controvalore attuale e il capitale versato per ogni fondo in `data/fineco_actual_values.csv`.")
+    if actual_values.empty:
+        st.warning("Template data/fineco_actual_values.csv non trovato.")
+    else:
+        st.dataframe(actual_values, use_container_width=True, hide_index=True)
+
+with tab5:
+    st.subheader("Tracker Fineco originale")
+    if not fineco.empty:
+        st.dataframe(fineco, use_container_width=True, hide_index=True)
     if not sectors.empty:
         st.subheader("Bussola settoriale")
-        cols = ["Priorita", "Settore", "Bucket", "Cosa fare", "Sector Score", "ETF/Fondo candidato"]
-        st.dataframe(sectors[[c for c in cols if c in sectors.columns]].head(10), use_container_width=True, hide_index=True)
+        st.dataframe(sectors.head(12), use_container_width=True, hide_index=True)
     if not actions.empty:
-        st.subheader("Priorità operative")
-        cols = ["Ticker", "Decisione chiara", "Cosa fare adesso", "Bucket operativo"]
-        st.dataframe(actions[[c for c in cols if c in actions.columns]].head(10), use_container_width=True, hide_index=True)
+        st.subheader("Priorità operative ETF/stock")
+        st.dataframe(actions.head(12), use_container_width=True, hide_index=True)
 
-st.warning("App informativa per monitoraggio personale. Non costituisce consulenza finanziaria o garanzia di rendimento.")
+st.warning("Informazioni per monitoraggio personale. Non costituiscono consulenza finanziaria, sollecitazione all'investimento o garanzia di rendimento.")

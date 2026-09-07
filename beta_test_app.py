@@ -32,7 +32,9 @@ REQUIRED_FILES = [
     "generate_fineco_portfolio.py",
     "generate_fund_performance.py",
     "generate_news_radar.py",
+    "generate_fund_decisions.py",
     "data/fineco_funds_public.csv",
+    "data/fineco_actual_values.csv",
 ]
 
 OUTPUT_FILES = [
@@ -61,6 +63,9 @@ OUTPUT_FILES = [
     "AlphaForge_News_Radar.csv",
     "AlphaForge_News_Radar.xlsx",
     "AlphaForge_News_Radar_Summary.json",
+    "AlphaForge_Fineco_Decision_Cockpit.csv",
+    "AlphaForge_Fineco_Decision_Cockpit.xlsx",
+    "AlphaForge_Fineco_Decision_Summary.json",
 ]
 
 CORE_MODULES = [
@@ -82,6 +87,7 @@ CORE_MODULES = [
     "core.fineco_portfolio_tracker",
     "core.fund_market_engine",
     "core.news_radar_engine",
+    "core.fund_decision_engine",
 ]
 
 
@@ -268,7 +274,7 @@ class BetaTester:
         if Path("AlphaForge_Fineco_Portfolio_Summary.json").exists():
             try:
                 summary = json.loads(Path("AlphaForge_Fineco_Portfolio_Summary.json").read_text(encoding="utf-8"))
-                if str(summary.get("version", "")).startswith(("AlphaForge v8", "AlphaForge v9")):
+                if str(summary.get("version", "")).startswith(("AlphaForge v8", "AlphaForge v9", "AlphaForge v10")):
                     self.ok("Fineco summary", str(summary.get("fase", "n/d")))
                 else:
                     self.warn("Fineco summary", str(summary.get("version", "versione mancante")))
@@ -300,8 +306,8 @@ class BetaTester:
         if Path("AlphaForge_News_Radar_Summary.json").exists():
             try:
                 news_summary = json.loads(Path("AlphaForge_News_Radar_Summary.json").read_text(encoding="utf-8"))
-                if news_summary.get("version") == "AlphaForge v9 News Radar":
-                    self.ok("News summary", "AlphaForge v9 News Radar")
+                if str(news_summary.get("version", "")).startswith("AlphaForge v9"):
+                    self.ok("News summary", str(news_summary.get("version")))
                 else:
                     self.warn("News summary", str(news_summary.get("version", "versione mancante")))
             except Exception as exc:  # noqa: BLE001
@@ -320,12 +326,12 @@ class BetaTester:
         if Path("index.html").exists():
             try:
                 html = Path("index.html").read_text(encoding="utf-8", errors="ignore")
-                if "AlphaForge v9.1" in html or ("AlphaForge v9" in html and "News" in html):
-                    self.ok("Dashboard pubblica v9", "AlphaForge v9/v9.1 presente")
-                elif "AlphaForge v8" in html or "AlphaForge v7" in html or "AlphaForge v6" in html or "AlphaForge v5" in html or "AlphaForge v4" in html:
-                    self.warn("Dashboard pubblica v9", "index.html non ancora v9: esegui full update")
+                if "AlphaForge v10" in html or "Decision Cockpit" in html:
+                    self.ok("Dashboard pubblica v10", "AlphaForge v10 presente")
+                elif "AlphaForge v9" in html or "AlphaForge v8" in html or "AlphaForge v7" in html or "AlphaForge v6" in html or "AlphaForge v5" in html or "AlphaForge v4" in html:
+                    self.warn("Dashboard pubblica v10", "index.html non ancora v10: esegui full update")
                 else:
-                    self.warn("Dashboard pubblica v9", "Marker v9 non trovato")
+                    self.warn("Dashboard pubblica v10", "Marker v10 non trovato")
             except Exception as exc:  # noqa: BLE001
                 self.fail("Dashboard pubblica", str(exc))
 
@@ -358,7 +364,7 @@ class BetaTester:
         warn = sum(1 for c in self.checks if c.status == "WARN")
         fail = sum(1 for c in self.checks if c.status == "FAIL")
         lines = [
-            "# AlphaForge v9.1 Beta Test Report",
+            "# AlphaForge v10 Beta Test Report",
             "",
             f"Check totali: {len(self.checks)}",
             f"OK: {ok}",

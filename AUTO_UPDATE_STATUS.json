@@ -1,9 +1,9 @@
 {
   "status": "success",
-  "message": "Aggiornamento AlphaForge v9.1 completato",
-  "started_at": "2026-09-04T20:53:08+00:00",
-  "finished_at": "2026-09-04T20:53:47+00:00",
-  "version": "AlphaForge v9.1 Investing-style Fineco Radar",
+  "message": "Aggiornamento AlphaForge v10 completato",
+  "started_at": "2026-09-07T11:21:15+00:00",
+  "finished_at": "2026-09-07T11:21:46+00:00",
+  "version": "AlphaForge v10 Decision Cockpit",
   "details": [
     {
       "script": "update_etf_data_v3.py",
@@ -56,19 +56,25 @@
     {
       "script": "generate_news_radar.py",
       "returncode": 0,
-      "stdout_tail": "News radar generato: 25 notizie, 7 strumenti\n",
+      "stdout_tail": "News radar generato: 26 notizie, 7 strumenti\n",
+      "stderr_tail": ""
+    },
+    {
+      "script": "generate_fund_decisions.py",
+      "returncode": 0,
+      "stdout_tail": "Fineco decision cockpit aggiornato: 7 strumenti, margine netto -30.0 EUR, decisione: Tieni: portafoglio troppo recente, ora serve solo controllo dati e NAV\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_dashboard.py",
       "returncode": 0,
-      "stdout_tail": "Dashboard v9.1 generata: index.html\n",
+      "stdout_tail": "Dashboard v10 generata: index.html\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_dashboard.py",
       "returncode": 0,
-      "stdout_tail": "Dashboard v9.1 generata: index.html\n",
+      "stdout_tail": "Dashboard v10 generata: index.html\n",
       "stderr_tail": ""
     }
   ]
