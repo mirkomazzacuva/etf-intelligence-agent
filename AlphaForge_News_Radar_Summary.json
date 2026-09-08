@@ -1,6 +1,6 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-09-08T16:51:27+00:00",
+  "generated_at": "2026-09-08T21:22:48+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
@@ -25,7 +25,7 @@
       "ISIN": "LU0981915779",
       "Nome Strumento": "Core Dividend",
       "Categoria AlphaForge": "Dividend globale",
-      "News trovate": 5,
+      "News trovate": 4,
       "News Score Totale": 0,
       "Bias prossimi giorni": "Neutro / da monitorare",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
@@ -52,7 +52,7 @@
       "ISIN": "IE000DWG3DP6",
       "Nome Strumento": "Fineco AM Passive Underlyings 8",
       "Categoria AlphaForge": "Multi asset crescita",
-      "News trovate": 4,
+      "News trovate": 5,
       "News Score Totale": -1,
       "Bias prossimi giorni": "Attenzione / pressione negativa",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
