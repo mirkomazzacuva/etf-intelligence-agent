@@ -7,8 +7,8 @@
   "margine_netto_eur": -30.0,
   "margine_netto_pct": -0.12,
   "pac_mensile_eur": 300.0,
-  "proiezione_3m_base_eur": 26259.81,
-  "proiezione_1y_base_eur": 30242.56,
+  "proiezione_3m_base_eur": 26221.04,
+  "proiezione_1y_base_eur": 30009.99,
   "decisione_sintesi": "Tieni: portafoglio troppo recente, ora serve solo controllo dati e NAV",
   "messaggio": "Per i fondi comuni il NAV ufficiale non e' real-time. Il margine esatto richiede il controvalore Fineco aggiornato in data/fineco_actual_values.csv."
 }
