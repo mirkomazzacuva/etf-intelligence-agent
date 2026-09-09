@@ -86,7 +86,7 @@ def _fetch_yfinance(ticker: str, period: str = "1y") -> pd.DataFrame:
     if not ticker or yf is None:
         return pd.DataFrame()
     try:
-        hist = yf.download(ticker, period=period, interval="1d", progress=False, auto_adjust=True, threads=False, timeout=10)
+        hist = yf.download(ticker, period=period, interval="1d", progress=False, auto_adjust=True, threads=False, timeout=4)
         if hist is None or hist.empty:
             return pd.DataFrame()
         hist = hist.reset_index()
@@ -124,7 +124,7 @@ def _fetch_stooq(ticker: str, period: str = "1y") -> pd.DataFrame:
         url = f"https://stooq.com/q/d/l/?s={symbol}&d1={start:%Y%m%d}&d2={end:%Y%m%d}&i=d"
         if requests is None:
             return pd.DataFrame()
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=4)
         response.raise_for_status()
         from io import StringIO
         df = pd.read_csv(StringIO(response.text))
@@ -137,15 +137,30 @@ def _fetch_stooq(ticker: str, period: str = "1y") -> pd.DataFrame:
         return pd.DataFrame()
 
 
+def _fast_candidates(candidates: list[str]) -> list[str]:
+    """Keep the update quick: primary tickers + liquid US fallbacks."""
+    selected: list[str] = []
+    for ticker in candidates[:2]:
+        if ticker and ticker not in selected:
+            selected.append(ticker)
+    for ticker in candidates:
+        if ticker and "." not in ticker and ticker not in selected:
+            selected.append(ticker)
+        if len(selected) >= 4:
+            break
+    return selected or candidates[:3]
+
+
 def _fetch_proxy_history(candidates: list[str], period: str = "1y") -> tuple[pd.DataFrame, str, str]:
     tried: list[str] = []
-    for ticker in candidates:
+    fast = _fast_candidates(candidates)
+    for ticker in fast:
         tried.append(ticker)
         hist = _fetch_yfinance(ticker, period=period)
         if not hist.empty:
             return hist, ticker, "Yahoo/yfinance"
     # fallback for US ETFs when Yahoo blocks a specific request
-    for ticker in candidates:
+    for ticker in fast:
         tried.append(f"stooq:{ticker}")
         hist = _fetch_stooq(ticker, period=period)
         if not hist.empty:

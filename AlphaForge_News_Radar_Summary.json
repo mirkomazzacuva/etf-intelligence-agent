@@ -1,6 +1,6 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-09-08T21:22:48+00:00",
+  "generated_at": "2026-09-09T10:34:35+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
@@ -62,9 +62,9 @@
       "Nome Strumento": "Fidelity Euro 50 Index Fund",
       "Categoria AlphaForge": "Europa",
       "News trovate": 5,
-      "News Score Totale": 2,
-      "Bias prossimi giorni": "Potenzialmente favorevole",
-      "Cosa fare": "Scenario favorevole: non inseguire, usare PAC/ingressi graduali"
+      "News Score Totale": 0,
+      "Bias prossimi giorni": "Neutro / da monitorare",
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     }
   ]
 }

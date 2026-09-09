@@ -83,3 +83,8 @@ FINECO_ACTUAL_VALUES_FILE = Path("data/fineco_actual_values.csv")
 FINECO_DECISION_COCKPIT_CSV = Path("AlphaForge_Fineco_Decision_Cockpit.csv")
 FINECO_DECISION_COCKPIT_XLSX = Path("AlphaForge_Fineco_Decision_Cockpit.xlsx")
 FINECO_DECISION_SUMMARY_FILE = Path("AlphaForge_Fineco_Decision_Summary.json")
+
+# AlphaForge v11 - Live value cockpit
+FINECO_LIVE_PORTFOLIO_CSV = Path("AlphaForge_Live_Portfolio.csv")
+FINECO_LIVE_PRICE_HISTORY_CSV = Path("AlphaForge_Live_Price_History.csv")
+FINECO_LIVE_SUMMARY_FILE = Path("AlphaForge_Live_Summary.json")

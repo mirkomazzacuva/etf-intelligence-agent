@@ -17,6 +17,9 @@ from core.config import (
     FINECO_NEWS_RADAR_CSV,
     FINECO_NEWS_RADAR_SUMMARY,
     FINECO_PORTFOLIO_OUTPUT_CSV,
+    FINECO_LIVE_PORTFOLIO_CSV,
+    FINECO_LIVE_PRICE_HISTORY_CSV,
+    FINECO_LIVE_SUMMARY_FILE,
     FINECO_PORTFOLIO_SUMMARY_FILE,
     INSIGHTS_OUTPUT_CSV,
     RANKING_FILE,
@@ -71,6 +74,16 @@ def generate_dashboard() -> None:
     news_summary = _read_json(FINECO_NEWS_RADAR_SUMMARY)
     decision_cockpit = _read_csv(FINECO_DECISION_COCKPIT_CSV)
     decision_summary = _read_json(FINECO_DECISION_SUMMARY_FILE)
+    live_portfolio = _read_csv(FINECO_LIVE_PORTFOLIO_CSV)
+    live_history = _read_csv(FINECO_LIVE_PRICE_HISTORY_CSV)
+    live_summary = _read_json(FINECO_LIVE_SUMMARY_FILE)
+    if not live_portfolio.empty:
+        decision_cockpit = live_portfolio
+    if not live_history.empty:
+        fund_history = live_history
+    if live_summary:
+        decision_summary.update(live_summary)
+        decision_summary["valore_attuale_eur"] = decision_summary.get("controvalore_attuale_eur", decision_summary.get("valore_attuale_eur", 0))
     status = read_status()
     REPORT_FILE.write_text(
         build_text_report(
@@ -110,7 +123,7 @@ def generate_dashboard() -> None:
         decision_cockpit,
         decision_summary,
     )
-    print(f"Dashboard v10 generata: {DASHBOARD_FILE}")
+    print(f"Dashboard v11 generata: {DASHBOARD_FILE}")
 
 
 if __name__ == "__main__":

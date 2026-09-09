@@ -66,8 +66,8 @@ def _format_cell(col: str, value: object) -> str:
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return ""
     badge_cols = {"Decisione pratica", "Quando valutare switch", "News bias", "Fonte valore", "Ruolo", "Tipo", "Categoria", "Trend proxy", "Cosa fare", "Bias prossimi giorni"}
-    pct_cols = {"Margine netto %", "Costo annuo %", "Rendimento atteso netto 3M %", "Rendimento atteso netto 1Y %", "Proxy return da inizio %", "Rendimento proxy 1D %", "Rendimento proxy 1M %", "Rendimento proxy 3M %", "Rendimento proxy 1Y %"}
-    eur_cols = {"Capitale versato EUR", "Valore attuale EUR", "Margine netto EUR", "Costo maturato stimato EUR", "PAC mensile EUR", "Proiezione 3M base EUR", "Proiezione 1Y base EUR", "Importo Iniziale EUR", "PAC Mensile EUR"}
+    pct_cols = {"Margine netto %", "Costo annuo %", "Rendimento atteso netto 3M %", "Rendimento atteso netto 1Y %", "Proxy return da inizio %", "Rendimento proxy 1D %", "Rendimento proxy 1M %", "Rendimento proxy 3M %", "Rendimento proxy 1Y %", "Rendimento atteso netto 3M %", "Rendimento atteso netto 1Y %"}
+    eur_cols = {"Capitale versato EUR", "Valore attuale EUR", "Margine netto EUR", "Costo maturato stimato EUR", "PAC mensile EUR", "Proiezione 3M base EUR", "Proiezione 1Y base EUR", "Importo Iniziale EUR", "PAC Mensile EUR", "Controvalore attuale EUR", "Margine lordo EUR", "Guadagno stimato 3M EUR", "Guadagno stimato 1Y EUR", "Bollo sottratto EUR"}
     if col in badge_cols:
         return _badge(value)
     if col in pct_cols:
@@ -206,7 +206,7 @@ def build_text_report(
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
     ds = decision_summary or {}
     lines = [
-        "AlphaForge v10 Decision Cockpit",
+        "AlphaForge v11 Live Value Cockpit",
         f"Aggiornato il {now}",
         "",
         f"Capitale versato: {ds.get('capitale_versato_eur', 'n/d')} EUR",
@@ -247,7 +247,7 @@ def render_dashboard_html(
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
     ds = decision_summary or {}
     status_text = str(status.get("status", "unknown") if isinstance(status, dict) else "unknown")
-    status_version = str(status.get("version", "AlphaForge v10") if isinstance(status, dict) else "AlphaForge v10")
+    status_version = str(status.get("version", "AlphaForge v11") if isinstance(status, dict) else "AlphaForge v11")
     decision_text = str(ds.get("decisione_sintesi", "Tieni e monitora"))
     latest_proxy = str(ds.get("latest_proxy_date", "n/d"))
     news_funds = pd.DataFrame((news_summary or {}).get("funds", [])) if isinstance(news_summary, dict) else pd.DataFrame()
@@ -260,12 +260,12 @@ def render_dashboard_html(
     """
 
     html = f"""<!doctype html>
-<html lang='it'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>AlphaForge v10 Decision Cockpit</title>{css}</head>
+<html lang='it'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>AlphaForge v11 Live Value Cockpit</title>{css}</head>
 <body><div class='wrap'>
   <div class='topbar'><div class='brand'>📈 AlphaForge Fineco Cockpit</div><div>{_badge('Update: ' + status_text)} {_badge(status_version)}</div></div>
   <div class='hero'>
-    <span class='pill good'>AlphaForge v10</span> <span class='pill'>Decision Cockpit</span>
-    <h1>Margine netto, proiezioni e decisione pratica per ogni fondo.</h1>
+    <span class='pill good'>AlphaForge v11</span> <span class='pill'>Live Value Cockpit</span>
+    <h1>Controvalore aggiornato, margine netto e proiezioni per ogni fondo.</h1>
     <p class='subtitle'>Vista piu' semplice: prima il guadagno/perdita netto, poi le proiezioni a 3 mesi e 1 anno, infine una lettura pratica: tenere, monitorare o valutare switch con il consulente.</p>
     <div class='kpis'>
       <div class='kpi'><div class='label'>Capitale versato</div><div class='value'>{escape(euro(ds.get('capitale_versato_eur',0),0))}</div><div class='hint'>Una tantum + PAC gia' valorizzati</div></div>
@@ -298,6 +298,6 @@ def render_dashboard_html(
   <section><h2>Regola pratica</h2><div class='three'><div class='callout'>Non vendere solo per pochi giorni negativi: i fondi sono appena partiti.</div><div class='callout'>Core Dividend va controllato di piu' perche' costa molto: deve giustificare il 3,40%.</div><div class='callout'>Per decidere uno switch servono almeno 3-6 mesi di confronto col benchmark, meglio 12 mesi.</div></div></section>
 
   <section><h2>Avvertenza</h2><p class='muted'>Dashboard informativa. Le proiezioni sono scenari basati su proxy, momentum e costi stimati, non sono previsioni garantite ne' consulenza finanziaria personalizzata.</p></section>
-  <div class='footer'>AlphaForge v10 Decision Cockpit · File generati automaticamente da GitHub Actions.</div>
+  <div class='footer'>AlphaForge v11 Live Value Cockpit · File statici generati da GitHub Actions. La versione Streamlit aggiorna i proxy all'apertura.</div>
 </div></body></html>"""
     output.write_text(html, encoding="utf-8")

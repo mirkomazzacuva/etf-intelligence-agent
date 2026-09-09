@@ -1,8 +1,8 @@
-ISIN,Nome Strumento,Capitale Versato Fineco EUR,Valore Attuale Fineco EUR,Data Valore Fineco,Note
-LU0981915779,Core Dividend,5000,5000,2026-08-31,Sostituisci valore attuale con controvalore Fineco reale
-IE0005TOUMC7,Fineco AM Passive Underlyings 7,5000,5000,2026-08-31,Sostituisci valore attuale con controvalore Fineco reale
-IE000KTYLDC4,Fineco AM Passive Underlyings 6,5000,5000,2026-08-31,Sostituisci valore attuale con controvalore Fineco reale
-IE000DWG3DP6,Fineco AM Passive Underlyings 8,5000,5000,2026-08-31,Sostituisci valore attuale con controvalore Fineco reale
-LU0261952682,Fidelity Euro 50 Index Fund,5000,5000,2026-08-31,Sostituisci valore attuale con controvalore Fineco reale
-IE0003YRHWF4,Sustainable Future Connectivity FAM Fund,0,0,2026-08-31,Quando parte la prima rata PAC inserisci capitale versato e valore attuale
-IE00BD2PJG29,FAM MSCI Emerging Markets Index Fund,0,0,2026-08-31,Quando parte la prima rata PAC inserisci capitale versato e valore attuale
+ISIN,Nome Strumento,Capitale Versato Fineco EUR,Valore Attuale Fineco EUR,Data Valore Fineco,Usa Valore Fineco,Note
+LU0981915779,Core Dividend,5000,5000,2026-08-31,no,Placeholder: sostituisci con il controvalore Fineco reale e metti Usa Valore Fineco = si
+IE0005TOUMC7,Fineco AM Passive Underlyings 7,5000,5000,2026-08-31,no,Placeholder: sostituisci con il controvalore Fineco reale e metti Usa Valore Fineco = si
+IE000KTYLDC4,Fineco AM Passive Underlyings 6,5000,5000,2026-08-31,no,Placeholder: sostituisci con il controvalore Fineco reale e metti Usa Valore Fineco = si
+IE000DWG3DP6,Fineco AM Passive Underlyings 8,5000,5000,2026-08-31,no,Placeholder: sostituisci con il controvalore Fineco reale e metti Usa Valore Fineco = si
+LU0261952682,Fidelity Euro 50 Index Fund,5000,5000,2026-08-31,no,Placeholder: sostituisci con il controvalore Fineco reale e metti Usa Valore Fineco = si
+IE0003YRHWF4,Sustainable Future Connectivity FAM Fund,0,0,2026-08-31,no,Quando parte la prima rata PAC inserisci capitale versato e valore attuale e metti Usa Valore Fineco = si
+IE00BD2PJG29,FAM MSCI Emerging Markets Index Fund,0,0,2026-08-31,no,Quando parte la prima rata PAC inserisci capitale versato e valore attuale e metti Usa Valore Fineco = si

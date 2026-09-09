@@ -3,9 +3,11 @@ name: Auto update ETF Intelligence App
 on:
   schedule:
     # GitHub cron uses UTC. These runs cover morning, afternoon and evening Italy time.
-    - cron: "37 7 * * 1-5"
-    - cron: "37 12 * * 1-5"
-    - cron: "37 18 * * 1-5"
+    - cron: "17 7 * * 1-5"
+    - cron: "17 10 * * 1-5"
+    - cron: "17 13 * * 1-5"
+    - cron: "17 16 * * 1-5"
+    - cron: "17 19 * * 1-5"
   workflow_dispatch:
 
 permissions:
@@ -67,6 +69,7 @@ jobs:
           git add AlphaForge_News_Radar_Summary.json || true
           git add AlphaForge_Fineco_Decision_Cockpit.csv AlphaForge_Fineco_Decision_Cockpit.xlsx || true
           git add AlphaForge_Fineco_Decision_Summary.json || true
+          git add AlphaForge_Live_Portfolio.csv AlphaForge_Live_Price_History.csv AlphaForge_Live_Summary.json || true
           git add data/fineco_portfolio_baseline.csv data/fineco_funds_public.csv data/fineco_portfolio_template_v8.csv data/fineco_actual_values.csv || true
 
           if git diff --cached --quiet; then
