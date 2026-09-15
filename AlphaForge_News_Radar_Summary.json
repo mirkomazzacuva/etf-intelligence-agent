@@ -1,6 +1,6 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-09-14T22:32:13+00:00",
+  "generated_at": "2026-09-15T12:42:47+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
@@ -35,8 +35,8 @@
       "Nome Strumento": "Fineco AM Passive Underlyings 7",
       "Categoria AlphaForge": "Multi asset",
       "News trovate": 5,
-      "News Score Totale": -1,
-      "Bias prossimi giorni": "Attenzione / pressione negativa",
+      "News Score Totale": 0,
+      "Bias prossimi giorni": "Neutro / da monitorare",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
@@ -44,8 +44,8 @@
       "Nome Strumento": "Fineco AM Passive Underlyings 6",
       "Categoria AlphaForge": "Multi asset prudente",
       "News trovate": 5,
-      "News Score Totale": -1,
-      "Bias prossimi giorni": "Attenzione / pressione negativa",
+      "News Score Totale": 0,
+      "Bias prossimi giorni": "Neutro / da monitorare",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
