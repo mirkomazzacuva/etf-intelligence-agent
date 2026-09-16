@@ -1,5 +1,5 @@
 AlphaForge v11 Live Value Cockpit
-Aggiornato il 16/09/2026 17:38
+Aggiornato il 16/09/2026 19:33
 
 Capitale versato: 25300.0 EUR
 Valore attuale: 25128.79 EUR
