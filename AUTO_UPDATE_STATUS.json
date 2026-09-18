@@ -1,8 +1,8 @@
 {
   "status": "success",
   "message": "Aggiornamento AlphaForge v11 completato",
-  "started_at": "2026-09-18T17:05:02+00:00",
-  "finished_at": "2026-09-18T17:05:56+00:00",
+  "started_at": "2026-09-18T19:01:17+00:00",
+  "finished_at": "2026-09-18T19:01:57+00:00",
   "version": "AlphaForge v11 Live Value Cockpit",
   "details": [
     {
@@ -56,13 +56,13 @@
     {
       "script": "generate_news_radar.py",
       "returncode": 0,
-      "stdout_tail": "News radar generato: 27 notizie, 7 strumenti\n",
+      "stdout_tail": "News radar generato: 26 notizie, 7 strumenti\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_live_snapshot.py",
       "returncode": 0,
-      "stdout_tail": "Live snapshot generato: 7 strumenti, 1759 punti grafico\n{'version': 'AlphaForge v11 Live Value Cockpit', 'generated_at_rome': '2026-09-18T19:05:52+02:00', 'data_analisi': '2026-09-18', 'latest_proxy_date': '2026-09-18', 'investito_iniziale_eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25300.0, 'controvalore_attuale_eur': 25133.13, 'valore_attuale_eur': 25133.13, 'margine_netto_eur': -208.87, 'margine_netto_pct': -0.83, 'proiezione_3m_base_eur': 26678.95, 'proiezione_1y_base_eur': 31664.19, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Tieni: controlla soprattutto i costi elevati', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
+      "stdout_tail": "Live snapshot generato: 7 strumenti, 1759 punti grafico\n{'version': 'AlphaForge v11 Live Value Cockpit', 'generated_at_rome': '2026-09-18T21:01:54+02:00', 'data_analisi': '2026-09-18', 'latest_proxy_date': '2026-09-18', 'investito_iniziale_eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25300.0, 'controvalore_attuale_eur': 25133.13, 'valore_attuale_eur': 25133.13, 'margine_netto_eur': -208.87, 'margine_netto_pct': -0.83, 'proiezione_3m_base_eur': 26678.95, 'proiezione_1y_base_eur': 31664.19, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Tieni: controlla soprattutto i costi elevati', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
       "stderr_tail": ""
     },
     {
