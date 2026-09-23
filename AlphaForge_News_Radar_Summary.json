@@ -1,16 +1,16 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-09-23T12:46:56+00:00",
+  "generated_at": "2026-09-23T15:05:05+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
       "ISIN": "IE0003YRHWF4",
       "Nome Strumento": "Sustainable Future Connectivity FAM Fund",
       "Categoria AlphaForge": "Tecnologia e AI",
-      "News trovate": 0,
+      "News trovate": 1,
       "News Score Totale": 0,
-      "Bias prossimi giorni": "Neutro: nessuna notizia rilevante trovata",
-      "Cosa fare": "Nessuna azione: attendere nuove notizie o aggiornare manualmente"
+      "Bias prossimi giorni": "Neutro / da monitorare",
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
       "ISIN": "IE00BD2PJG29",
