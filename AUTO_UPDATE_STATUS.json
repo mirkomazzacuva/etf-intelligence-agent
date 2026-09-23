@@ -1,8 +1,8 @@
 {
   "status": "success",
   "message": "Aggiornamento AlphaForge v11 completato",
-  "started_at": "2026-09-23T17:51:39+00:00",
-  "finished_at": "2026-09-23T17:52:17+00:00",
+  "started_at": "2026-09-23T19:40:09+00:00",
+  "finished_at": "2026-09-23T19:40:46+00:00",
   "version": "AlphaForge v11 Live Value Cockpit",
   "details": [
     {
@@ -62,7 +62,7 @@
     {
       "script": "generate_live_snapshot.py",
       "returncode": 0,
-      "stdout_tail": "Live snapshot generato: 7 strumenti, 1759 punti grafico\n{'version': 'AlphaForge v11 Live Value Cockpit', 'generated_at_rome': '2026-09-23T19:52:12+02:00', 'data_analisi': '2026-09-23', 'latest_proxy_date': '2026-09-23', 'investito_iniziale_eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25300.0, 'controvalore_attuale_eur': 25466.1, 'valore_attuale_eur': 25466.1, 'margine_netto_eur': 124.1, 'margine_netto_pct': 0.49, 'proiezione_3m_base_eur': 27225.62, 'proiezione_1y_base_eur': 32941.47, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Tieni: controlla soprattutto i costi elevati', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
+      "stdout_tail": "Live snapshot generato: 7 strumenti, 1759 punti grafico\n{'version': 'AlphaForge v11 Live Value Cockpit', 'generated_at_rome': '2026-09-23T21:40:42+02:00', 'data_analisi': '2026-09-23', 'latest_proxy_date': '2026-09-23', 'investito_iniziale_eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25300.0, 'controvalore_attuale_eur': 25466.1, 'valore_attuale_eur': 25466.1, 'margine_netto_eur': 124.1, 'margine_netto_pct': 0.49, 'proiezione_3m_base_eur': 27225.62, 'proiezione_1y_base_eur': 32941.47, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Tieni: controlla soprattutto i costi elevati', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
       "stderr_tail": ""
     },
     {
