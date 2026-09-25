@@ -1,6 +1,6 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-09-25T12:48:17+00:00",
+  "generated_at": "2026-09-25T15:19:36+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
@@ -16,7 +16,7 @@
       "ISIN": "IE00BD2PJG29",
       "Nome Strumento": "FAM MSCI Emerging Markets Index Fund",
       "Categoria AlphaForge": "Emerging Markets",
-      "News trovate": 3,
+      "News trovate": 4,
       "News Score Totale": -1,
       "Bias prossimi giorni": "Attenzione / pressione negativa",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
