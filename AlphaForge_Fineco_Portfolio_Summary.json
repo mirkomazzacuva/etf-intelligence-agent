@@ -1,7 +1,7 @@
 {
   "version": "AlphaForge v9.1 Investing UI Portfolio Tracker",
-  "data_analisi": "2026-09-29",
-  "fase": "Punto zero",
+  "data_analisi": "2026-09-30",
+  "fase": "Prima verifica",
   "numero_strumenti": 7,
   "capitale_una_tantum_eur": 25000.0,
   "pac_mensile_eur": 300.0,
@@ -11,6 +11,6 @@
   "rendimento_pct": 0.0,
   "peso_core_pct": 60.0,
   "peso_satellite_pct": 40.0,
-  "portfolio_health_score": 72.0,
-  "messaggio_principale": "Portafoglio appena avviato: una tantum corretta e PAC attivi in baseline. Non valutare ancora la performance; controlla quote, NAV e costi. PAC programmato: 300 EUR/mese."
+  "portfolio_health_score": 75.0,
+  "messaggio_principale": "Confronta rendimento, pesi e benchmark; porta al consulente solo le anomalie importanti."
 }

@@ -1,8 +1,8 @@
 {
   "status": "success",
   "message": "Aggiornamento AlphaForge v11 completato",
-  "started_at": "2026-09-29T20:44:48+00:00",
-  "finished_at": "2026-09-29T20:45:26+00:00",
+  "started_at": "2026-09-29T22:59:16+00:00",
+  "finished_at": "2026-09-29T22:59:50+00:00",
   "version": "AlphaForge v11 Live Value Cockpit",
   "details": [
     {
@@ -44,7 +44,7 @@
     {
       "script": "generate_fineco_portfolio.py",
       "returncode": 0,
-      "stdout_tail": "Fineco portfolio tracker aggiornato: 7 strumenti, capitale stimato 25000.0 EUR, fase Punto zero\n",
+      "stdout_tail": "Fineco portfolio tracker aggiornato: 7 strumenti, capitale stimato 25000.0 EUR, fase Prima verifica\n",
       "stderr_tail": ""
     },
     {
@@ -62,13 +62,13 @@
     {
       "script": "generate_live_snapshot.py",
       "returncode": 0,
-      "stdout_tail": "Live snapshot generato: 7 strumenti, 1759 punti grafico\n{'version': 'AlphaForge v11 Live Value Cockpit', 'generated_at_rome': '2026-09-29T22:45:23+02:00', 'data_analisi': '2026-09-29', 'latest_proxy_date': '2026-09-29', 'investito_iniziale_eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25300.0, 'controvalore_attuale_eur': 25349.55, 'valore_attuale_eur': 25349.55, 'margine_netto_eur': 7.55, 'margine_netto_pct': 0.03, 'proiezione_3m_base_eur': 26958.5, 'proiezione_1y_base_eur': 32162.22, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Tieni: controlla soprattutto i costi elevati', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
+      "stdout_tail": "Live snapshot generato: 7 strumenti, 1759 punti grafico\n{'version': 'AlphaForge v11 Live Value Cockpit', 'generated_at_rome': '2026-09-30T00:59:45+02:00', 'data_analisi': '2026-09-30', 'latest_proxy_date': '2026-09-28', 'investito_iniziale_eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25600.0, 'controvalore_attuale_eur': 25647.44, 'valore_attuale_eur': 25647.44, 'margine_netto_eur': 5.44, 'margine_netto_pct': 0.02, 'proiezione_3m_base_eur': 27269.75, 'proiezione_1y_base_eur': 32514.96, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Tieni: controlla soprattutto i costi elevati', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_fund_decisions.py",
       "returncode": 0,
-      "stdout_tail": "Fineco decision cockpit aggiornato: 7 strumenti, margine netto 7.55 EUR, decisione: Tieni: controlla soprattutto i costi elevati\n",
+      "stdout_tail": "Fineco decision cockpit aggiornato: 7 strumenti, margine netto 5.44 EUR, decisione: Tieni: controlla soprattutto i costi elevati\n",
       "stderr_tail": ""
     },
     {
