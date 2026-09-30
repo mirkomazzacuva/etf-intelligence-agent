@@ -1,16 +1,16 @@
 {
   "version": "AlphaForge v9.1 Investing UI Portfolio Tracker",
-  "data_analisi": "2026-09-30",
+  "data_analisi": "2026-10-01",
   "fase": "Prima verifica",
   "numero_strumenti": 7,
   "capitale_una_tantum_eur": 25000.0,
   "pac_mensile_eur": 300.0,
-  "capitale_versato_stimato_eur": 25000.0,
-  "valore_attuale_stimato_eur": 25000.0,
+  "capitale_versato_stimato_eur": 25300.0,
+  "valore_attuale_stimato_eur": 25300.0,
   "guadagno_perdita_eur": 0.0,
   "rendimento_pct": 0.0,
-  "peso_core_pct": 60.0,
-  "peso_satellite_pct": 40.0,
+  "peso_core_pct": 59.29,
+  "peso_satellite_pct": 40.71,
   "portfolio_health_score": 75.0,
   "messaggio_principale": "Confronta rendimento, pesi e benchmark; porta al consulente solo le anomalie importanti."
 }
