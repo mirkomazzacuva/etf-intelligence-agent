@@ -1,8 +1,8 @@
 {
   "status": "success",
   "message": "Aggiornamento AlphaForge v11 completato",
-  "started_at": "2026-10-06T00:50:14+00:00",
-  "finished_at": "2026-10-06T00:50:52+00:00",
+  "started_at": "2026-10-06T14:13:44+00:00",
+  "finished_at": "2026-10-06T14:14:30+00:00",
   "version": "AlphaForge v11 Live Value Cockpit",
   "details": [
     {
@@ -21,7 +21,7 @@
       "script": "generate_watchlist.py",
       "returncode": 0,
       "stdout_tail": "Watchlist aggiornata: 9 strumenti\n",
-      "stderr_tail": "$STM.MI: No data found, symbol may be delisted\n\n1 Failed download:\n['STM.MI']: No data found, symbol may be delisted\n$STM.MI: No data found, symbol may be delisted\n\n1 Failed download:\n['STM.MI']: No data found, symbol may be delisted\n$STM.MI: No data found, symbol may be delisted\n\n1 Failed download:\n['STM.MI']: No data found, symbol may be delisted\n"
+      "stderr_tail": "englishMessage2\n        }\n      };\n\n      var siteDetails = siteDataMap['default'];\n\n      document.write('<table><tbody><tr><td>');\n      document.write('<div id=\"content\">');\n      document.write('<img src=\"' + siteDetails['logo'] + '\" alt=\"' + siteDetails['logoAlt'] + '\" style=\"' + siteDetails['logoStyle'] + '\">');\n      document.write('<h1 style=\"margin-top:20px;\">' + siteDetails['header'] + '</h1>');\n      document.write('<p id=\"message-1\">' + siteDetails['message1'] + '</p>');\n      document.write('<p id=\"message-2\">' + siteDetails['message2'] + '</p>');\n      document.write('</div>');\n      document.write('</td></tr></tbody></table>');\n    }\n\n    function generateBeaconMarkup(params) {\n        document.write('<img src=\"' + buildUrl('//geo.yahoo.com/b', params) + '\" style=\"display:none;\" width=\"0px\" height=\"0px\"/>');\n        var beacon = new Image();\n        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);\n    }\n\n    var hostname = window.location.hostname;\n    var device = 'desktop';\n    var ynet = ('-' === '1');\n    var prid = '0kumnshlca0hi';\n    var crid = '0kumnshlca0hi';\n    var time = new Date().getTime();\n    var params = {\n        s: '1197757129',\n        t: time,\n        err_url: document.URL,\n        err: '502',\n        test: '-',\n        ats_host: 'media-router-api7123.prod.media.bf1.yahoo.com',\n        prid: prid,\n        crid: crid,\n        message: 'Could Not Connect'\n    };\n\n    if(ynet) {\n        document.write('<div style=\"height: 5px; background-color: red;\"></div>');\n    }\n    generateBRBMarkup(hostname, params);\n\n  </script>\n  <noscript>\n  <table>\n    <tbody>\n      <tr>\n        <td>\n          <div id=\"englishContent\">\n            <h1 style=\"margin-top:20px;\">Will be right back...</h1>\n            <p id=\"message-1\">Thank you for your patience.</p>\n            <p id=\"message-2\">Our engineers are working quickly to resolve the issue.</p>\n          </div>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n  </noscript>\n  </body>\n</html>\n\n"
     },
     {
       "script": "generate_insights.py",
@@ -50,7 +50,7 @@
     {
       "script": "generate_fund_performance.py",
       "returncode": 0,
-      "stdout_tail": "Performance fondi/proxy generata: 7 strumenti, 1752 punti storici\n",
+      "stdout_tail": "Performance fondi/proxy generata: 7 strumenti, 1759 punti storici\n",
       "stderr_tail": ""
     },
     {
@@ -62,13 +62,13 @@
     {
       "script": "generate_live_snapshot.py",
       "returncode": 0,
-      "stdout_tail": "Live snapshot generato: 7 strumenti, 1752 punti grafico\n{'version': 'AlphaForge v11 Live Value Cockpit', 'generated_at_rome': '2026-10-06T02:50:47+02:00', 'data_analisi': '2026-10-06', 'latest_proxy_date': '2026-10-02', 'investito_iniziale_eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25600.0, 'controvalore_attuale_eur': 25770.88, 'valore_attuale_eur': 25770.88, 'margine_netto_eur': 128.88, 'margine_netto_pct': 0.5, 'proiezione_3m_base_eur': 27412.18, 'proiezione_1y_base_eur': 32755.24, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Tieni: controlla soprattutto i costi elevati', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
+      "stdout_tail": "Live snapshot generato: 7 strumenti, 1759 punti grafico\n{'version': 'AlphaForge v11 Live Value Cockpit', 'generated_at_rome': '2026-10-06T16:14:25+02:00', 'data_analisi': '2026-10-06', 'latest_proxy_date': '2026-10-06', 'investito_iniziale_eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25600.0, 'controvalore_attuale_eur': 26087.8, 'valore_attuale_eur': 26087.8, 'margine_netto_eur': 445.8, 'margine_netto_pct': 1.74, 'proiezione_3m_base_eur': 27820.39, 'proiezione_1y_base_eur': 33451.79, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Tieni: controlla soprattutto i costi elevati', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_fund_decisions.py",
       "returncode": 0,
-      "stdout_tail": "Fineco decision cockpit aggiornato: 7 strumenti, margine netto 128.88 EUR, decisione: Tieni: controlla soprattutto i costi elevati\n",
+      "stdout_tail": "Fineco decision cockpit aggiornato: 7 strumenti, margine netto 445.8 EUR, decisione: Tieni: controlla soprattutto i costi elevati\n",
       "stderr_tail": ""
     },
     {
