@@ -1,22 +1,22 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-10-13T23:17:56+00:00",
+  "generated_at": "2026-10-14T12:54:27+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
       "ISIN": "IE0003YRHWF4",
       "Nome Strumento": "Sustainable Future Connectivity FAM Fund",
       "Categoria AlphaForge": "Tecnologia e AI",
-      "News trovate": 0,
+      "News trovate": 1,
       "News Score Totale": 0,
-      "Bias prossimi giorni": "Neutro: nessuna notizia rilevante trovata",
-      "Cosa fare": "Nessuna azione: attendere nuove notizie o aggiornare manualmente"
+      "Bias prossimi giorni": "Neutro / da monitorare",
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
       "ISIN": "IE00BD2PJG29",
       "Nome Strumento": "FAM MSCI Emerging Markets Index Fund",
       "Categoria AlphaForge": "Emerging Markets",
-      "News trovate": 2,
+      "News trovate": 1,
       "News Score Totale": 0,
       "Bias prossimi giorni": "Neutro / da monitorare",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
@@ -35,8 +35,8 @@
       "Nome Strumento": "Fineco AM Passive Underlyings 7",
       "Categoria AlphaForge": "Multi asset",
       "News trovate": 5,
-      "News Score Totale": 0,
-      "Bias prossimi giorni": "Neutro / da monitorare",
+      "News Score Totale": -1,
+      "Bias prossimi giorni": "Attenzione / pressione negativa",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
@@ -44,8 +44,8 @@
       "Nome Strumento": "Fineco AM Passive Underlyings 6",
       "Categoria AlphaForge": "Multi asset prudente",
       "News trovate": 5,
-      "News Score Totale": 0,
-      "Bias prossimi giorni": "Neutro / da monitorare",
+      "News Score Totale": -1,
+      "Bias prossimi giorni": "Attenzione / pressione negativa",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
