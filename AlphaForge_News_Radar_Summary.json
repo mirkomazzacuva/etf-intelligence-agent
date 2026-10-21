@@ -1,6 +1,6 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-10-21T18:02:31+00:00",
+  "generated_at": "2026-10-21T20:08:05+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
@@ -25,9 +25,9 @@
       "ISIN": "LU0981915779",
       "Nome Strumento": "Core Dividend",
       "Categoria AlphaForge": "Dividend globale",
-      "News trovate": 5,
-      "News Score Totale": 0,
-      "Bias prossimi giorni": "Neutro / da monitorare",
+      "News trovate": 3,
+      "News Score Totale": -1,
+      "Bias prossimi giorni": "Attenzione / pressione negativa",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
