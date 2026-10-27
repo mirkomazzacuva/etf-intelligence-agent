@@ -1,20 +1,20 @@
 AlphaForge v11 Live Value Cockpit
-Aggiornato il 27/10/2026 15:55
+Aggiornato il 27/10/2026 18:42
 
 Capitale versato: 25600.0 EUR
-Valore attuale: 26216.99 EUR
-Margine netto: 574.99 EUR
-Proiezione 3M base: 28111.67 EUR
-Proiezione 1Y base: 34146.82 EUR
+Valore attuale: 26216.42 EUR
+Margine netto: 574.42 EUR
+Proiezione 3M base: 28108.99 EUR
+Proiezione 1Y base: 34138.12 EUR
 Decisione sintesi: Mantieni ma non aumentare le parti deboli
 
 Nota: il margine esatto richiede il controvalore Fineco reale. Le proiezioni sono scenari, non previsioni garantite.
 
 Decisioni per fondo:
-- Sustainable Future Connectivity FAM Fund: margine 34.99 EUR, 1Y 2346.43 EUR, Tieni PAC, non aumentare peso
-- FAM MSCI Emerging Markets Index Fund: margine -17.35 EUR, 1Y 2068.55 EUR, Tieni PAC, non aumentare peso
-- Core Dividend: margine 91.16 EUR, 1Y 6014.65 EUR, Tieni PAC, non aumentare peso
-- Fineco AM Passive Underlyings 7: margine 173.24 EUR, 1Y 6111.5 EUR, Tieni
-- Fineco AM Passive Underlyings 6: margine 173.24 EUR, 1Y 6111.5 EUR, Tieni
-- Fineco AM Passive Underlyings 8: margine 173.24 EUR, 1Y 6111.5 EUR, Tieni
-- Fidelity Euro 50 Index Fund: margine -53.53 EUR, 1Y 5382.69 EUR, Tieni PAC, non aumentare peso
+- Sustainable Future Connectivity FAM Fund: margine 36.11 EUR, 1Y 2347.76 EUR, Tieni PAC, non aumentare peso
+- FAM MSCI Emerging Markets Index Fund: margine -17.26 EUR, 1Y 2070.13 EUR, Tieni PAC, non aumentare peso
+- Core Dividend: margine 90.54 EUR, 1Y 6013.92 EUR, Tieni PAC, non aumentare peso
+- Fineco AM Passive Underlyings 7: margine 173.63 EUR, 1Y 6111.97 EUR, Tieni
+- Fineco AM Passive Underlyings 6: margine 173.63 EUR, 1Y 6111.97 EUR, Tieni
+- Fineco AM Passive Underlyings 8: margine 173.63 EUR, 1Y 6111.97 EUR, Tieni
+- Fidelity Euro 50 Index Fund: margine -55.86 EUR, 1Y 5370.4 EUR, Tieni PAC, non aumentare peso
