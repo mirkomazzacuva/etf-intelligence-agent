@@ -2,13 +2,13 @@
   "status": "success",
   "version": "AlphaForge v12 - Fineco NAV Reale",
   "message": "Portafoglio Fineco v12 aggiornato e dashboard generata.",
-  "started_at": "2026-10-29T18:57:36+00:00",
-  "finished_at": "2026-10-29T18:58:27+00:00",
+  "started_at": "2026-10-29T21:06:15+00:00",
+  "finished_at": "2026-10-29T21:07:01+00:00",
   "details": [
     {
       "script": "generate_real_portfolio.py",
       "returncode": 0,
-      "stdout_tail": "o ISIN non verificabili\nLU0981915779 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE000DWG3DP6 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE0005TOUMC7 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE000KTYLDC4 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\n",
+      "stdout_tail": "te dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nLU0981915779 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. OK\nIE000DWG3DP6 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE0005TOUMC7 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE000KTYLDC4 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\n",
       "stderr_tail": ""
     },
     {
@@ -62,7 +62,7 @@
     {
       "script": "generate_news_radar.py",
       "returncode": 0,
-      "stdout_tail": "News radar generato: 29 notizie, 7 strumenti\n",
+      "stdout_tail": "News radar generato: 26 notizie, 7 strumenti\n",
       "stderr_tail": ""
     },
     {
