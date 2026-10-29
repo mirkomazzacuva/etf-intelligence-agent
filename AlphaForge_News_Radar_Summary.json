@@ -1,6 +1,6 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-10-29T14:50:56+00:00",
+  "generated_at": "2026-10-29T16:58:26+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
@@ -25,10 +25,10 @@
       "ISIN": "LU0981915779",
       "Nome Strumento": "Core Dividend",
       "Categoria AlphaForge": "Dividend globale",
-      "News trovate": 0,
-      "News Score Totale": 0,
-      "Bias prossimi giorni": "Neutro: nessuna notizia rilevante trovata",
-      "Cosa fare": "Nessuna azione: attendere nuove notizie o aggiornare manualmente"
+      "News trovate": 5,
+      "News Score Totale": 1,
+      "Bias prossimi giorni": "Potenzialmente favorevole",
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
       "ISIN": "IE0005TOUMC7",
@@ -62,9 +62,9 @@
       "Nome Strumento": "Fidelity Euro 50 Index Fund",
       "Categoria AlphaForge": "Europa",
       "News trovate": 5,
-      "News Score Totale": 3,
+      "News Score Totale": 1,
       "Bias prossimi giorni": "Potenzialmente favorevole",
-      "Cosa fare": "Scenario favorevole: non inseguire, usare PAC/ingressi graduali"
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     }
   ]
 }
