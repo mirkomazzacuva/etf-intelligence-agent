@@ -70,6 +70,9 @@ jobs:
           git add AlphaForge_Fineco_Decision_Cockpit.csv AlphaForge_Fineco_Decision_Cockpit.xlsx || true
           git add AlphaForge_Fineco_Decision_Summary.json || true
           git add AlphaForge_Live_Portfolio.csv AlphaForge_Live_Price_History.csv AlphaForge_Live_Summary.json || true
+          git add AlphaForge_Real_Portfolio.csv AlphaForge_Real_NAV_History.csv AlphaForge_Real_Summary.json AlphaForge_Real_Dashboard_Data.json AlphaForge_Real_Source_Status.csv || true
+          git add data/fineco_official_positions.csv data/fineco_nav_history_real.csv data/fineco_transactions_real.csv data/fineco_nav_manual_real.csv || true
+          git add legacy_alpha_forge.html || true
           git add data/fineco_portfolio_baseline.csv data/fineco_funds_public.csv data/fineco_portfolio_template_v8.csv data/fineco_actual_values.csv || true
 
           if git diff --cached --quiet; then

@@ -1,0 +1,8 @@
+ISIN,Nome,Tipo,Quote_rilevate,Prezzo_medio_carico_EUR,NAV_rilevato_EUR,Controvalore_Fineco_EUR,Margine_Fineco_EUR,Rendimento_Fineco_pct,Data_rilevazione,Costo_annuo_pct,PAC_programmato_mensile_EUR,Nota
+IE0003YRHWF4,Future Connectivity (PAC),PAC,2.062,148.69059,141.157,291.07,-15.53,-5.07,2026-10-29,1.80,150,Rilevazione da schermata Fineco; data effettiva NAV non indicata; quote mostrate arrotondate
+IE00BD2PJG29,MSCI Emerging Markets (PAC),PAC,1.981,154.77031,145.584,288.40,-18.20,-5.94,2026-10-29,0.30,150,Rilevazione da schermata Fineco; data effettiva NAV non indicata; quote mostrate arrotondate
+LU0261952682,Fidelity Euro 50 Index,Fondo,169.780,29.50288,28.670,4867.59,-141.41,-2.82,2026-10-29,0.30,0,Rilevazione da schermata Fineco; data effettiva NAV non indicata; quote mostrate arrotondate
+LU0981915779,Core Dividend,Fondo,406.273,12.32176,12.600,5119.04,113.04,2.26,2026-10-29,3.40,0,Rilevazione da schermata Fineco; data effettiva NAV non indicata; quote mostrate arrotondate
+IE000DWG3DP6,Passive Underlyings 8,Fondo,31.509,158.87524,161.837,5099.32,93.32,1.86,2026-10-29,1.39,0,Rilevazione da schermata Fineco; data effettiva NAV non indicata; quote mostrate arrotondate
+IE0005TOUMC7,Passive Underlyings 7,Fondo,39.567,126.51957,127.700,5052.71,46.71,0.93,2026-10-29,1.39,0,Rilevazione da schermata Fineco; data effettiva NAV non indicata; quote mostrate arrotondate
+IE000KTYLDC4,Passive Underlyings 6,Fondo,43.592,114.83758,115.090,5017.00,11.00,0.22,2026-10-29,1.39,0,Rilevazione da schermata Fineco; data effettiva NAV non indicata; quote mostrate arrotondate

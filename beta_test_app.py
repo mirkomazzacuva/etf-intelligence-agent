@@ -36,6 +36,11 @@ REQUIRED_FILES = [
     "generate_live_snapshot.py",
     "data/fineco_funds_public.csv",
     "data/fineco_actual_values.csv",
+    "generate_real_portfolio.py",
+    "data/fineco_official_positions.csv",
+    "data/fineco_nav_history_real.csv",
+    "data/fineco_transactions_real.csv",
+    "data/fineco_nav_manual_real.csv",
 ]
 
 OUTPUT_FILES = [
@@ -70,6 +75,11 @@ OUTPUT_FILES = [
     "AlphaForge_Live_Portfolio.csv",
     "AlphaForge_Live_Price_History.csv",
     "AlphaForge_Live_Summary.json",
+    "AlphaForge_Real_Portfolio.csv",
+    "AlphaForge_Real_NAV_History.csv",
+    "AlphaForge_Real_Summary.json",
+    "AlphaForge_Real_Dashboard_Data.json",
+    "AlphaForge_Real_Source_Status.csv",
 ]
 
 CORE_MODULES = [
@@ -93,6 +103,9 @@ CORE_MODULES = [
     "core.news_radar_engine",
     "core.fund_decision_engine",
     "core.live_value_engine",
+    "core.fineco_real_engine",
+    "core.fineco_nav_sources",
+    "core.fineco_real_ui",
 ]
 
 
@@ -339,11 +352,29 @@ class BetaTester:
             except Exception as exc:  # noqa: BLE001
                 self.fail("Stato aggiornamento", str(exc))
 
+        # Real NAV tracker must reconcile exactly to the Fineco screenshot when offline.
+        if Path("AlphaForge_Real_Portfolio.csv").exists() and Path("AlphaForge_Real_Summary.json").exists():
+            try:
+                real = pd.read_csv("AlphaForge_Real_Portfolio.csv")
+                smry = json.loads(Path("AlphaForge_Real_Summary.json").read_text(encoding="utf-8"))
+                if len(real) != 7 or real["ISIN"].nunique() != 7:
+                    self.fail("NAV Fineco v12", "Servono 7 ISIN distinti")
+                elif abs(real["Controvalore_EUR"].sum() - real["Costo_carico_EUR"].sum() - real["Margine_EUR"].sum()) > .02:
+                    self.fail("NAV Fineco v12", "Controvalore, carico e margine non quadrano")
+                elif real["Fonte_ultimo_dato"].astype(str).str.contains("proxy", case=False).any():
+                    self.fail("NAV Fineco v12", "Il tracker reale non deve usare proxy ETF")
+                elif abs(float(smry["pac_monthly_eur"]) - 300) > .01:
+                    self.fail("NAV Fineco v12", "PAC mensili non corretti")
+                else:
+                    self.ok("NAV Fineco v12", "7 ISIN, carico e margini riconciliati senza proxy")
+            except Exception as exc:
+                self.fail("NAV Fineco v12", str(exc))
+
         if Path("index.html").exists():
             try:
                 html = Path("index.html").read_text(encoding="utf-8", errors="ignore")
-                if "AlphaForge v11" in html or "Live Value Cockpit" in html or "Decision Cockpit" in html:
-                    self.ok("Dashboard pubblica v11", "AlphaForge v11/live presente")
+                if "AlphaForge v12" in html or "Live Value Cockpit" in html or "Decision Cockpit" in html:
+                    self.ok("Dashboard pubblica v12", "AlphaForge v12/legacy presente")
                 elif "AlphaForge v9" in html or "AlphaForge v8" in html or "AlphaForge v7" in html or "AlphaForge v6" in html or "AlphaForge v5" in html or "AlphaForge v4" in html:
                     self.warn("Dashboard pubblica v11", "index.html non ancora v11: esegui full update")
                 else:
@@ -380,7 +411,7 @@ class BetaTester:
         warn = sum(1 for c in self.checks if c.status == "WARN")
         fail = sum(1 for c in self.checks if c.status == "FAIL")
         lines = [
-            "# AlphaForge v11 Beta Test Report",
+            "# AlphaForge v12 Beta Test Report",
             "",
             f"Check totali: {len(self.checks)}",
             f"OK: {ok}",
@@ -398,8 +429,19 @@ class BetaTester:
         print("\n".join(lines[:8]))
         return 1 if fail else 0
 
+    def check_v12_unit_tests(self) -> None:
+        completed = subprocess.run(
+            [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_real_fineco.py"],
+            text=True, capture_output=True, check=False,
+        )
+        if completed.returncode == 0:
+            self.ok("Fineco v12 test unita", "Conciliazione, parser NAV e grafici verificati")
+        else:
+            self.fail("Fineco v12 test unita", (completed.stderr or completed.stdout)[-800:])
+
     def run(self) -> int:
         self.check_required_files()
+        self.check_v12_unit_tests()
         self.check_python_syntax()
         self.check_imports()
         self.run_full_update_if_requested()

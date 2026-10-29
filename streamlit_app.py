@@ -1,276 +1,99 @@
+"""AlphaForge v12 interactive home. Older pages remain accessible in sidebar."""
 from __future__ import annotations
 
-import json
+from datetime import date
 from pathlib import Path
+import json
 
 import pandas as pd
 import streamlit as st
 
 try:
-    import plotly.express as px
-except Exception:  # noqa: BLE001
-    px = None  # type: ignore[assignment]
+    import plotly.graph_objects as go
+except ImportError:
+    go = None
 
-from core.config import (
-    ACTION_PLAN_OUTPUT_CSV,
-    FINECO_ACTUAL_VALUES_FILE,
-    FINECO_DECISION_COCKPIT_CSV,
-    FINECO_DECISION_SUMMARY_FILE,
-    FINECO_FUND_PERFORMANCE_CSV,
-    FINECO_FUND_PRICE_HISTORY_CSV,
-    FINECO_LIVE_PORTFOLIO_CSV,
-    FINECO_LIVE_PRICE_HISTORY_CSV,
-    FINECO_LIVE_SUMMARY_FILE,
-    FINECO_NEWS_RADAR_CSV,
-    FINECO_NEWS_RADAR_SUMMARY,
-    FINECO_PORTFOLIO_OUTPUT_CSV,
-    STATUS_FILE,
-)
-from core.live_value_engine import build_live_portfolio_snapshot
+from core.fineco_real_engine import build_real_portfolio, OUT_DASH_DATA, ROOT
 
-st.set_page_config(page_title="AlphaForge v11 Live", page_icon="📈", layout="wide")
+st.set_page_config(page_title='AlphaForge | Portafoglio Fineco',page_icon='📈',layout='wide',initial_sidebar_state='collapsed')
+st.markdown('''<style>
+:root{--brand:#156cd3} .block-container{max-width:1400px;padding-top:2rem}
+h1{letter-spacing:-.04em}.af-banner{background:#10233e;border-radius:14px;padding:22px 28px;margin-bottom:20px;color:white}
+.af-banner h1{margin:2px 0 8px;color:white}.af-banner p{color:#c7d8ec;margin:0}
+.af-note{background:#fff8e6;border-left:4px solid #dca63f;padding:12px 18px;border-radius:5px;color:#553d1d}
+</style>''',unsafe_allow_html=True)
 
-CSS = """
-<style>
-:root { --af-bg:#f4f6f9; --af-card:#ffffff; --af-line:#d9dee7; --af-text:#111827; --af-muted:#667085; --af-green:#067647; --af-red:#d92d20; --af-blue:#175cd3; --af-amber:#b54708; --af-dark:#0b1220; }
-.stApp { background: var(--af-bg); }
-.block-container { padding-top: 1.0rem; padding-bottom: 2.5rem; max-width: 1500px; }
-.af-top { background: var(--af-dark); color:white; border-radius:18px; padding:20px 22px; margin-bottom:14px; box-shadow:0 14px 34px rgba(15,23,42,.22); }
-.af-top h1 { font-size: 42px; line-height: .98; letter-spacing: -.05em; margin: 8px 0 6px; }
-.af-top p { color:#d0d5dd; margin:0; font-size:16px; }
-.af-chip { display:inline-flex; align-items:center; border-radius:999px; padding:4px 10px; font-weight:900; font-size:12px; margin-right:6px; background:#e0f2fe; color:#075985; }
-.af-chip.green { background:#dcfce7; color:#166534; }
-.af-chip.red { background:#fee2e2; color:#991b1b; }
-.af-chip.dark { background:#344054; color:#fff; }
-div[data-testid="stMetric"] { background: var(--af-card); border:1px solid var(--af-line); padding:14px; border-radius:15px; box-shadow:0 8px 20px rgba(15,23,42,.05); }
-[data-testid="stDataFrame"] { border-radius: 14px; overflow: hidden; border:1px solid var(--af-line); }
-.af-note { background:#eff6ff; border:1px solid #bfdbfe; border-radius:14px; padding:14px; font-weight:750; color:#1e3a8a; line-height:1.45; }
-.af-warning { background:#fffbeb; border:1px solid #fed7aa; border-radius:14px; padding:14px; font-weight:750; color:#92400e; line-height:1.45; }
-.af-card { background:white; border:1px solid var(--af-line); border-radius:16px; padding:14px; box-shadow:0 8px 20px rgba(15,23,42,.04); }
-.af-section-title { font-size:22px; font-weight:950; letter-spacing:-.035em; margin: 12px 0 4px; }
-.af-muted { color:var(--af-muted); }
-</style>
-"""
-st.markdown(CSS, unsafe_allow_html=True)
+@st.cache_data(ttl=900,show_spinner=False)
+def real_data():
+    return build_real_portfolio(allow_network=True,persist=False)
 
-
-def read_json(path: Path) -> dict:
-    try:
-        return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-    except Exception:  # noqa: BLE001
-        return {}
-
-
-def read_csv(path: Path) -> pd.DataFrame:
-    try:
-        return pd.read_csv(path) if path.exists() else pd.DataFrame()
-    except Exception:  # noqa: BLE001
-        return pd.DataFrame()
-
-
-def euro(value: object, digits: int = 0) -> str:
-    try:
-        return f"{float(value):,.{digits}f} €".replace(",", "X").replace(".", ",").replace("X", ".")
-    except Exception:  # noqa: BLE001
-        return "n/d"
-
-
-def pct(value: object) -> str:
-    try:
-        return f"{float(value):+.2f}%".replace(".", ",")
-    except Exception:  # noqa: BLE001
-        return "n/d"
-
-
-@st.cache_data(ttl=180, show_spinner="Aggiorno i dati live/proxy dei fondi...")
-def load_live_data() -> tuple[pd.DataFrame, pd.DataFrame, dict]:
-    return build_live_portfolio_snapshot(period="1y")
-
-
-if "force_live_refresh" not in st.session_state:
-    st.session_state.force_live_refresh = False
-
-header_left, header_right = st.columns([0.72, 0.28])
-with header_left:
-    st.markdown(
-        """
-<div class="af-top">
-  <div><span class="af-chip green">AlphaForge v11</span><span class="af-chip">Live Value Cockpit</span><span class="af-chip dark">stile Investing</span></div>
-  <h1>Controvalore, margini e grafici aggiornati.</h1>
-  <p>Ogni apertura della versione Streamlit aggiorna proxy, margini, proiezioni e grafici. I valori Fineco reali restano inseribili/importabili quando li esporti dal conto.</p>
-</div>
-""",
-        unsafe_allow_html=True,
-    )
-with header_right:
-    st.write("")
-    st.write("")
-    if st.button("🔄 Aggiorna ora", use_container_width=True):
+c1,c2=st.columns([5,1])
+with c1:
+    st.markdown('<div class="af-banner"><small>AlphaForge v12 / FINECO</small><h1>Il mio portafoglio reale</h1><p>Valore di carico, margini e NAV per ISIN. Senza proxy ETF nel rendimento.</p></div>',unsafe_allow_html=True)
+with c2:
+    st.write('')
+    if st.button('🔄 Verifica nuovi NAV',use_container_width=True):
         st.cache_data.clear()
         st.rerun()
-
 try:
-    live, live_history, live_summary = load_live_data()
-except Exception as exc:  # noqa: BLE001
-    st.error(f"Aggiornamento live non riuscito: {exc}")
-    live = read_csv(FINECO_LIVE_PORTFOLIO_CSV)
-    live_history = read_csv(FINECO_LIVE_PRICE_HISTORY_CSV)
-    live_summary = read_json(FINECO_LIVE_SUMMARY_FILE)
-
-if live.empty:
-    # Fallback to files generated by GitHub Actions.
-    live = read_csv(FINECO_DECISION_COCKPIT_CSV)
-    live_history = read_csv(FINECO_FUND_PRICE_HISTORY_CSV)
-    live_summary = read_json(FINECO_DECISION_SUMMARY_FILE)
-
-news = read_csv(FINECO_NEWS_RADAR_CSV)
-news_summary = read_json(FINECO_NEWS_RADAR_SUMMARY)
-fund_perf = read_csv(FINECO_FUND_PERFORMANCE_CSV)
-fineco = read_csv(FINECO_PORTFOLIO_OUTPUT_CSV)
-actual_values = read_csv(FINECO_ACTUAL_VALUES_FILE)
-actions = read_csv(ACTION_PLAN_OUTPUT_CSV)
-status = read_json(STATUS_FILE)
-
-# Normalize summary aliases.
-if "controvalore_attuale_eur" not in live_summary:
-    live_summary["controvalore_attuale_eur"] = live_summary.get("valore_attuale_eur", 0)
-
-k1, k2, k3, k4, k5, k6 = st.columns(6)
-k1.metric("Investito iniziale", euro(live_summary.get("investito_iniziale_eur", 25000)))
-k2.metric("PAC mensile", euro(live_summary.get("pac_mensile_eur", 300)))
-k3.metric("Versato ad oggi", euro(live_summary.get("capitale_versato_eur", 0)))
-k4.metric("Controvalore attuale", euro(live_summary.get("controvalore_attuale_eur", 0)))
-k5.metric("Margine netto", euro(live_summary.get("margine_netto_eur", 0)), pct(live_summary.get("margine_netto_pct", 0)))
-k6.metric("Proiezione 1 anno", euro(live_summary.get("proiezione_1y_base_eur", 0)))
-
-st.markdown(
-    f"<div class='af-note'>{live_summary.get('decisione_sintesi', 'Tieni e monitora')}<br><span class='af-muted'>Aggiornato: {live_summary.get('generated_at_rome', 'n/d')} · Fonte: {live_summary.get('fonte_prevalente', 'proxy/Fineco')}</span></div>",
-    unsafe_allow_html=True,
-)
-
-st.markdown(
-    "<div class='af-warning'>Nota importante: GitHub Pages è una dashboard statica e si aggiorna solo quando gira GitHub Actions. L'aggiornamento all'apertura funziona nella versione Streamlit, perché lì Python può scaricare i proxy live. Il controvalore Fineco esatto richiede l'export/inserimento dei valori reali dal conto; senza accesso al conto l'app usa proxy di mercato.</div>",
-    unsafe_allow_html=True,
-)
-
-main_tab, chart_tab, projection_tab, news_tab, fineco_tab = st.tabs([
-    "📌 Margini e decisioni",
-    "📈 Grafici fondi",
-    "🔮 Proiezioni",
-    "📰 News radar",
-    "✍️ Valori Fineco reali",
-])
-
-with main_tab:
-    st.markdown("<div class='af-section-title'>Margine netto per fondo/PAC</div>", unsafe_allow_html=True)
-    if live.empty:
-        st.warning("Nessun dato live disponibile.")
+    rows, history, summary, statuses=real_data()
+except Exception as exc:
+    st.error('Recupero NAV non riuscito: %s. Ultima fotografia salvata disponibile.' % str(exc))
+    if OUT_DASH_DATA.exists():
+        data=json.loads(OUT_DASH_DATA.read_text(encoding='utf-8'))
+        rows,history,summary=data['funds'],data['nav_history'],data['summary']
+        statuses=[]
     else:
-        preferred = [
-            "Fondo/PAC", "Tipo", "Capitale versato EUR", "Controvalore attuale EUR", "Margine netto EUR", "Margine netto %",
-            "Costo annuo %", "Costo maturato stimato EUR", "Fonte valore", "Decisione pratica", "Quando valutare switch",
-        ]
-        cols = [c for c in preferred if c in live.columns]
-        st.dataframe(live[cols], use_container_width=True, hide_index=True)
+        st.stop()
 
-        c1, c2 = st.columns([0.58, 0.42])
-        with c1:
-            st.markdown("<div class='af-section-title'>Guadagno/perdita netto</div>", unsafe_allow_html=True)
-            if px is not None and "Margine netto EUR" in live.columns:
-                fig = px.bar(
-                    live,
-                    x="Fondo/PAC",
-                    y="Margine netto EUR",
-                    hover_data=[x for x in ["Controvalore attuale EUR", "Capitale versato EUR", "Fonte valore", "Decisione pratica"] if x in live.columns],
-                )
-                fig.update_layout(height=420, xaxis_title="", yaxis_title="Margine netto EUR", margin=dict(l=20, r=20, t=20, b=90))
-                st.plotly_chart(fig, use_container_width=True)
-            elif "Margine netto EUR" in live.columns:
-                st.bar_chart(live.set_index("Fondo/PAC")["Margine netto EUR"])
-        with c2:
-            st.markdown("<div class='af-section-title'>Cosa controllare</div>", unsafe_allow_html=True)
-            for _, row in live.iterrows():
-                decision = str(row.get("Decisione pratica", "Tieni"))
-                margin = euro(row.get("Margine netto EUR", 0))
-                name = str(row.get("Fondo/PAC", ""))
-                st.markdown(f"<div class='af-card'><b>{name}</b><br>{decision}<br><span class='af-muted'>Margine netto: {margin}</span></div>", unsafe_allow_html=True)
+m1,m2,m3,m4=st.columns(4)
+m1.metric('Controvalore Fineco/NAV',f"{summary['market_value_eur']:,.2f} €".replace(',','X').replace('.',',').replace('X','.'))
+m2.metric('Costo di carico',f"{summary['cost_basis_eur']:,.2f} €".replace(',','X').replace('.',',').replace('X','.'))
+m3.metric('Margine su carico',f"{summary['margin_eur']:+,.2f} €".replace(',','X').replace('.',',').replace('X','.'),f"{summary['margin_pct']:+.2f}%")
+m4.metric('PAC mensili previsti','300 €','150 € + 150 €')
 
-with chart_tab:
-    st.markdown("<div class='af-section-title'>Grafici aggiornati dei fondi/proxy</div>", unsafe_allow_html=True)
-    if live_history.empty:
-        st.warning("Storico proxy non disponibile. Verifica i ticker proxy o rilancia l'aggiornamento.")
+if summary['has_latest_nav_after_snapshot']:
+    st.info('Almeno un fondo ha un NAV datato successivo alla rilevazione Fineco del 29/10/2026. Controlla la data specifica per ciascuno.')
+else:
+    st.warning('Valori dalla fotografia Fineco del 29/10/2026. Nessun NAV pubblico successivo verificato: il prezzo NON viene inventato.')
+st.markdown('<div class="af-note">Per i PAC, nuove quote sono incluse solo se registrate in <code>data/fineco_transactions_real.csv</code>. Il margine comprende i costi gia inclusi nel carico/NAV ma non la tassazione futura.</div>',unsafe_allow_html=True)
+
+t1,t2,t3,t4=st.tabs(['💼 Portafoglio','📉 Grafici NAV','🧾 Costi e scenari','📋 Dati e fonti'])
+with t1:
+    df=pd.DataFrame(rows)
+    cols=['Nome','Tipo','Costo_carico_EUR','Controvalore_EUR','Margine_EUR','Rendimento_pct','NAV_attuale_EUR','Data_ultimo_dato','Fonte_ultimo_dato']
+    st.dataframe(df[[c for c in cols if c in df]],use_container_width=True,hide_index=True)
+    st.caption('Margine = valore corrente - costo di carico Fineco. Data della rilevazione e data effettiva NAV possono essere diverse.')
+    if go is not None:
+        fig=go.Figure(go.Bar(x=df['Nome'],y=df['Margine_EUR'],marker_color=['#14965a' if m>=0 else '#c93745' for m in df['Margine_EUR']]))
+        fig.update_layout(height=340,margin=dict(t=12,b=115,l=22,r=18),yaxis_title='Euro',xaxis_title='',template='plotly_white')
+        st.plotly_chart(fig,use_container_width=True)
+with t2:
+    st.subheader('NAV effettivi dei sette fondi')
+    funds={r['Nome']:r['ISIN'] for r in rows}
+    fund=st.selectbox('Seleziona un fondo',list(funds))
+    h=pd.DataFrame([p for p in history if p['ISIN']==funds[fund]])
+    if not h.empty:
+        h=h.sort_values('Data_NAV')
+        h['NAV_EUR']=pd.to_numeric(h['NAV_EUR'],errors='coerce')
+        if go is not None:
+            figure=go.Figure(go.Scatter(x=h['Data_NAV'],y=h['NAV_EUR'],mode='markers+lines',name='NAV',line=dict(dash='dot' if len(h)<5 else 'solid'),marker=dict(size=9),hovertemplate='%{x}: %{y:.3f} €<extra></extra>'))
+            figure.update_layout(height=440,template='plotly_white',margin=dict(t=12,b=30),xaxis_title='Data valore',yaxis_title='NAV in euro')
+            st.plotly_chart(figure,use_container_width=True)
+        st.dataframe(h[['Data_NAV','NAV_EUR','Fonte','Qualita']],use_container_width=True,hide_index=True)
+        if len(h)<20:
+            st.warning('Storico incompleto: sono riportate solo osservazioni NAV effettivamente verificabili. La linea puntinata collega osservazioni distanti nel tempo, non implica prezzi intermedi.')
     else:
-        names = sorted(live_history["Nome Strumento"].dropna().unique().tolist()) if "Nome Strumento" in live_history.columns else []
-        default_names = names[:7]
-        selected = st.multiselect("Scegli fondi/PAC", names, default=default_names)
-        view = live_history[live_history["Nome Strumento"].isin(selected)].copy() if selected else live_history.copy()
-        if not view.empty and px is not None:
-            y_col = "Normalized 100" if "Normalized 100" in view.columns else "Close"
-            fig = px.line(
-                view,
-                x="Date",
-                y=y_col,
-                color="Nome Strumento",
-                hover_data=[c for c in ["Proxy usato", "Close", "Fonte dato"] if c in view.columns],
-            )
-            fig.update_layout(height=560, xaxis_title="", yaxis_title="Base 100", margin=dict(l=20, r=20, t=20, b=20))
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.dataframe(view, use_container_width=True, hide_index=True)
-
-        st.markdown("<div class='af-section-title'>Grafico singolo per fondo</div>", unsafe_allow_html=True)
-        one = st.selectbox("Fondo", names) if names else None
-        if one:
-            single = live_history[live_history["Nome Strumento"] == one].copy()
-            if not single.empty and px is not None:
-                y_col = "Normalized 100" if "Normalized 100" in single.columns else "Close"
-                fig = px.line(single, x="Date", y=y_col, hover_data=[c for c in ["Proxy usato", "Close", "Fonte dato"] if c in single.columns])
-                fig.update_layout(height=420, xaxis_title="", yaxis_title="Base 100", margin=dict(l=20, r=20, t=20, b=20))
-                st.plotly_chart(fig, use_container_width=True)
-
-with projection_tab:
-    st.markdown("<div class='af-section-title'>Proiezioni a 3 mesi e 1 anno</div>", unsafe_allow_html=True)
-    if live.empty:
-        st.warning("Proiezioni non disponibili.")
-    else:
-        cols = [
-            "Fondo/PAC", "Capitale versato EUR", "Controvalore attuale EUR", "Rendimento atteso netto 3M %",
-            "Proiezione 3M base EUR", "Guadagno stimato 3M EUR", "Rendimento atteso netto 1Y %",
-            "Proiezione 1Y base EUR", "Guadagno stimato 1Y EUR", "Trend proxy", "Decisione pratica",
-        ]
-        st.dataframe(live[[c for c in cols if c in live.columns]], use_container_width=True, hide_index=True)
-        if px is not None and {"Fondo/PAC", "Guadagno stimato 3M EUR", "Guadagno stimato 1Y EUR"}.issubset(live.columns):
-            long = live[["Fondo/PAC", "Guadagno stimato 3M EUR", "Guadagno stimato 1Y EUR"]].melt("Fondo/PAC", var_name="Scenario", value_name="Guadagno stimato EUR")
-            fig = px.bar(long, x="Fondo/PAC", y="Guadagno stimato EUR", color="Scenario", barmode="group")
-            fig.update_layout(height=460, xaxis_title="", yaxis_title="Guadagno stimato EUR", margin=dict(l=20, r=20, t=20, b=90))
-            st.plotly_chart(fig, use_container_width=True)
-
-with news_tab:
-    st.markdown("<div class='af-section-title'>Notizie collegate ai fondi</div>", unsafe_allow_html=True)
-    if news.empty:
-        st.warning("News non disponibili. Rilancia Auto update o controlla la connessione.")
-    else:
-        cols = ["Nome Strumento", "Titolo", "Fonte", "News Score", "Lettura", "Impatto possibile", "Link"]
-        st.dataframe(news[[c for c in cols if c in news.columns]], use_container_width=True, hide_index=True)
-    if fund_perf.empty is False:
-        st.markdown("<div class='af-section-title'>Performance proxy sintetica</div>", unsafe_allow_html=True)
-        cols = ["Nome Strumento", "Proxy usato", "Rendimento proxy 1D %", "Rendimento proxy 1M %", "Rendimento proxy 3M %", "Trend proxy", "Azione pratica"]
-        st.dataframe(fund_perf[[c for c in cols if c in fund_perf.columns]], use_container_width=True, hide_index=True)
-
-with fineco_tab:
-    st.markdown("<div class='af-section-title'>Valori reali Fineco</div>", unsafe_allow_html=True)
-    st.write("Per avere il margine esatto, aggiorna `data/fineco_actual_values.csv` con il controvalore reale che vedi in Fineco. Se non lo compili, AlphaForge usa un proxy live automatico.")
-    if actual_values.empty:
-        st.info("File data/fineco_actual_values.csv non trovato o vuoto.")
-    else:
-        st.dataframe(actual_values, use_container_width=True, hide_index=True)
-    st.markdown("""
-Formato consigliato:
-
-```text
-ISIN,Nome Strumento,Capitale Versato Fineco EUR,Valore Attuale Fineco EUR,Data Valore Fineco,Usa Valore Fineco,Note
-LU0981915779,Core Dividend,5000,5120,2026-09-09,si,Valore letto da Fineco
-```
-""")
-
-st.warning("Questa dashboard è per monitoraggio personale. Le proiezioni sono scenari basati su proxy/valori Fineco inseriti, non una garanzia di rendimento e non una raccomandazione finanziaria.")
+        st.info('Nessun NAV storico disponibile.')
+with t3:
+    c=pd.DataFrame(rows)[['Nome','Costo_annuo_pct','Costo_carico_EUR','Margine_EUR']]
+    st.dataframe(c,use_container_width=True,hide_index=True)
+    st.info('Le proiezioni a 3 mesi e 1 anno da soli due NAV sarebbero poco attendibili. In questa versione sono sospese, anziche produrre numeri da ETF proxy. Verranno aggiunte quando ci sara una serie storica NAV sufficientemente completa e parametri di rischio verificati.')
+with t4:
+    st.subheader('Controllo delle fonti')
+    if statuses:
+        st.dataframe(pd.DataFrame(statuses),use_container_width=True,hide_index=True)
+    st.write('Rilevazione Fineco iniziale: 29/10/2026; nella schermata non era riportata una data NAV separata.')
+    st.write('File sorgente: `data/fineco_official_positions.csv` ; storici: `data/fineco_nav_history_real.csv`; operazioni: `data/fineco_transactions_real.csv`.')
+    st.write('Se acquisti nuove quote, devi registrare le quote eseguite effettivamente. Per il conto, Fineco rimane il dato definitivo.')
+st.caption('L app verifica i NAV all apertura, con cache di 15 minuti; GitHub Pages invece usa gli aggiornamenti di GitHub Actions. Investimenti soggetti a rischio; nessuna raccomandazione di acquisto o vendita automatica.')
