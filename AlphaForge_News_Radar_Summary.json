@@ -1,6 +1,6 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-11-02T22:20:10+00:00",
+  "generated_at": "2026-11-02T23:29:44+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
@@ -25,28 +25,28 @@
       "ISIN": "LU0981915779",
       "Nome Strumento": "Core Dividend",
       "Categoria AlphaForge": "Dividend globale",
-      "News trovate": 0,
-      "News Score Totale": 0,
-      "Bias prossimi giorni": "Neutro: nessuna notizia rilevante trovata",
-      "Cosa fare": "Nessuna azione: attendere nuove notizie o aggiornare manualmente"
+      "News trovate": 5,
+      "News Score Totale": 1,
+      "Bias prossimi giorni": "Potenzialmente favorevole",
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
       "ISIN": "IE0005TOUMC7",
       "Nome Strumento": "Fineco AM Passive Underlyings 7",
       "Categoria AlphaForge": "Multi asset",
       "News trovate": 5,
-      "News Score Totale": -3,
+      "News Score Totale": -1,
       "Bias prossimi giorni": "Attenzione / pressione negativa",
-      "Cosa fare": "Scenario negativo: non aumentare esposizione, monitorare supporti/NAV"
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
       "ISIN": "IE000KTYLDC4",
       "Nome Strumento": "Fineco AM Passive Underlyings 6",
       "Categoria AlphaForge": "Multi asset prudente",
       "News trovate": 5,
-      "News Score Totale": -3,
+      "News Score Totale": -1,
       "Bias prossimi giorni": "Attenzione / pressione negativa",
-      "Cosa fare": "Scenario negativo: non aumentare esposizione, monitorare supporti/NAV"
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
       "ISIN": "IE000DWG3DP6",
