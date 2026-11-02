@@ -1,6 +1,6 @@
 {
   "version": "AlphaForge v9.1 News Radar",
-  "generated_at": "2026-10-30T23:00:17+00:00",
+  "generated_at": "2026-11-02T17:07:41+00:00",
   "disclaimer": "Il bias e' una lettura automatica di notizie e momentum, non una previsione o raccomandazione.",
   "funds": [
     {
@@ -8,8 +8,8 @@
       "Nome Strumento": "Sustainable Future Connectivity FAM Fund",
       "Categoria AlphaForge": "Tecnologia e AI",
       "News trovate": 2,
-      "News Score Totale": -1,
-      "Bias prossimi giorni": "Attenzione / pressione negativa",
+      "News Score Totale": 0,
+      "Bias prossimi giorni": "Neutro / da monitorare",
       "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     },
     {
@@ -25,28 +25,28 @@
       "ISIN": "LU0981915779",
       "Nome Strumento": "Core Dividend",
       "Categoria AlphaForge": "Dividend globale",
-      "News trovate": 5,
-      "News Score Totale": 1,
-      "Bias prossimi giorni": "Potenzialmente favorevole",
-      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
+      "News trovate": 0,
+      "News Score Totale": 0,
+      "Bias prossimi giorni": "Neutro: nessuna notizia rilevante trovata",
+      "Cosa fare": "Nessuna azione: attendere nuove notizie o aggiornare manualmente"
     },
     {
       "ISIN": "IE0005TOUMC7",
       "Nome Strumento": "Fineco AM Passive Underlyings 7",
       "Categoria AlphaForge": "Multi asset",
       "News trovate": 5,
-      "News Score Totale": -1,
+      "News Score Totale": -3,
       "Bias prossimi giorni": "Attenzione / pressione negativa",
-      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
+      "Cosa fare": "Scenario negativo: non aumentare esposizione, monitorare supporti/NAV"
     },
     {
       "ISIN": "IE000KTYLDC4",
       "Nome Strumento": "Fineco AM Passive Underlyings 6",
       "Categoria AlphaForge": "Multi asset prudente",
       "News trovate": 5,
-      "News Score Totale": -1,
+      "News Score Totale": -3,
       "Bias prossimi giorni": "Attenzione / pressione negativa",
-      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
+      "Cosa fare": "Scenario negativo: non aumentare esposizione, monitorare supporti/NAV"
     },
     {
       "ISIN": "IE000DWG3DP6",
@@ -62,9 +62,9 @@
       "Nome Strumento": "Fidelity Euro 50 Index Fund",
       "Categoria AlphaForge": "Europa",
       "News trovate": 5,
-      "News Score Totale": 3,
-      "Bias prossimi giorni": "Potenzialmente favorevole",
-      "Cosa fare": "Scenario favorevole: non inseguire, usare PAC/ingressi graduali"
+      "News Score Totale": 0,
+      "Bias prossimi giorni": "Neutro / da monitorare",
+      "Cosa fare": "Scenario neutro: continuare monitoraggio e confrontare con andamento fondi"
     }
   ]
 }
