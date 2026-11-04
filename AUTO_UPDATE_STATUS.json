@@ -2,13 +2,13 @@
   "status": "success",
   "version": "AlphaForge v12 - Fineco NAV Reale",
   "message": "Portafoglio Fineco v12 aggiornato e dashboard generata.",
-  "started_at": "2026-11-04T15:28:04+00:00",
-  "finished_at": "2026-11-04T15:29:10+00:00",
+  "started_at": "2026-11-04T18:01:53+00:00",
+  "finished_at": "2026-11-04T18:02:42+00:00",
   "details": [
     {
       "script": "generate_real_portfolio.py",
       "returncode": 0,
-      "stdout_tail": "screenshot. OK\nIE00BD2PJG29 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. OK\nLU0261952682 | NAV NUOVO | OK\nLU0981915779 | NAV NUOVO | OK\nIE000DWG3DP6 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE0005TOUMC7 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE000KTYLDC4 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\n",
+      "stdout_tail": "SUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. OK\nLU0981915779 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. OK\nIE000DWG3DP6 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE0005TOUMC7 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE000KTYLDC4 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\n",
       "stderr_tail": ""
     },
     {
@@ -68,13 +68,13 @@
     {
       "script": "generate_live_snapshot.py",
       "returncode": 0,
-      "stdout_tail": "eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25900.0, 'controvalore_attuale_eur': 26477.17, 'valore_attuale_eur': 26477.17, 'margine_netto_eur': 535.17, 'margine_netto_pct': 2.07, 'proiezione_3m_base_eur': 28069.34, 'proiezione_1y_base_eur': 33010.48, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Mantieni ma non aumentare le parti deboli', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
+      "stdout_tail": "eur': 25000.0, 'pac_mensile_eur': 300.0, 'capitale_versato_eur': 25900.0, 'controvalore_attuale_eur': 26500.21, 'valore_attuale_eur': 26500.21, 'margine_netto_eur': 558.21, 'margine_netto_pct': 2.16, 'proiezione_3m_base_eur': 28094.72, 'proiezione_1y_base_eur': 33030.79, 'fonte_prevalente': 'Fineco manuale se compilato; altrimenti proxy live automatico', 'decisione_sintesi': 'Mantieni ma non aumentare le parti deboli', 'messaggio': \"Streamlit aggiorna dati/proxy all'apertura. Il controvalore Fineco esatto richiede export o inserimento dei valori reali; il proxy live e' una stima di mercato.\"}\n",
       "stderr_tail": ""
     },
     {
       "script": "generate_fund_decisions.py",
       "returncode": 0,
-      "stdout_tail": "Fineco decision cockpit aggiornato: 7 strumenti, margine netto 535.17 EUR, decisione: Mantieni ma non aumentare le parti deboli\n",
+      "stdout_tail": "Fineco decision cockpit aggiornato: 7 strumenti, margine netto 558.21 EUR, decisione: Mantieni ma non aumentare le parti deboli\n",
       "stderr_tail": ""
     },
     {

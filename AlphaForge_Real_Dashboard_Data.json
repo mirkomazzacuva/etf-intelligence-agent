@@ -1,12 +1,12 @@
 {
   "summary": {
     "version": "AlphaForge v12 - Fineco NAV Reale",
-    "updated_at_rome": "2026-11-04T16:28:13+01:00",
+    "updated_at_rome": "2026-11-04T19:02:03+01:00",
     "snapshot_date": "2026-10-29",
-    "market_value_eur": 25724.3,
+    "market_value_eur": 25719.49,
     "cost_basis_eur": 25646.2,
-    "margin_eur": 78.1,
-    "margin_pct": 0.3,
+    "margin_eur": 73.29,
+    "margin_pct": 0.29,
     "initial_oneoff_eur": 25000.0,
     "pac_monthly_eur": 300.0,
     "confirmed_initial_pac_principal_eur": 600.0,
@@ -53,11 +53,11 @@
       "Quote_attuali": 1.981,
       "Prezzo_medio_carico_EUR": 154.77031,
       "Costo_carico_EUR": 306.6,
-      "Controvalore_EUR": 286.46,
-      "Margine_EUR": -20.14,
-      "Rendimento_pct": -6.57,
-      "NAV_attuale_EUR": 144.603,
-      "Data_ultimo_dato": "2026-11-02",
+      "Controvalore_EUR": 281.65,
+      "Margine_EUR": -24.95,
+      "Rendimento_pct": -8.14,
+      "NAV_attuale_EUR": 142.179,
+      "Data_ultimo_dato": "2026-11-03",
       "Fonte_ultimo_dato": "Fineco Asset Management",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -65,7 +65,7 @@
       "PAC_mensile_EUR": 150.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 4,
+      "Numero_punti_NAV": 5,
       "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/fam-msci-emerging-markets-index-fund"
     },
     {
@@ -293,6 +293,14 @@
       "ISIN": "IE00BD2PJG29",
       "Data_NAV": "2026-11-02",
       "NAV_EUR": "144.603000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/fam-msci-emerging-markets-index-fund",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "IE00BD2PJG29",
+      "Data_NAV": "2026-11-03",
+      "NAV_EUR": "142.179000",
       "Fonte": "Fineco Asset Management",
       "URL": "https://finecoassetmanagement.com/it/archives/products/fam-msci-emerging-markets-index-fund",
       "Qualita": "NAV datato per ISIN; fonte pubblica"
