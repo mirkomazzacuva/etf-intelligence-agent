@@ -1,12 +1,12 @@
 {
   "summary": {
     "version": "AlphaForge v12 - Fineco NAV Reale",
-    "updated_at_rome": "2026-11-04T00:59:42+01:00",
+    "updated_at_rome": "2026-11-04T16:28:13+01:00",
     "snapshot_date": "2026-10-29",
-    "market_value_eur": 25725.32,
+    "market_value_eur": 25724.3,
     "cost_basis_eur": 25646.2,
-    "margin_eur": 79.12,
-    "margin_pct": 0.31,
+    "margin_eur": 78.1,
+    "margin_pct": 0.3,
     "initial_oneoff_eur": 25000.0,
     "pac_monthly_eur": 300.0,
     "confirmed_initial_pac_principal_eur": 600.0,
@@ -76,11 +76,11 @@
       "Quote_attuali": 169.78,
       "Prezzo_medio_carico_EUR": 29.50288,
       "Costo_carico_EUR": 5009.0,
-      "Controvalore_EUR": 4877.78,
-      "Margine_EUR": -131.22,
-      "Rendimento_pct": -2.62,
-      "NAV_attuale_EUR": 28.73,
-      "Data_ultimo_dato": "2026-11-02",
+      "Controvalore_EUR": 4854.01,
+      "Margine_EUR": -154.99,
+      "Rendimento_pct": -3.09,
+      "NAV_attuale_EUR": 28.59,
+      "Data_ultimo_dato": "2026-11-03",
       "Fonte_ultimo_dato": "Borsa Italiana",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -88,7 +88,7 @@
       "PAC_mensile_EUR": 0.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 4,
+      "Numero_punti_NAV": 5,
       "Fonte_URL": "https://www.borsaitaliana.it/borsa/fondi/dettaglio/2FIDES50.html?lang=it"
     },
     {
@@ -99,20 +99,20 @@
       "Quote_attuali": 406.273,
       "Prezzo_medio_carico_EUR": 12.32176,
       "Costo_carico_EUR": 5006.0,
-      "Controvalore_EUR": 5119.04,
-      "Margine_EUR": 113.04,
-      "Rendimento_pct": 2.26,
-      "NAV_attuale_EUR": 12.6,
-      "Data_ultimo_dato": "2026-10-29",
-      "Fonte_ultimo_dato": "Schermata Fineco",
-      "Qualita_ultimo_dato": "Rilevazione Fineco: data effettiva NAV non visibile",
-      "Aggiornamento": "Snapshot Fineco, valore invariato (nessun NAV piu recente verificato)",
+      "Controvalore_EUR": 5141.79,
+      "Margine_EUR": 135.79,
+      "Rendimento_pct": 2.71,
+      "NAV_attuale_EUR": 12.656,
+      "Data_ultimo_dato": "2026-10-30",
+      "Fonte_ultimo_dato": "Fineco Asset Management",
+      "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
+      "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
       "Costo_annuo_pct": 3.4,
       "PAC_mensile_EUR": 0.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 2,
-      "Fonte_URL": ""
+      "Numero_punti_NAV": 3,
+      "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4"
     },
     {
       "ISIN": "IE000DWG3DP6",
@@ -330,6 +330,14 @@
       "Qualita": "NAV datato per ISIN; fonte pubblica"
     },
     {
+      "ISIN": "LU0261952682",
+      "Data_NAV": "2026-11-03",
+      "NAV_EUR": "28.590000",
+      "Fonte": "Borsa Italiana",
+      "URL": "https://www.borsaitaliana.it/borsa/fondi/dettaglio/2FIDES50.html?lang=it",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
       "ISIN": "LU0981915779",
       "Data_NAV": "2026-09-08",
       "NAV_EUR": "12.292",
@@ -344,6 +352,14 @@
       "Fonte": "Schermata Fineco fornita dall utente",
       "URL": "",
       "Qualita": "NAV mostrato nella schermata; data NAV non dichiarata (data rilevazione 29/10/2026)"
+    },
+    {
+      "ISIN": "LU0981915779",
+      "Data_NAV": "2026-10-30",
+      "NAV_EUR": "12.656000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
     }
   ]
 }
