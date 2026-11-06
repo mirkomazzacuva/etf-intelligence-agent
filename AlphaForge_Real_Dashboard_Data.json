@@ -1,12 +1,12 @@
 {
   "summary": {
     "version": "AlphaForge v12 - Fineco NAV Reale",
-    "updated_at_rome": "2026-11-05T22:58:21+01:00",
+    "updated_at_rome": "2026-11-06T01:18:48+01:00",
     "snapshot_date": "2026-10-29",
-    "market_value_eur": 25813.33,
+    "market_value_eur": 25791.26,
     "cost_basis_eur": 25646.2,
-    "margin_eur": 167.13,
-    "margin_pct": 0.65,
+    "margin_eur": 145.06,
+    "margin_pct": 0.57,
     "initial_oneoff_eur": 25000.0,
     "pac_monthly_eur": 300.0,
     "confirmed_initial_pac_principal_eur": 600.0,
@@ -76,11 +76,11 @@
       "Quote_attuali": 169.78,
       "Prezzo_medio_carico_EUR": 29.50288,
       "Costo_carico_EUR": 5009.0,
-      "Controvalore_EUR": 4950.78,
-      "Margine_EUR": -58.22,
-      "Rendimento_pct": -1.16,
-      "NAV_attuale_EUR": 29.16,
-      "Data_ultimo_dato": "2026-11-04",
+      "Controvalore_EUR": 4928.71,
+      "Margine_EUR": -80.29,
+      "Rendimento_pct": -1.6,
+      "NAV_attuale_EUR": 29.03,
+      "Data_ultimo_dato": "2026-11-05",
       "Fonte_ultimo_dato": "Borsa Italiana",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -88,7 +88,7 @@
       "PAC_mensile_EUR": 0.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 6,
+      "Numero_punti_NAV": 7,
       "Fonte_URL": "https://www.borsaitaliana.it/borsa/fondi/dettaglio/2FIDES50.html?lang=it"
     },
     {
@@ -365,6 +365,14 @@
       "ISIN": "LU0261952682",
       "Data_NAV": "2026-11-04",
       "NAV_EUR": "29.160000",
+      "Fonte": "Borsa Italiana",
+      "URL": "https://www.borsaitaliana.it/borsa/fondi/dettaglio/2FIDES50.html?lang=it",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "LU0261952682",
+      "Data_NAV": "2026-11-05",
+      "NAV_EUR": "29.030000",
       "Fonte": "Borsa Italiana",
       "URL": "https://www.borsaitaliana.it/borsa/fondi/dettaglio/2FIDES50.html?lang=it",
       "Qualita": "NAV datato per ISIN; fonte pubblica"
