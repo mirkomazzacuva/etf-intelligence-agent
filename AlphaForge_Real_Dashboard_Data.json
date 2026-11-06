@@ -1,12 +1,12 @@
 {
   "summary": {
     "version": "AlphaForge v12 - Fineco NAV Reale",
-    "updated_at_rome": "2026-11-06T01:18:48+01:00",
+    "updated_at_rome": "2026-11-06T16:05:52+01:00",
     "snapshot_date": "2026-10-29",
-    "market_value_eur": 25791.26,
+    "market_value_eur": 25781.76,
     "cost_basis_eur": 25646.2,
-    "margin_eur": 145.06,
-    "margin_pct": 0.57,
+    "margin_eur": 135.56,
+    "margin_pct": 0.53,
     "initial_oneoff_eur": 25000.0,
     "pac_monthly_eur": 300.0,
     "confirmed_initial_pac_principal_eur": 600.0,
@@ -30,11 +30,11 @@
       "Quote_attuali": 2.062,
       "Prezzo_medio_carico_EUR": 148.69059,
       "Costo_carico_EUR": 306.6,
-      "Controvalore_EUR": 274.34,
-      "Margine_EUR": -32.26,
-      "Rendimento_pct": -10.52,
-      "NAV_attuale_EUR": 133.042,
-      "Data_ultimo_dato": "2026-11-03",
+      "Controvalore_EUR": 275.0,
+      "Margine_EUR": -31.6,
+      "Rendimento_pct": -10.31,
+      "NAV_attuale_EUR": 133.363,
+      "Data_ultimo_dato": "2026-11-04",
       "Fonte_ultimo_dato": "Fineco Asset Management",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -42,7 +42,7 @@
       "PAC_mensile_EUR": 150.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 5,
+      "Numero_punti_NAV": 6,
       "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/sustainable-future-connectivity-fam-fund-5"
     },
     {
@@ -99,11 +99,11 @@
       "Quote_attuali": 406.273,
       "Prezzo_medio_carico_EUR": 12.32176,
       "Costo_carico_EUR": 5006.0,
-      "Controvalore_EUR": 5136.92,
-      "Margine_EUR": 130.92,
-      "Rendimento_pct": 2.62,
-      "NAV_attuale_EUR": 12.644,
-      "Data_ultimo_dato": "2026-11-02",
+      "Controvalore_EUR": 5126.76,
+      "Margine_EUR": 120.76,
+      "Rendimento_pct": 2.41,
+      "NAV_attuale_EUR": 12.619,
+      "Data_ultimo_dato": "2026-11-03",
       "Fonte_ultimo_dato": "Fineco Asset Management",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -111,7 +111,7 @@
       "PAC_mensile_EUR": 0.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 4,
+      "Numero_punti_NAV": 5,
       "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4"
     },
     {
@@ -221,6 +221,14 @@
       "ISIN": "IE0003YRHWF4",
       "Data_NAV": "2026-11-03",
       "NAV_EUR": "133.042000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/sustainable-future-connectivity-fam-fund-5",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "IE0003YRHWF4",
+      "Data_NAV": "2026-11-04",
+      "NAV_EUR": "133.363000",
       "Fonte": "Fineco Asset Management",
       "URL": "https://finecoassetmanagement.com/it/archives/products/sustainable-future-connectivity-fam-fund-5",
       "Qualita": "NAV datato per ISIN; fonte pubblica"
@@ -405,6 +413,14 @@
       "ISIN": "LU0981915779",
       "Data_NAV": "2026-11-02",
       "NAV_EUR": "12.644000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "LU0981915779",
+      "Data_NAV": "2026-11-03",
+      "NAV_EUR": "12.619000",
       "Fonte": "Fineco Asset Management",
       "URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4",
       "Qualita": "NAV datato per ISIN; fonte pubblica"
