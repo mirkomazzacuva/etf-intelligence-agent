@@ -1,12 +1,12 @@
 {
   "summary": {
     "version": "AlphaForge v12 - Fineco NAV Reale",
-    "updated_at_rome": "2026-11-09T18:33:34+01:00",
+    "updated_at_rome": "2026-11-09T21:48:59+01:00",
     "snapshot_date": "2026-10-29",
-    "market_value_eur": 25710.69,
+    "market_value_eur": 25733.85,
     "cost_basis_eur": 25646.2,
-    "margin_eur": 64.49,
-    "margin_pct": 0.25,
+    "margin_eur": 87.65,
+    "margin_pct": 0.34,
     "initial_oneoff_eur": 25000.0,
     "pac_monthly_eur": 300.0,
     "confirmed_initial_pac_principal_eur": 600.0,
@@ -99,11 +99,11 @@
       "Quote_attuali": 406.273,
       "Prezzo_medio_carico_EUR": 12.32176,
       "Costo_carico_EUR": 5006.0,
-      "Controvalore_EUR": 5126.76,
-      "Margine_EUR": 120.76,
-      "Rendimento_pct": 2.41,
-      "NAV_attuale_EUR": 12.619,
-      "Data_ultimo_dato": "2026-11-03",
+      "Controvalore_EUR": 5149.92,
+      "Margine_EUR": 143.92,
+      "Rendimento_pct": 2.87,
+      "NAV_attuale_EUR": 12.676,
+      "Data_ultimo_dato": "2026-11-05",
       "Fonte_ultimo_dato": "Fineco Asset Management",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -111,7 +111,7 @@
       "PAC_mensile_EUR": 0.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 5,
+      "Numero_punti_NAV": 6,
       "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4"
     },
     {
@@ -445,6 +445,14 @@
       "ISIN": "LU0981915779",
       "Data_NAV": "2026-11-03",
       "NAV_EUR": "12.619000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "LU0981915779",
+      "Data_NAV": "2026-11-05",
+      "NAV_EUR": "12.676000",
       "Fonte": "Fineco Asset Management",
       "URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4",
       "Qualita": "NAV datato per ISIN; fonte pubblica"

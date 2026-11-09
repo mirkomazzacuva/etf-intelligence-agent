@@ -2,13 +2,13 @@
   "status": "success",
   "version": "AlphaForge v12 - Fineco NAV Reale",
   "message": "Portafoglio Fineco v12 aggiornato e dashboard generata.",
-  "started_at": "2026-11-09T17:33:25+00:00",
-  "finished_at": "2026-11-09T17:34:13+00:00",
+  "started_at": "2026-11-09T20:48:52+00:00",
+  "finished_at": "2026-11-09T20:49:32+00:00",
   "details": [
     {
       "script": "generate_real_portfolio.py",
       "returncode": 0,
-      "stdout_tail": "screenshot. OK\nIE00BD2PJG29 | NAV NUOVO | OK\nLU0261952682 | NAV NUOVO | OK\nLU0981915779 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. OK\nIE000DWG3DP6 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE0005TOUMC7 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE000KTYLDC4 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\n",
+      "stdout_tail": "ne pubblica piu recente dello screenshot. OK\nLU0261952682 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. OK\nLU0981915779 | NAV NUOVO | OK\nIE000DWG3DP6 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE0005TOUMC7 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE000KTYLDC4 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\n",
       "stderr_tail": ""
     },
     {
