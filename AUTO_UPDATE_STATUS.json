@@ -2,8 +2,8 @@
   "status": "success",
   "version": "AlphaForge v12 - Fineco NAV Reale",
   "message": "Portafoglio Fineco v12 aggiornato e dashboard generata.",
-  "started_at": "2026-11-11T20:12:07+00:00",
-  "finished_at": "2026-11-11T20:13:07+00:00",
+  "started_at": "2026-11-11T22:40:29+00:00",
+  "finished_at": "2026-11-11T22:41:14+00:00",
   "details": [
     {
       "script": "generate_real_portfolio.py",
