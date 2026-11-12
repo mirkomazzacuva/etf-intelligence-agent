@@ -1,12 +1,12 @@
 {
   "summary": {
     "version": "AlphaForge v12 - Fineco NAV Reale",
-    "updated_at_rome": "2026-11-11T23:40:37+01:00",
+    "updated_at_rome": "2026-11-12T02:33:15+01:00",
     "snapshot_date": "2026-10-29",
-    "market_value_eur": 25865.53,
+    "market_value_eur": 25913.07,
     "cost_basis_eur": 25646.2,
-    "margin_eur": 219.33,
-    "margin_pct": 0.86,
+    "margin_eur": 266.87,
+    "margin_pct": 1.04,
     "initial_oneoff_eur": 25000.0,
     "pac_monthly_eur": 300.0,
     "confirmed_initial_pac_principal_eur": 600.0,
@@ -15,8 +15,8 @@
     "transactions_after_snapshot_count": 0,
     "has_latest_nav_after_snapshot": true,
     "funds_count": 7,
-    "positive_count": 4,
-    "negative_count": 3,
+    "positive_count": 5,
+    "negative_count": 2,
     "status": "NAV pubblico + snapshot Fineco",
     "warning": "Quote PAC successive al 29/10/2026 NON stimate automaticamente: registrare ogni eseguito nel file movimenti. Nessun valore ETF proxy entra nel margine.",
     "cost_note": "Margini gia al netto dei costi incorporati nel NAV e dei costi di carico Fineco; prima di eventuali imposte di vendita. Nessuna ulteriore detrazione del TER."
@@ -76,11 +76,11 @@
       "Quote_attuali": 169.78,
       "Prezzo_medio_carico_EUR": 29.50288,
       "Costo_carico_EUR": 5009.0,
-      "Controvalore_EUR": 5000.02,
-      "Margine_EUR": -8.98,
-      "Rendimento_pct": -0.18,
-      "NAV_attuale_EUR": 29.45,
-      "Data_ultimo_dato": "2026-11-10",
+      "Controvalore_EUR": 5047.56,
+      "Margine_EUR": 38.56,
+      "Rendimento_pct": 0.77,
+      "NAV_attuale_EUR": 29.73,
+      "Data_ultimo_dato": "2026-11-11",
       "Fonte_ultimo_dato": "Borsa Italiana",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -88,7 +88,7 @@
       "PAC_mensile_EUR": 0.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 10,
+      "Numero_punti_NAV": 11,
       "Fonte_URL": "https://www.borsaitaliana.it/borsa/fondi/dettaglio/2FIDES50.html?lang=it"
     },
     {
@@ -461,6 +461,14 @@
       "ISIN": "LU0261952682",
       "Data_NAV": "2026-11-10",
       "NAV_EUR": "29.450000",
+      "Fonte": "Borsa Italiana",
+      "URL": "https://www.borsaitaliana.it/borsa/fondi/dettaglio/2FIDES50.html?lang=it",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "LU0261952682",
+      "Data_NAV": "2026-11-11",
+      "NAV_EUR": "29.730000",
       "Fonte": "Borsa Italiana",
       "URL": "https://www.borsaitaliana.it/borsa/fondi/dettaglio/2FIDES50.html?lang=it",
       "Qualita": "NAV datato per ISIN; fonte pubblica"
