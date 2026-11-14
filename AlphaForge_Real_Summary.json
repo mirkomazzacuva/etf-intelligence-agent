@@ -1,10 +1,10 @@
 {
   "version": "AlphaForge v12 - Fineco NAV Reale",
-  "updated_at_rome": "2026-11-13T22:57:14+01:00",
+  "updated_at_rome": "2026-11-14T01:21:12+01:00",
   "snapshot_date": "2026-10-29",
-  "market_value_eur": 25901.37,
+  "market_value_eur": 25901.16,
   "cost_basis_eur": 25646.2,
-  "margin_eur": 255.17,
+  "margin_eur": 254.96,
   "margin_pct": 0.99,
   "initial_oneoff_eur": 25000.0,
   "pac_monthly_eur": 300.0,
