@@ -1,11 +1,11 @@
 {
   "summary": {
     "version": "AlphaForge v12 - Fineco NAV Reale",
-    "updated_at_rome": "2026-11-17T03:28:47+01:00",
+    "updated_at_rome": "2026-11-17T17:55:04+01:00",
     "snapshot_date": "2026-10-29",
-    "market_value_eur": 25895.88,
+    "market_value_eur": 25896.02,
     "cost_basis_eur": 25646.2,
-    "margin_eur": 249.68,
+    "margin_eur": 249.82,
     "margin_pct": 0.97,
     "initial_oneoff_eur": 25000.0,
     "pac_monthly_eur": 300.0,
@@ -53,11 +53,11 @@
       "Quote_attuali": 1.981,
       "Prezzo_medio_carico_EUR": 154.77031,
       "Costo_carico_EUR": 306.6,
-      "Controvalore_EUR": 286.11,
-      "Margine_EUR": -20.49,
-      "Rendimento_pct": -6.68,
-      "NAV_attuale_EUR": 144.43,
-      "Data_ultimo_dato": "2026-11-12",
+      "Controvalore_EUR": 286.25,
+      "Margine_EUR": -20.35,
+      "Rendimento_pct": -6.64,
+      "NAV_attuale_EUR": 144.499,
+      "Data_ultimo_dato": "2026-11-13",
       "Fonte_ultimo_dato": "Fineco Asset Management",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -65,7 +65,7 @@
       "PAC_mensile_EUR": 150.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 12,
+      "Numero_punti_NAV": 13,
       "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/fam-msci-emerging-markets-index-fund"
     },
     {
@@ -429,6 +429,14 @@
       "ISIN": "IE00BD2PJG29",
       "Data_NAV": "2026-11-12",
       "NAV_EUR": "144.430000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/fam-msci-emerging-markets-index-fund",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "IE00BD2PJG29",
+      "Data_NAV": "2026-11-13",
+      "NAV_EUR": "144.499000",
       "Fonte": "Fineco Asset Management",
       "URL": "https://finecoassetmanagement.com/it/archives/products/fam-msci-emerging-markets-index-fund",
       "Qualita": "NAV datato per ISIN; fonte pubblica"
