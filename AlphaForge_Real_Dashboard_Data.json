@@ -1,12 +1,12 @@
 {
   "summary": {
     "version": "AlphaForge v12 - Fineco NAV Reale",
-    "updated_at_rome": "2026-11-18T17:29:06+01:00",
+    "updated_at_rome": "2026-11-18T19:52:50+01:00",
     "snapshot_date": "2026-10-29",
-    "market_value_eur": 25842.91,
+    "market_value_eur": 25839.4,
     "cost_basis_eur": 25646.2,
-    "margin_eur": 196.71,
-    "margin_pct": 0.77,
+    "margin_eur": 193.2,
+    "margin_pct": 0.75,
     "initial_oneoff_eur": 25000.0,
     "pac_monthly_eur": 300.0,
     "confirmed_initial_pac_principal_eur": 600.0,
@@ -30,11 +30,11 @@
       "Quote_attuali": 2.062,
       "Prezzo_medio_carico_EUR": 148.69059,
       "Costo_carico_EUR": 306.6,
-      "Controvalore_EUR": 264.79,
-      "Margine_EUR": -41.81,
-      "Rendimento_pct": -13.64,
-      "NAV_attuale_EUR": 128.411,
-      "Data_ultimo_dato": "2026-11-16",
+      "Controvalore_EUR": 261.28,
+      "Margine_EUR": -45.32,
+      "Rendimento_pct": -14.78,
+      "NAV_attuale_EUR": 126.711,
+      "Data_ultimo_dato": "2026-11-17",
       "Fonte_ultimo_dato": "Fineco Asset Management",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -42,7 +42,7 @@
       "PAC_mensile_EUR": 150.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 14,
+      "Numero_punti_NAV": 15,
       "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/sustainable-future-connectivity-fam-fund-5"
     },
     {
@@ -293,6 +293,14 @@
       "ISIN": "IE0003YRHWF4",
       "Data_NAV": "2026-11-16",
       "NAV_EUR": "128.411000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/sustainable-future-connectivity-fam-fund-5",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "IE0003YRHWF4",
+      "Data_NAV": "2026-11-17",
+      "NAV_EUR": "126.711000",
       "Fonte": "Fineco Asset Management",
       "URL": "https://finecoassetmanagement.com/it/archives/products/sustainable-future-connectivity-fam-fund-5",
       "Qualita": "NAV datato per ISIN; fonte pubblica"
