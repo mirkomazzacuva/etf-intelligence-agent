@@ -2,8 +2,8 @@
   "status": "success",
   "version": "AlphaForge v12 - Fineco NAV Reale",
   "message": "Portafoglio Fineco v12 aggiornato e dashboard generata.",
-  "started_at": "2026-11-20T18:38:19+00:00",
-  "finished_at": "2026-11-20T18:39:15+00:00",
+  "started_at": "2026-11-20T21:05:16+00:00",
+  "finished_at": "2026-11-20T21:06:11+00:00",
   "details": [
     {
       "script": "generate_real_portfolio.py",
@@ -62,7 +62,7 @@
     {
       "script": "generate_news_radar.py",
       "returncode": 0,
-      "stdout_tail": "News radar generato: 25 notizie, 7 strumenti\n",
+      "stdout_tail": "News radar generato: 24 notizie, 7 strumenti\n",
       "stderr_tail": ""
     },
     {
