@@ -1,12 +1,12 @@
 {
   "summary": {
     "version": "AlphaForge v12 - Fineco NAV Reale",
-    "updated_at_rome": "2026-11-24T05:18:06+01:00",
+    "updated_at_rome": "2026-11-24T19:55:15+01:00",
     "snapshot_date": "2026-10-29",
-    "market_value_eur": 25634.61,
+    "market_value_eur": 25600.27,
     "cost_basis_eur": 25646.2,
-    "margin_eur": -11.59,
-    "margin_pct": -0.05,
+    "margin_eur": -45.93,
+    "margin_pct": -0.18,
     "initial_oneoff_eur": 25000.0,
     "pac_monthly_eur": 300.0,
     "confirmed_initial_pac_principal_eur": 600.0,
@@ -30,11 +30,11 @@
       "Quote_attuali": 2.062,
       "Prezzo_medio_carico_EUR": 148.69059,
       "Costo_carico_EUR": 306.6,
-      "Controvalore_EUR": 241.84,
-      "Margine_EUR": -64.76,
-      "Rendimento_pct": -21.12,
-      "NAV_attuale_EUR": 117.283,
-      "Data_ultimo_dato": "2026-11-20",
+      "Controvalore_EUR": 258.34,
+      "Margine_EUR": -48.26,
+      "Rendimento_pct": -15.74,
+      "NAV_attuale_EUR": 125.283,
+      "Data_ultimo_dato": "2026-11-23",
       "Fonte_ultimo_dato": "Fineco Asset Management",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -42,7 +42,7 @@
       "PAC_mensile_EUR": 150.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 17,
+      "Numero_punti_NAV": 18,
       "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/sustainable-future-connectivity-fam-fund-5"
     },
     {
@@ -53,11 +53,11 @@
       "Quote_attuali": 1.981,
       "Prezzo_medio_carico_EUR": 154.77031,
       "Costo_carico_EUR": 306.6,
-      "Controvalore_EUR": 271.82,
-      "Margine_EUR": -34.78,
-      "Rendimento_pct": -11.34,
-      "NAV_attuale_EUR": 137.215,
-      "Data_ultimo_dato": "2026-11-19",
+      "Controvalore_EUR": 264.86,
+      "Margine_EUR": -41.74,
+      "Rendimento_pct": -13.61,
+      "NAV_attuale_EUR": 133.702,
+      "Data_ultimo_dato": "2026-11-23",
       "Fonte_ultimo_dato": "Fineco Asset Management",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -65,7 +65,7 @@
       "PAC_mensile_EUR": 150.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 15,
+      "Numero_punti_NAV": 16,
       "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/fam-msci-emerging-markets-index-fund"
     },
     {
@@ -99,11 +99,11 @@
       "Quote_attuali": 406.273,
       "Prezzo_medio_carico_EUR": 12.32176,
       "Costo_carico_EUR": 5006.0,
-      "Controvalore_EUR": 5145.45,
-      "Margine_EUR": 139.45,
-      "Rendimento_pct": 2.79,
-      "NAV_attuale_EUR": 12.665,
-      "Data_ultimo_dato": "2026-11-18",
+      "Controvalore_EUR": 5101.57,
+      "Margine_EUR": 95.57,
+      "Rendimento_pct": 1.91,
+      "NAV_attuale_EUR": 12.557,
+      "Data_ultimo_dato": "2026-11-19",
       "Fonte_ultimo_dato": "Fineco Asset Management",
       "Qualita_ultimo_dato": "NAV datato per ISIN; fonte pubblica",
       "Aggiornamento": "NAV pubblico/registrato, nuove quote solo se dichiarate",
@@ -111,7 +111,7 @@
       "PAC_mensile_EUR": 0.0,
       "Versamenti_post_snapshot_EUR": 0.0,
       "Nuove_quote_registrate": 0.0,
-      "Numero_punti_NAV": 14,
+      "Numero_punti_NAV": 15,
       "Fonte_URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4"
     },
     {
@@ -322,6 +322,14 @@
       "Qualita": "NAV datato per ISIN; fonte pubblica"
     },
     {
+      "ISIN": "IE0003YRHWF4",
+      "Data_NAV": "2026-11-23",
+      "NAV_EUR": "125.283000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/sustainable-future-connectivity-fam-fund-5",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
       "ISIN": "IE0005TOUMC7",
       "Data_NAV": "2026-09-09",
       "NAV_EUR": "126.612",
@@ -485,6 +493,14 @@
       "ISIN": "IE00BD2PJG29",
       "Data_NAV": "2026-11-19",
       "NAV_EUR": "137.215000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/fam-msci-emerging-markets-index-fund",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "IE00BD2PJG29",
+      "Data_NAV": "2026-11-23",
+      "NAV_EUR": "133.702000",
       "Fonte": "Fineco Asset Management",
       "URL": "https://finecoassetmanagement.com/it/archives/products/fam-msci-emerging-markets-index-fund",
       "Qualita": "NAV datato per ISIN; fonte pubblica"
@@ -749,6 +765,14 @@
       "ISIN": "LU0981915779",
       "Data_NAV": "2026-11-18",
       "NAV_EUR": "12.665000",
+      "Fonte": "Fineco Asset Management",
+      "URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4",
+      "Qualita": "NAV datato per ISIN; fonte pubblica"
+    },
+    {
+      "ISIN": "LU0981915779",
+      "Data_NAV": "2026-11-19",
+      "NAV_EUR": "12.557000",
       "Fonte": "Fineco Asset Management",
       "URL": "https://finecoassetmanagement.com/it/archives/products/core-dividend-4",
       "Qualita": "NAV datato per ISIN; fonte pubblica"
