@@ -1,8 +1,8 @@
 ISIN,Esito,Messaggio,Ultimo_NAV_utilizzato,Controllato_il
-IE0003YRHWF4,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. OK,2026-11-20,2026-11-23T23:04:44+01:00
-IE00BD2PJG29,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. OK,2026-11-19,2026-11-23T23:04:45+01:00
-LU0261952682,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. OK,2026-11-20,2026-11-23T23:04:46+01:00
-LU0981915779,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. OK,2026-11-18,2026-11-23T23:04:46+01:00
-IE000DWG3DP6,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. Fonte non raggiungibile: ConnectionError,2026-10-29,2026-11-23T23:04:47+01:00
-IE0005TOUMC7,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. Fonte non raggiungibile: ConnectionError,2026-10-29,2026-11-23T23:04:48+01:00
-IE000KTYLDC4,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. Fonte non raggiungibile: ConnectionError,2026-10-29,2026-11-23T23:04:49+01:00
+IE0003YRHWF4,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. OK,2026-11-20,2026-11-24T01:50:30+01:00
+IE00BD2PJG29,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. OK,2026-11-19,2026-11-24T01:50:30+01:00
+LU0261952682,NAV NUOVO,OK,2026-11-23,2026-11-24T01:50:31+01:00
+LU0981915779,NESSUNA NOVITA,Nessuna quotazione pubblica piu recente dello screenshot. OK,2026-11-18,2026-11-24T01:50:31+01:00
+IE000DWG3DP6,NESSUNA NOVITA,"Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili",2026-10-29,2026-11-24T01:50:34+01:00
+IE0005TOUMC7,NESSUNA NOVITA,"Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili",2026-10-29,2026-11-24T01:50:37+01:00
+IE000KTYLDC4,NESSUNA NOVITA,"Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili",2026-10-29,2026-11-24T01:50:43+01:00
