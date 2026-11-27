@@ -2,13 +2,13 @@
   "status": "success",
   "version": "AlphaForge v12 - Fineco NAV Reale",
   "message": "Portafoglio Fineco v12 aggiornato e dashboard generata.",
-  "started_at": "2026-11-27T00:33:40+00:00",
-  "finished_at": "2026-11-27T00:34:20+00:00",
+  "started_at": "2026-11-27T02:12:33+00:00",
+  "finished_at": "2026-11-27T02:13:11+00:00",
   "details": [
     {
       "script": "generate_real_portfolio.py",
       "returncode": 0,
-      "stdout_tail": "NAV NUOVO | OK\nIE00BD2PJG29 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. OK\nLU0261952682 | NAV NUOVO | OK\nLU0981915779 | NAV NUOVO | OK\nIE000DWG3DP6 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE0005TOUMC7 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\nIE000KTYLDC4 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Pagina raggiunta, ma NAV/data o ISIN non verificabili\n",
+      "stdout_tail": "SSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. OK\nLU0981915779 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Fonte non raggiungibile: ConnectionError\nIE000DWG3DP6 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Fonte non raggiungibile: ConnectionError\nIE0005TOUMC7 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Fonte non raggiungibile: ConnectionError\nIE000KTYLDC4 | NESSUNA NOVITA | Nessuna quotazione pubblica piu recente dello screenshot. Fonte non raggiungibile: ConnectionError\n",
       "stderr_tail": ""
     },
     {
